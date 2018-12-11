@@ -30,7 +30,7 @@ public class Auth {
         List<Header> headers = given().spec(SpecStorage.commonRequestSpec())
                 .body(new LoginModel().setLogin(login).setPassword(password))
                 .when()
-                .post(EndPoints.login)
+                .post(EndPoints.users_login)
                 .then()
                 .spec(SpecStorage.commonResponseSpec())
                 .extract().headers().asList();
@@ -47,7 +47,7 @@ public class Auth {
                     .extract().body().as(MobileVerification.class).getCode();
 
             headers = given().spec(SpecStorage.commonRequestSpec()).body(new LoginModel().setLogin(login).setPassword(password).setCode(code))
-                    .when().post(EndPoints.login_verify)
+                    .when().post(EndPoints.users_login_verify)
                     .then().statusCode(200).extract().headers().asList();
         }
         return given()
