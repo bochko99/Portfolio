@@ -1,0 +1,72 @@
+{
+	"id": "3608273c-fd35-42a7-84fc-a68c1e6a38f0",
+	"values": [
+		{
+			"key": "UserALogin",
+			"value": "TestUser_ALastTest",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "UserBLogin",
+			"value": "TestUser_BLastTest",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "UserAEmail",
+			"value": "TestUser_ALast@mail.ru",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "UserBEmail",
+			"value": "TestUser_BLast@mail.ru",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "URL",
+			"value": "http://develop-auth-ws-kt.features.testessential.net",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "citizenFilePath",
+			"value": "file.txt",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		},
+		{
+			"key": "docType",
+			"value": "PASSPORT",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			},
+			"enabled": true
+		}
+	],
+	"name": "My Workspace Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2018-10-22T06:23:51.999Z",
+	"_postman_exported_using": "Postman/6.4.2"
+}
