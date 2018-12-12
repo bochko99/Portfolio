@@ -33,8 +33,8 @@ public class EndPoints {
     public static final String users_profile_kyc2 = "/users/profile/kyc2";
     public static final String users_profile_kyc2_verify = "/users/profile/kyc2/verify";
     
-    public static final String users_login = "/users/users_login";
-    public static final String users_login_verify = "/users/users_login/verify";
+    public static final String users_login = "/users/login";
+    public static final String users_login_verify = "/users/login/verify";
 
     //MANAGEMENT
     public static final String testers_mobile = "/testers/mobile";

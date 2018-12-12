@@ -23,3 +23,16 @@ dependencies {
     testCompile 'io.rest-assured:rest-assured:3.2.0'
     testCompile 'io.rest-assured:json-schema-validator:3.2.0'
 }
+
+task jarTest (type: Jar) {
+    from sourceSets.test.output
+    classifier = 'test'
+}
+
+configurations {
+    testOutput
+}
+
+artifacts {
+    testOutput jarTest
+}

@@ -8,6 +8,8 @@ import utils.ConstantHelper;
 import utils.EndPoints;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
@@ -25,19 +27,16 @@ public class Auth {
         return new Auth();
     }
 
-    public static RequestSpecification auth(String login, String password) {
-
-        List<Header> headers = given().spec(SpecStorage.commonRequestSpec())
+    public static Map<String, String> getHeaders(String login, String password) {
+        List<Header> headers = given()
                 .body(new LoginModel().setLogin(login).setPassword(password))
-                .when()
+            .when()
                 .post(EndPoints.users_login)
-                .then()
-                .spec(SpecStorage.commonResponseSpec())
+            .then()
                 .extract().headers().asList();
 
         if (headers.stream().noneMatch(h -> h.getName().equals(ConstantHelper.X_AUTHORIZATION))) {
             String code = given()
-                    .baseUri(ConstantHelper.BETA)
                     .basePath(ConstantHelper.MANAGEMENT)
                     .queryParam("mobile", login)
                 .when()
@@ -50,17 +49,18 @@ public class Auth {
                     .when().post(EndPoints.users_login_verify)
                     .then().statusCode(200).extract().headers().asList();
         }
+        return headers.stream().collect(Collectors.toMap(Header::getName, Header::getValue, (k1, k2) -> k2));
+    }
+
+    public static RequestSpecification auth(String login, String password) {
+        Map<String, String> headers = getHeaders(login, password);
         return given()
-                .header(ConstantHelper.X_AUTHORIZATION, getHeaderValueByName(headers, ConstantHelper.X_AUTHORIZATION))
-                .header(ConstantHelper.X_USER_ID, getHeaderValueByName(headers, ConstantHelper.X_USER_ID));
+                .header(ConstantHelper.X_AUTHORIZATION, headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, ""))
+                .header(ConstantHelper.X_USER_ID, headers.getOrDefault(ConstantHelper.X_USER_ID, ""));
     }
 
     public static RequestSpecification auth() {
         return Auth.auth(defaultLogin, defaultPassword);
     }
 
-    private static String getHeaderValueByName(List<Header> headers, String name) {
-        Header matching = headers.stream().filter(h -> h.getName().equals(name)).findFirst().orElse(null);
-        return matching == null ? "" : matching.getValue();
-    }
 }
