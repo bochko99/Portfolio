@@ -29,167 +29,167 @@ public class FirstTest {
     }
 
     @Test
-    public void testChatMessages() {
+    public void testGetChatMessages() {
         auth().get(EndPoints.chat_messages);
     }
 
     @Test
-    public void testCurrencies() {
+    public void testGetCurrencies() {
         given().get(EndPoints.currencies);
     }
 
     @Test
-    public void testFavoritesInvoices() {
+    public void testGetFavoritesInvoices() {
         auth().get(EndPoints.favorites_invoices);
     }
 
     @Test
-    public void testFavoritesQuotes() {
+    public void testGetFavoritesQuotes() {
         auth().get(EndPoints.favorites_quotes);
     }
 
     @Test
-    public void testFundswallets() {
+    public void testGetFundswallets() {
         auth().get(EndPoints.fundswallets);
     }
 
     @Test
-    public void testHotelsSearch() {
+    public void testGetHotelsSearch() {
         given().get(EndPoints.hotels_search);
     }
 
     @Test
-    public void testInvoicesBpay() {
+    public void testPostInvoicesBpay() {
         auth().post(EndPoints.invoices_bpay);
     }
 
     @Test
-    public void testInvoicesBsb() {
+    public void testPostInvoicesBsb() {
         auth().post(EndPoints.invoices_bsb);
     }
 
     @Test
-    public void testInvoicesIban() {
+    public void testPostInvoicesIban() {
         auth().post(EndPoints.invoices_iban);
     }
 
     @Test
-    public void testInvoicesIbanRates() {
+    public void testGetInvoicesIbanRates() {
         given().get(EndPoints.invoices_iban_rates);
     }
 
     @Test
-    public void testInvoicesMobile() {
+    public void testPostInvoicesMobile() {
         auth().post(EndPoints.invoices_mobile);
     }
 
     @Test
-    public void testInvoicesMobileCodes() {
+    public void testGetInvoicesMobileCodes() {
         given().get(EndPoints.invoices_mobile_codes);
     }
 
     @Test
-    public void testInvoicesVoucherServices() {
+    public void testGetInvoicesVoucherServices() {
         given().get(EndPoints.invoices_voucher_services);
     }
 
     @Test
-    public void testInvoicesCommissions() {
+    public void testGetInvoicesCommissions() {
         given().get(EndPoints.invoices_commissions);
     }
 
     @Test
-    public void testInvoicesWithdraw() {
+    public void testPostInvoicesWithdraw() {
         auth().post(EndPoints.invoices_withdraw);
     }
 
     @Test
-    public void testInvoicesExchange() {
+    public void testPostInvoicesExchange() {
         auth().post(EndPoints.invoices_exchange);
     }
 
     @Test
-    public void testInvoicesExchangesRates() {
+    public void testGetInvoicesExchangesRates() {
         given().get(EndPoints.invoices_exchanges_rates);
     }
 
     @Test
-    public void testCountries() {
+    public void testGetCountries() {
         given().get(EndPoints.countries);
     }
 
     @Test
-    public void testMapPoints() {
+    public void testGetMapPoints() {
         given().get(EndPoints.map_points);
     }
 
     @Test
-    public void testNews() {
+    public void testGetNews() {
         given().get(EndPoints.news);
     }
 
     @Test
-    public void testOperations() {
+    public void testGetOperations() {
         auth().get(EndPoints.operations);
     }
 
     @Test
-    public void testOperationsRead() {
+    public void testPostOperationsRead() {
         auth().post(EndPoints.operations_read);
     }
 
     @Test
-    public void testSettings() {
+    public void testGetSettings() {
         auth().get(EndPoints.settings);
     }
 
     @Test
-    public void testSettingsOperations() {
+    public void testGetSettingsOperations() {
         auth().get(EndPoints.settings_operations);
     }
 
     @Test
-    public void testSettingsKyc() {
+    public void testGetSettingsKyc() {
         auth().get(EndPoints.settings_kyc);
     }
 
     @Test
-    public void testSettingsReceipts() {
+    public void testGetSettingsReceipts() {
         auth().get(EndPoints.settings_receipts);
     }
 
     @Test
-    public void testSettingsReceiptsCountries() {
+    public void testGetSettingsReceiptsCountries() {
         auth().get(EndPoints.settings_receipts_countries);
     }
 
     @Test
-    public void testSettingsLending() {
+    public void testGetSettingsLending() {
         auth().get(EndPoints.settings_lending);
     }
 
     @Test
-    public void testSettingsDeposits() {
+    public void testGetSettingsDeposits() {
         auth().get(EndPoints.settings_deposits);
     }
 
     @Test
-    public void testSettingsOnboarding() {
+    public void testGetSettingsOnboarding() {
         given().get(EndPoints.settings_onboarding);
     }
 
     @Test
-    public void testTransactionsHistory() {
+    public void testGetTransactionsHistory() {
         auth().get(EndPoints.transactions_history);
     }
 
     @Test
-    public void testTransfersFrequent() {
+    public void testGetTransfersFrequent() {
         auth().get(EndPoints.transfers_frequent);
     }
 
     @Test
-    public void testUsersProfile() {
+    public void testGetUsersProfile() {
         auth().get(EndPoints.users_profile);
     }
 
@@ -199,42 +199,42 @@ public class FirstTest {
     }
 
     @Test
-    public void testUsersProfileTermsAgree() {
+    public void testPostUsersProfileTermsAgree() {
         auth().post(EndPoints.users_profile_terms_agree);
     }
 
     @Test
-    public void testUsersProfileTermsIbanAgree() {
+    public void testPostUsersProfileTermsIbanAgree() {
         auth().post(EndPoints.users_profile_terms_iban_agree);
     }
 
     @Test
-    public void testUsersProfileLoyalty() {
+    public void testGetUsersProfileLoyalty() {
         auth().get(EndPoints.users_profile_loyalty);
     }
 
     @Test
-    public void testUsersProfileKyc0() {
+    public void testGetUsersProfileKyc0() {
         auth().get(EndPoints.users_profile_kyc0);
     }
 
     @Test
-    public void testUsersProfileKyc1() {
+    public void testGetUsersProfileKyc1() {
         auth().get(EndPoints.users_profile_kyc1);
     }
 
     @Test
-    public void testUsersProfileKyc1Verify() {
+    public void testPostUsersProfileKyc1Verify() {
         auth().post(EndPoints.users_profile_kyc1_verify);
     }
 
     @Test
-    public void testUsersProfileKyc2() {
+    public void testGetUsersProfileKyc2() {
         auth().get(EndPoints.users_profile_kyc2);
     }
 
     @Test
-    public void testUsersProfileKyc2Verify() {
+    public void testPostUsersProfileKyc2Verify() {
         auth().post(EndPoints.users_profile_kyc2_verify);
     }
 
