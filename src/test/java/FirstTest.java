@@ -23,7 +23,7 @@ public class FirstTest {
                         .setLogin("70000000040")
                         .setPassword("1234567"))
             .when()
-                .post(EndPoints.login)
+                .post(EndPoints.users_login)
             .then()
                 .statusCode(200);
     }
@@ -35,7 +35,7 @@ public class FirstTest {
                         .setLogin("70000000040")
                         .setPassword("12345678"))
             .when()
-                .post(EndPoints.login)
+                .post(EndPoints.users_login)
             .then()
                 .statusCode(401);
 
