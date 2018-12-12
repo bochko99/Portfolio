@@ -4,7 +4,7 @@ public class ConstantHelper {
 
     public static final String BETA = "https://api-beta.crypterium.io";
     public static final String PROD = "https://api.crypterium.com";
-
+    public static final String STAGE = "https://api-stage.crypterium.io";
 
     public static final String MOBILE = "/mobile/1.0";
     public static final String MANAGEMENT = "/management";
