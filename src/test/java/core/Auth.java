@@ -62,5 +62,6 @@ public class Auth {
     private static String getHeaderValueByName(List<Header> headers, String name) {
         Header matching = headers.stream().filter(h -> h.getName().equals(name)).findFirst().orElse(null);
         return matching == null ? "" : matching.getValue();
+
     }
 }
