@@ -1,6 +1,6 @@
 import core.SpecStorage;
 import io.restassured.RestAssured;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.LoginModel;
 import utils.EndPoints;
@@ -8,11 +8,11 @@ import utils.EndPoints;
 import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 
+
 public class FirstTest {
 
-    @Before
-    public void init() {
-        System.out.println("Init");
+    @BeforeClass
+    public static void init() {
         RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
         RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
     }
@@ -27,20 +27,6 @@ public class FirstTest {
                 .then()
                 .statusCode(200);
     }
-
-    @Test
-    public void testFailedAuth() {
-        RestAssured.responseSpecification = null;
-        given().body(new LoginModel()
-                .setLogin("70000000040")
-                .setPassword("12345678"))
-                .when()
-                .post(EndPoints.users_login)
-                .then()
-                .statusCode(401);
-
-    }
-
 
     @Test
     public void testChatMessages() {

@@ -6,6 +6,7 @@ import pojos.LoginModel;
 import pojos.MobileVerification;
 import utils.ConstantHelper;
 import utils.EndPoints;
+import utils.Environment;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,11 @@ import static io.restassured.RestAssured.given;
 
 public class Auth {
 
-    private static String defaultLogin = ConstantHelper.DEFAULT_LOGIN;
-    private static String defaultPassword = ConstantHelper.DEFAULT_PASSWORD;
+    private static String defaultLogin = Environment.BASE_LOGIN;
+    private static String defaultPassword = Environment.BASE_PASSWORD;
+    private static String X_AUTH = "";
+    private static String X_USER_ID = "";
+
 
     public Auth() {
     }
@@ -30,18 +34,18 @@ public class Auth {
     public static Map<String, String> getHeaders(String login, String password) {
         List<Header> headers = given()
                 .body(new LoginModel().setLogin(login).setPassword(password))
-            .when()
+                .when()
                 .post(EndPoints.users_login)
-            .then()
+                .then()
                 .extract().headers().asList();
 
         if (headers.stream().noneMatch(h -> h.getName().equals(ConstantHelper.X_AUTHORIZATION))) {
             String code = given()
                     .basePath(ConstantHelper.MANAGEMENT)
                     .queryParam("mobile", login)
-                .when()
+                    .when()
                     .get(EndPoints.testers_mobile)
-                .then()
+                    .then()
                     .statusCode(200)
                     .extract().body().as(MobileVerification.class).getCode();
 
@@ -54,13 +58,24 @@ public class Auth {
 
     public static RequestSpecification auth(String login, String password) {
         Map<String, String> headers = getHeaders(login, password);
+        X_AUTH = headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, "");
+        X_USER_ID = headers.getOrDefault(ConstantHelper.X_USER_ID, "");
+        System.out.println(login + " : " + X_AUTH);
         return given()
-                .header(ConstantHelper.X_AUTHORIZATION, headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, ""))
-                .header(ConstantHelper.X_USER_ID, headers.getOrDefault(ConstantHelper.X_USER_ID, ""));
+                .header(ConstantHelper.X_AUTHORIZATION, X_AUTH)
+                .header(ConstantHelper.X_USER_ID, X_USER_ID);
     }
 
     public static RequestSpecification auth() {
-        return Auth.auth(defaultLogin, defaultPassword);
+        if (X_AUTH.isEmpty() || X_USER_ID.isEmpty()) {
+            Map<String, String> headers = getHeaders(defaultLogin, defaultPassword);
+            X_AUTH = headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, "");
+            X_USER_ID = headers.getOrDefault(ConstantHelper.X_USER_ID, "");
+            System.out.println(X_AUTH);
+        }
+        return given()
+                .header(ConstantHelper.X_AUTHORIZATION, X_AUTH)
+                .header(ConstantHelper.X_USER_ID, X_USER_ID);
     }
 
 }
