@@ -9,6 +9,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.hamcrest.Matchers;
 import utils.ConstantHelper;
 import utils.Environment;
 
@@ -34,7 +35,7 @@ public class SpecStorage {
     public static ResponseSpecification commonResponseSpec() {
         return new ResponseSpecBuilder()
                 .expectBody(not(containsString("BadRequest")))
-                .expectStatusCode(200)
+                .expectStatusCode(Matchers.isOneOf(200, 201))
                 .build();
     }
 
