@@ -1,6 +1,6 @@
 package utils;
 
-public class ConstantHelper {
+public class Constants {
 
     public static final String BETA = "https://api-beta.crypterium.io";
     public static final String PROD = "https://api.crypterium.com";

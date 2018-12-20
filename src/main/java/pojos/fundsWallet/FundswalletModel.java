@@ -100,20 +100,20 @@ public class FundswalletModel {
         return this;
     }
 
-    public Boolean getDebit() {
+    public Boolean getIsDebit() {
         return isDebit;
     }
 
-    public FundswalletModel setDebit(Boolean debit) {
+    public FundswalletModel setIsDebit(Boolean debit) {
         isDebit = debit;
         return this;
     }
 
-    public Boolean getLiveMode() {
+    public Boolean getIsLiveMode() {
         return isLiveMode;
     }
 
-    public FundswalletModel setLiveMode(Boolean liveMode) {
+    public FundswalletModel setIsLiveMode(Boolean liveMode) {
         isLiveMode = liveMode;
         return this;
     }

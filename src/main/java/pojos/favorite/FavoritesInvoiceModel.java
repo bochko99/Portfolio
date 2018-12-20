@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
-public class FavoritesInvoiceResponseModel {
+public class FavoritesInvoiceModel {
 
     @Expose
     private String invoiceId;
@@ -18,7 +18,7 @@ public class FavoritesInvoiceResponseModel {
         return invoiceId;
     }
 
-    public FavoritesInvoiceResponseModel setInvoiceId(String invoiceId) {
+    public FavoritesInvoiceModel setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
         return this;
     }
@@ -27,7 +27,7 @@ public class FavoritesInvoiceResponseModel {
         return name;
     }
 
-    public FavoritesInvoiceResponseModel setName(String name) {
+    public FavoritesInvoiceModel setName(String name) {
         this.name = name;
         return this;
     }

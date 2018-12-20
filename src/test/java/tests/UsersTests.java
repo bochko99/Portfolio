@@ -1,6 +1,9 @@
 package tests;
 
+import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.EndPoints;
 
@@ -8,6 +11,13 @@ import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 
 public class UsersTests {
+
+    @BeforeClass
+    public static void init() {
+        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
+        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
+
     @Test
     @DisplayName(EndPoints.users_profile + " GET")
     public void testGetUsersProfile() {
@@ -15,7 +25,7 @@ public class UsersTests {
     }
 
     @Test
-    @DisplayName(EndPoints.users_login + " POST")
+    @DisplayName(EndPoints.users_profile + " POST")
     public void testPostUsersProfile() {
         given().post(EndPoints.users_profile);
     }

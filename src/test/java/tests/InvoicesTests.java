@@ -1,13 +1,23 @@
 package tests;
 
+import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.EndPoints;
 
 import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.greaterThan;
 
 public class InvoicesTests {
+
+    @BeforeClass
+    public static void init() {
+        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
+        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
 
     @Test
     @DisplayName(EndPoints.invoices_bpay + " POST")
@@ -72,7 +82,16 @@ public class InvoicesTests {
     @Test
     @DisplayName(EndPoints.invoices_exchanges_rates + " GET")
     public void testGetInvoicesExchangesRates() {
-        given().get(EndPoints.invoices_exchanges_rates);
+        auth().get(EndPoints.invoices_exchanges_rates).then().body("size()", greaterThan(0));
     }
+
+    @Test
+    @DisplayName(EndPoints.invoices_id + " GET")
+    public void testGetInvoicesId() {
+        String id = auth().post(EndPoints.invoices_exchange).then().extract().body().jsonPath().get("id");
+        auth().pathParam("id", id).get(EndPoints.invoices_id);
+    }
+
+
 
 }

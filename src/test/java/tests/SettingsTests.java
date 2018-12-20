@@ -1,6 +1,9 @@
 package tests;
 
+import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.EndPoints;
 
@@ -8,6 +11,12 @@ import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 
 public class SettingsTests {
+
+    @BeforeClass
+    public static void init() {
+        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
+        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
 
     @Test
     @DisplayName(EndPoints.settings + " GET")

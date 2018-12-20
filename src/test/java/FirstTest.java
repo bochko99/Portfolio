@@ -1,4 +1,7 @@
+import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.LoginModel;
 import utils.EndPoints;
@@ -9,6 +12,11 @@ import static io.restassured.RestAssured.given;
 
 public class FirstTest {
 
+    @BeforeClass
+    public static void init() {
+        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
+        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
 
 
     @Test
@@ -41,6 +49,12 @@ public class FirstTest {
         given().get(EndPoints.news);
     }
 
+
+    @Test
+    @DisplayName(EndPoints.quotes + " GET")
+    public void testGetQuotes() {
+        given().get(EndPoints.quotes);
+    }
 
     @Test
     @DisplayName(EndPoints.transactions_history + " GET")

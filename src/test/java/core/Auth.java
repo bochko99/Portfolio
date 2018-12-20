@@ -4,7 +4,7 @@ import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
 import pojos.LoginModel;
 import pojos.MobileVerification;
-import utils.ConstantHelper;
+import utils.Constants;
 import utils.EndPoints;
 import utils.Environment;
 
@@ -39,9 +39,9 @@ public class Auth {
                 .then()
                 .extract().headers().asList();
 
-        if (headers.stream().noneMatch(h -> h.getName().equals(ConstantHelper.X_AUTHORIZATION))) {
+        if (headers.stream().noneMatch(h -> h.getName().equals(Constants.X_AUTHORIZATION))) {
             String code = given()
-                    .basePath(ConstantHelper.MANAGEMENT)
+                    .basePath(Constants.MANAGEMENT)
                     .queryParam("mobile", login)
                     .when()
                     .get(EndPoints.testers_mobile)
@@ -58,24 +58,24 @@ public class Auth {
 
     public static RequestSpecification auth(String login, String password) {
         Map<String, String> headers = getHeaders(login, password);
-        X_AUTH = headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, "");
-        X_USER_ID = headers.getOrDefault(ConstantHelper.X_USER_ID, "");
+        X_AUTH = headers.getOrDefault(Constants.X_AUTHORIZATION, "");
+        X_USER_ID = headers.getOrDefault(Constants.X_USER_ID, "");
         System.out.println(login + " : " + X_AUTH);
         return given()
-                .header(ConstantHelper.X_AUTHORIZATION, X_AUTH)
-                .header(ConstantHelper.X_USER_ID, X_USER_ID);
+                .header(Constants.X_AUTHORIZATION, X_AUTH)
+                .header(Constants.X_USER_ID, X_USER_ID);
     }
 
     public static RequestSpecification auth() {
         if (X_AUTH.isEmpty() || X_USER_ID.isEmpty()) {
             Map<String, String> headers = getHeaders(defaultLogin, defaultPassword);
-            X_AUTH = headers.getOrDefault(ConstantHelper.X_AUTHORIZATION, "");
-            X_USER_ID = headers.getOrDefault(ConstantHelper.X_USER_ID, "");
+            X_AUTH = headers.getOrDefault(Constants.X_AUTHORIZATION, "");
+            X_USER_ID = headers.getOrDefault(Constants.X_USER_ID, "");
             System.out.println(X_AUTH);
         }
         return given()
-                .header(ConstantHelper.X_AUTHORIZATION, X_AUTH)
-                .header(ConstantHelper.X_USER_ID, X_USER_ID);
+                .header(Constants.X_AUTHORIZATION, X_AUTH)
+                .header(Constants.X_USER_ID, X_USER_ID);
     }
 
 }
