@@ -10,15 +10,15 @@ import javax.annotation.Generated;
 public class InvoiceFundsWalletModel {
 
     @Expose
-    private Long amount;
+    private Float amount;
     @Expose
     private String id;
 
-    public Long getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public InvoiceFundsWalletModel setAmount(Long amount) {
+    public InvoiceFundsWalletModel setAmount(Float amount) {
         this.amount = amount;
         return this;
     }

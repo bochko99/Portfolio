@@ -1,6 +1,7 @@
 package core;
 
 import io.restassured.http.Header;
+import io.restassured.http.Headers;
 import io.restassured.specification.RequestSpecification;
 import pojos.LoginModel;
 import pojos.MobileVerification;
@@ -76,6 +77,20 @@ public class Auth {
         return given()
                 .header(Constants.X_AUTHORIZATION, X_AUTH)
                 .header(Constants.X_USER_ID, X_USER_ID);
+    }
+
+    public static RequestSpecification createUser() {
+        Headers headers = given().post(EndPoints.users_profile).then().extract().headers();
+        X_AUTH = headers.get(Constants.X_AUTHORIZATION).getValue();
+        X_USER_ID = headers.get(Constants.X_USER_ID).getValue();
+        return given()
+                .header(Constants.X_AUTHORIZATION, X_AUTH)
+                .header(Constants.X_USER_ID, X_USER_ID);
+    }
+
+    public static void flush() {
+        X_AUTH = "";
+        X_USER_ID = "";
     }
 
 }

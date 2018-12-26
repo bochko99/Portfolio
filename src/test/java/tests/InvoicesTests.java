@@ -3,20 +3,76 @@ package tests;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import io.restassured.path.json.JsonPath;
+import org.junit.*;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import pojos.fundsWallet.FundswalletModel;
+import pojos.invoices.InvoiceBodyModel;
+import pojos.invoices.InvoiceFundsWalletModel;
+import pojos.invoices.InvoicesPaymentModel;
+import pojos.users.UsersProfileResponseModel;
 import utils.EndPoints;
+import utils.Environment;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.*;
 
 public class InvoicesTests {
+
+    private static final String BTC = "BTC";
+    private static final String CRPT = "CRPT";
+    private static final String ETH = "ETH";
+    private static final String LTC = "LTC";
+
+    @Rule
+    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
+
+    public class FinancialAnnotationRule extends TestWatcher {
+
+        Financial annotation;
+
+        /**
+         * Invoked when a test is about to start
+         *
+         * @param description
+         */
+        @Override
+        protected void starting(Description description) {
+            super.starting(description);
+            this.annotation = description.getAnnotation(Financial.class);
+        }
+
+        public Financial getAnnotation() {
+            return annotation;
+        }
+
+    };
+
 
     @BeforeClass
     public static void init() {
         RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
         RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
+
+    @Before
+    public void checkSkipNeed() {
+        Assume.assumeTrue(annotation.getAnnotation() == null
+                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
+    }
+
+    public static Pair p(String currency, Float amount) {
+        return new Pair(currency, amount);
     }
 
     @Test
@@ -85,6 +141,7 @@ public class InvoicesTests {
         auth().get(EndPoints.invoices_exchanges_rates).then().body("size()", greaterThan(0));
     }
 
+    @Financial
     @Test
     @DisplayName(EndPoints.invoices_id + " GET")
     public void testGetInvoicesId() {
@@ -92,6 +149,274 @@ public class InvoicesTests {
         auth().pathParam("id", id).get(EndPoints.invoices_id);
     }
 
+    @Financial
+    @Test
+    @DisplayName("Send crypto by phone : BTC")
+    public void testSendCryptoByPhoneBtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.00001f)
+                .setCurrency(BTC)
+                .setMobile("70000000040");
 
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(BTC));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by phone : LTC")
+    public void testSendCryptoByPhoneLtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.00001f)
+                .setCurrency(LTC)
+                .setMobile("70000000040");
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(LTC));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by phone : ETH")
+    public void testSendCryptoByPhoneEth() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.00001f)
+                .setCurrency(ETH)
+                .setMobile("70000000040");
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(ETH));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : CRPT")
+    public void testSendCryptoByAddressCrpt() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(CRPT)
+                .setCryptoWalletAddress(getWallet(CRPT));
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, feeInvoiceModelCallback(CRPT, ETH));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : BTC")
+    public void testSendCryptoByAddressBtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(BTC)
+                .setCryptoWalletAddress(getWallet(BTC));
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(BTC));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : ETH")
+    public void testSendCryptoByAddressEth() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(ETH)
+                .setCryptoWalletAddress(getWallet(ETH));
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(ETH));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : LTC")
+    public void testSendCryptoByAddressLtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(LTC)
+                .setCryptoWalletAddress(getWallet(LTC));
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(LTC));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by userID : CRPT")
+    public void testSendCryptoByUserIDCrpt() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(CRPT)
+                .setAccountNumber(getUserId());
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, feeInvoiceModelCallback(CRPT, ETH));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : BTC")
+    public void testSendCryptoByUserIDBtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(BTC)
+                .setAccountNumber(getUserId());
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(BTC));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : ETH")
+    public void testSendCryptoByUserIDEth() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(ETH)
+                .setAccountNumber(getUserId());
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(ETH));
+    }
+
+    @Financial
+    @Test
+    @DisplayName("Send crypto by address : LTC")
+    public void testSendCryptoByUserIDLtc() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(LTC)
+                .setAccountNumber(getUserId());
+
+        testInvoice(EndPoints.invoices_withdraw, bodyModel, commonInvoiceModelCallback(LTC));
+    }
+
+    @Ignore
+    @Test
+    @DisplayName(EndPoints.invoices_id + " PUT")
+    public void testPutInvoicesId() {
+        String iban = "gb77barc20201530093459";
+        String code = given().pathParam("iban", iban).get(EndPoints.invoices_iban_banks_iban).then().extract().body().jsonPath().getString("code");
+
+        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
+
+        FundswalletModel btcWallet = Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase("BTC")).findFirst().orElse(null);
+        FundswalletModel crptWallet = Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase("CRPT")).findFirst().orElse(null);
+
+        String invoiceId = auth().post(EndPoints.invoices_iban).jsonPath().getString("id");
+
+        InvoiceBodyModel model = new InvoiceBodyModel()
+                .setIban(iban)
+                .setBankCode(code)
+                .setReceiverFirstName("Test")
+                .setReceiverLastName("LastName")
+                .setAmount(3f);
+
+        JsonPath response = auth().body(model).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
+        Float feeAmount = response.getFloat("fee.customerCommissionAmount");
+        Float totalAmount = response.getFloat("totalAmount");
+        InvoicesPaymentModel paymentModel = createInvoicesPaymentModel("1111", p("BTC", totalAmount), p("CRPT", feeAmount));
+
+        auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
+
+    }
+
+    @Test
+    @DisplayName("Exchange")
+    public void testExchange() {
+        InvoiceBodyModel bodyModel = new InvoiceBodyModel()
+                .setAmount(0.0003f)
+                .setCurrency(BTC);
+
+        testInvoice(EndPoints.invoices_exchange, bodyModel, commonInvoiceModelCallback(BTC));
+    }
+
+    private String getWallet(String currency) {
+        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        return Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(currency)).findFirst().get().getDescription();
+    }
+
+    private String getUserId() {
+        return auth().get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
+    }
+
+    private void testInvoice(String invoiceEndPoint, InvoiceBodyModel bodyModel, InvoiceModelCallback modelCallback) {
+        //create invoice
+        String invoiceId = createInvoice(invoiceEndPoint);
+
+        //Put data to invoice
+        JsonPath response = auth().body(bodyModel).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
+
+        //Post payment
+        InvoicesPaymentModel paymentModel = modelCallback.create(response);
+        auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
+
+        auth().queryParam("take", 5).get(EndPoints.operations)
+                .then().assertThat().body("id", hasItem(invoiceId))
+                .body("find { it.id == '" + invoiceId + "'}.status", not("Failed"));
+
+    }
+
+    private String createInvoice(String endpoint) {
+        return auth().post(endpoint).jsonPath().getString("id");
+    }
+
+    private InvoicesPaymentModel createInvoicesPaymentModel(String pin, Pair... pairs) {
+        List<InvoiceFundsWalletModel> walletsData = new ArrayList<>();
+        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
+
+
+        for (Pair p : pairs) {
+            FundswalletModel wallet = Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(p.getCurrency())).findFirst().orElse(null);
+            walletsData.add(new InvoiceFundsWalletModel().setId(wallet.getId()).setAmount(p.getAmount()));
+        }
+
+        return new InvoicesPaymentModel().setFundsWallets(walletsData).setPassword(pin);
+    }
+
+    private InvoiceModelCallback commonInvoiceModelCallback(String currency) {
+        return response -> {
+            Float totalAmount = response.getFloat("totalAmount");
+            return createInvoicesPaymentModel("1111", p(currency, totalAmount));
+        };
+    }
+
+    private InvoiceModelCallback feeInvoiceModelCallback(String currencyOrigin, String currencyFee) {
+        return response -> {
+            Float amount = response.getFloat("amount");
+            Float fee = response.getFloat("fee.customerCommissionAmount");
+            return createInvoicesPaymentModel("1111", p(currencyOrigin, amount), p(currencyFee, fee));
+        };
+    }
+
+    @FunctionalInterface
+    private interface InvoiceModelCallback {
+        InvoicesPaymentModel create(JsonPath response);
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    private @interface Financial {
+
+    }
+
+    private static class Pair {
+
+        private String currency;
+        private Float amount;
+
+        public Pair(String currency, Float amount) {
+            this.currency = currency;
+            this.amount = amount;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public Pair setCurrency(String currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public Float getAmount() {
+            return amount;
+        }
+
+        public Pair setAmount(Float amount) {
+            this.amount = amount;
+            return this;
+        }
+    }
 
 }

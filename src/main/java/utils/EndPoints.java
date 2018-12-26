@@ -118,5 +118,6 @@ public class EndPoints {
 
     //MANAGEMENT
     public static final String testers_mobile = "/testers/mobile";
+    public static final String testers_email = "/testers/email";
 
 }

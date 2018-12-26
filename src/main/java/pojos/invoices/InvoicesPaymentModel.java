@@ -11,16 +11,16 @@ import java.util.List;
 public class InvoicesPaymentModel {
 
     @Expose
-    private List<InvoiceFundsWalletModel> invoiceFundsWalletModels;
+    private List<InvoiceFundsWalletModel> fundsWallets;
     @Expose
     private String password;
 
-    public List<InvoiceFundsWalletModel> getInvoiceFundsWalletModels() {
-        return invoiceFundsWalletModels;
+    public List<InvoiceFundsWalletModel> getFundsWallets() {
+        return fundsWallets;
     }
 
-    public InvoicesPaymentModel setInvoiceFundsWalletModels(List<InvoiceFundsWalletModel> invoiceFundsWalletModels) {
-        this.invoiceFundsWalletModels = invoiceFundsWalletModels;
+    public InvoicesPaymentModel setFundsWallets(List<InvoiceFundsWalletModel> fundsWallets) {
+        this.fundsWallets = fundsWallets;
         return this;
     }
 

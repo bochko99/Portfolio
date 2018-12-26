@@ -287,47 +287,47 @@ public class UsersProfileResponseModel {
         return this;
     }
 
-    public Boolean getAgreePrivacyCheck() {
+    public Boolean getIsAgreePrivacyCheck() {
         return isAgreePrivacyCheck;
     }
 
-    public UsersProfileResponseModel setAgreePrivacyCheck(Boolean agreePrivacyCheck) {
+    public UsersProfileResponseModel setIsAgreePrivacyCheck(Boolean agreePrivacyCheck) {
         isAgreePrivacyCheck = agreePrivacyCheck;
         return this;
     }
 
-    public Boolean getIbanTermsAgreed() {
+    public Boolean getIsIbanTermsAgreed() {
         return isIbanTermsAgreed;
     }
 
-    public UsersProfileResponseModel setIbanTermsAgreed(Boolean ibanTermsAgreed) {
+    public UsersProfileResponseModel setIsIbanTermsAgreed(Boolean ibanTermsAgreed) {
         isIbanTermsAgreed = ibanTermsAgreed;
         return this;
     }
 
-    public Boolean getLegalFunds() {
+    public Boolean getIsLegalFunds() {
         return isLegalFunds;
     }
 
-    public UsersProfileResponseModel setLegalFunds(Boolean legalFunds) {
+    public UsersProfileResponseModel setIsLegalFunds(Boolean legalFunds) {
         isLegalFunds = legalFunds;
         return this;
     }
 
-    public Boolean getTermsAgreed() {
+    public Boolean getIsTermsAgreed() {
         return isTermsAgreed;
     }
 
-    public UsersProfileResponseModel setTermsAgreed(Boolean termsAgreed) {
+    public UsersProfileResponseModel setIsTermsAgreed(Boolean termsAgreed) {
         isTermsAgreed = termsAgreed;
         return this;
     }
 
-    public Boolean getTestMode() {
+    public Boolean getIsTestMode() {
         return isTestMode;
     }
 
-    public UsersProfileResponseModel setTestMode(Boolean testMode) {
+    public UsersProfileResponseModel setIsTestMode(Boolean testMode) {
         isTestMode = testMode;
         return this;
     }
