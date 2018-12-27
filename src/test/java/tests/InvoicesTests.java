@@ -56,7 +56,7 @@ public class InvoicesTests {
             return annotation;
         }
 
-    };
+    }
 
 
     @BeforeClass
@@ -141,7 +141,6 @@ public class InvoicesTests {
         auth().get(EndPoints.invoices_exchanges_rates).then().body("size()", greaterThan(0));
     }
 
-    @Financial
     @Test
     @DisplayName(EndPoints.invoices_id + " GET")
     public void testGetInvoicesId() {
@@ -190,7 +189,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : CRPT")
     public void testSendCryptoByAddressCrpt() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(CRPT)
                 .setCryptoWalletAddress(getWallet(CRPT));
 
@@ -202,7 +201,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : BTC")
     public void testSendCryptoByAddressBtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(BTC)
                 .setCryptoWalletAddress(getWallet(BTC));
 
@@ -214,7 +213,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : ETH")
     public void testSendCryptoByAddressEth() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(ETH)
                 .setCryptoWalletAddress(getWallet(ETH));
 
@@ -226,7 +225,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : LTC")
     public void testSendCryptoByAddressLtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(LTC)
                 .setCryptoWalletAddress(getWallet(LTC));
 
@@ -238,7 +237,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by userID : CRPT")
     public void testSendCryptoByUserIDCrpt() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(CRPT)
                 .setAccountNumber(getUserId());
 
@@ -250,7 +249,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : BTC")
     public void testSendCryptoByUserIDBtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(BTC)
                 .setAccountNumber(getUserId());
 
@@ -262,7 +261,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : ETH")
     public void testSendCryptoByUserIDEth() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(ETH)
                 .setAccountNumber(getUserId());
 
@@ -274,7 +273,7 @@ public class InvoicesTests {
     @DisplayName("Send crypto by address : LTC")
     public void testSendCryptoByUserIDLtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(LTC)
                 .setAccountNumber(getUserId());
 
@@ -287,11 +286,6 @@ public class InvoicesTests {
     public void testPutInvoicesId() {
         String iban = "gb77barc20201530093459";
         String code = given().pathParam("iban", iban).get(EndPoints.invoices_iban_banks_iban).then().extract().body().jsonPath().getString("code");
-
-        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
-
-        FundswalletModel btcWallet = Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase("BTC")).findFirst().orElse(null);
-        FundswalletModel crptWallet = Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase("CRPT")).findFirst().orElse(null);
 
         String invoiceId = auth().post(EndPoints.invoices_iban).jsonPath().getString("id");
 
@@ -315,7 +309,7 @@ public class InvoicesTests {
     @DisplayName("Exchange")
     public void testExchange() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setAmount(0.0003f)
+                .setAmount(0.00001f)
                 .setCurrency(BTC);
 
         testInvoice(EndPoints.invoices_exchange, bodyModel, commonInvoiceModelCallback(BTC));

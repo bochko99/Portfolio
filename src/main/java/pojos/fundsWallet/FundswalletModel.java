@@ -1,12 +1,14 @@
 
 package pojos.fundsWallet;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
 import java.util.List;
 
 @Generated("net.hexar.json2pojo")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @SuppressWarnings("unused")
 public class FundswalletModel {
 

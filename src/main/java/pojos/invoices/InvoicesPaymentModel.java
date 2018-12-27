@@ -1,6 +1,7 @@
 
 package pojos.invoices;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InvoicesPaymentModel {
 
     @Expose
