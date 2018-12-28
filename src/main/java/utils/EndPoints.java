@@ -20,9 +20,9 @@ public class EndPoints {
   public static final String rates_currencyFrom_currencyTo = "/rates/{currencyFrom}/{currencyTo}";
 
   //currencyexchange
-  public static final String currencyexchange_directions_path = "/currency-exchange/directions/{path}";
-  public static final String currencyexchange_offers_path = "/currency-exchange/offers/{path}";
-  public static final String currencyexchange_transfers_path = "/currency-exchange/transfers/{path}";
+  public static final String currencyexchange_directions_path = "/currency-exchange/directions";
+  public static final String currencyexchange_offers_path = "/currency-exchange/offers";
+  public static final String currencyexchange_transfers_path = "/currency-exchange/transfers";
 
   //favorites
   public static final String favorites_invoices = "/favorites/invoices";

@@ -21,6 +21,8 @@ public class SpecStorage {
     private static final RequestSpecification commonRequestSpec = new RequestSpecBuilder()
             .setAccept(ContentType.JSON)
             .setContentType(ContentType.JSON)
+            .addHeader("X-PlatformId", "7B5237A5-996B-43BB-B9A5-747E32A3BCA5")
+            .addHeader("X-AppId", "7B5237A5-996B-43BB-B9A5-747E32A3BCA5")
             .setBaseUri(Environment.BASE_URL)
             .setBasePath(Constants.MOBILE)
             .addFilter(new RequestLoggingFilter())

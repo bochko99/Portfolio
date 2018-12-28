@@ -4,6 +4,7 @@ import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.*;
+import pojos.exchange.ExchangeOfferReqModel;
 import rules.FinancialAnnotationRule;
 import utils.EndPoints;
 import utils.Environment;
@@ -32,15 +33,20 @@ public class CurrencyExchangeTest {
     @DisplayName(EndPoints.currencyexchange_directions_path + " GET")
     public void currencyExchangeDirection() {
 
-        auth().pathParam("path", "").get(EndPoints.currencyexchange_directions_path);
+        auth().get(EndPoints.currencyexchange_directions_path);
 
     }
 
     @Test
     @DisplayName(EndPoints.currencyexchange_offers_path + " POST")
     public void currencyExchangeOffers() {
+        ExchangeOfferReqModel model = new ExchangeOfferReqModel()
+                .setAmount(0L)
+                .setAmountKind("SourceAmount")
+                .setSourceCurrencyCode("BTC")
+                .setTargetCurrencyCode("ETH");
 
-        auth().pathParam("path", "").post(EndPoints.currencyexchange_offers_path);
+        auth().body(model).post(EndPoints.currencyexchange_offers_path);
 
     }
 

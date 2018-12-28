@@ -7,6 +7,7 @@ import pojos.LoginModel;
 import utils.EndPoints;
 
 import static core.Auth.auth;
+import static core.Currency.BTC;
 import static io.restassured.RestAssured.given;
 
 
@@ -54,6 +55,12 @@ public class FirstTest {
     @DisplayName(EndPoints.quotes + " GET")
     public void testGetQuotes() {
         given().get(EndPoints.quotes);
+    }
+
+    @Test
+    @DisplayName(EndPoints.quotes_currency + " GET")
+    public void testGetQuotesCurrency() {
+        given().pathParam("currency", BTC).get(EndPoints.quotes_currency);
     }
 
     @Test

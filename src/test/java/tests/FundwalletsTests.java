@@ -11,6 +11,7 @@ import pojos.fundsWallet.FundswalletModel;
 import utils.EndPoints;
 
 import static core.Auth.auth;
+import static core.Currency.BTC;
 
 public class FundwalletsTests {
 
@@ -34,7 +35,7 @@ public class FundwalletsTests {
         String uuid = java.util.UUID.randomUUID().toString();
         String address = "0x" + RandomStringUtils.randomAlphanumeric(30);
         FundswalletModel model = new FundswalletModel()
-                .setCurrency("BTC")
+                .setCurrency(BTC)
                 .setDescription("Best MSC in the world!")
                 .setEncryptedKey(address);
 

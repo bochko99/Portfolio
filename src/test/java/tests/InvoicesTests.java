@@ -21,15 +21,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static core.Auth.auth;
+import static core.Currency.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class InvoicesTests {
-
-    private static final String BTC = "BTC";
-    private static final String CRPT = "CRPT";
-    private static final String ETH = "ETH";
-    private static final String LTC = "LTC";
 
     @Rule
     public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
@@ -299,7 +295,7 @@ public class InvoicesTests {
         JsonPath response = auth().body(model).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
         Float feeAmount = response.getFloat("fee.customerCommissionAmount");
         Float totalAmount = response.getFloat("totalAmount");
-        InvoicesPaymentModel paymentModel = createInvoicesPaymentModel("1111", p("BTC", totalAmount), p("CRPT", feeAmount));
+        InvoicesPaymentModel paymentModel = createInvoicesPaymentModel("1111", p(BTC, totalAmount), p(CRPT, feeAmount));
 
         auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
 
@@ -314,6 +310,14 @@ public class InvoicesTests {
 
         testInvoice(EndPoints.invoices_exchange, bodyModel, commonInvoiceModelCallback(BTC));
     }
+
+    @Financial
+    @Test
+    @DisplayName("BPay")
+    public void testBPay() {
+
+    }
+
 
     private String getWallet(String currency) {
         FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
