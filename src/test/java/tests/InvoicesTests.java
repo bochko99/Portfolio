@@ -1,25 +1,21 @@
 package tests;
 
+import annotations.Financial;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.*;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 import pojos.fundsWallet.FundswalletModel;
 import pojos.invoices.InvoiceBodyModel;
 import pojos.invoices.InvoiceFundsWalletModel;
 import pojos.invoices.InvoicesPaymentModel;
 import pojos.users.UsersProfileResponseModel;
+import rules.FinancialAnnotationRule;
 import utils.EndPoints;
 import utils.Environment;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -37,27 +33,6 @@ public class InvoicesTests {
 
     @Rule
     public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
-
-    public class FinancialAnnotationRule extends TestWatcher {
-
-        Financial annotation;
-
-        /**
-         * Invoked when a test is about to start
-         *
-         * @param description
-         */
-        @Override
-        protected void starting(Description description) {
-            super.starting(description);
-            this.annotation = description.getAnnotation(Financial.class);
-        }
-
-        public Financial getAnnotation() {
-            return annotation;
-        }
-
-    }
 
 
     @BeforeClass
@@ -401,12 +376,6 @@ public class InvoicesTests {
     @FunctionalInterface
     private interface InvoiceModelCallback {
         InvoicesPaymentModel create(JsonPath response);
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    private @interface Financial {
-
     }
 
     private static class Pair {

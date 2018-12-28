@@ -1,92 +1,103 @@
 package tests;
 
 
+import annotations.Financial;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import pojos.bankwithdrawal.BankWithdrawalReqOffer;
 import pojos.bankwithdrawal.BankWithdrawalReqTransfer;
 import pojos.bankwithdrawal.BankWithdrawalRespOffer;
+import rules.FinancialAnnotationRule;
 import utils.EndPoints;
+import utils.Environment;
 
 import static core.Auth.auth;
 
 
 public class BankWithdrawalTest {
 
-  @BeforeClass
-  public static void init() {
+    @Rule
+    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
 
-    RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-    RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
 
-  }
+    @BeforeClass
+    public static void init() {
+        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
+        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
+    }
 
-  @Test
-  @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
-  public void testBanks() {
+    @Before
+    public void checkSkipNeed() {
+        Assume.assumeTrue(annotation.getAnnotation() == null
+                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
+    }
 
-    auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
+    @Test
+    @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
+    public void testBanks() {
 
-  }
+        auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
 
-  @Test
-  @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
-  public void testBanksLimitsRub() {
+    }
 
-    auth().get(EndPoints.bankwithdrawals_limits_rubank);
+    @Test
+    @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
+    public void testBanksLimitsRub() {
 
-  }
+        auth().get(EndPoints.bankwithdrawals_limits_rubank);
 
-  @Test
-  @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
-  public void testBanksLimitsCountries() {
+    }
 
-    auth().get(EndPoints.bankwithdrawals_limits_countries);
+    @Test
+    @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
+    public void testBanksLimitsCountries() {
 
-  }
+        auth().get(EndPoints.bankwithdrawals_limits_countries);
 
-  @Test
-  @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
-  public void testBanksRates() {
+    }
 
-    auth().queryParam("currency", "BTC").get(EndPoints.bankwithdrawals_rates_rubank);
+    @Test
+    @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
+    public void testBanksRates() {
 
-  }
+        auth().queryParam("currency", "BTC").get(EndPoints.bankwithdrawals_rates_rubank);
 
-  @Test
-  @DisplayName("Create Bank Offer")
-  public void createOffer() {
+    }
 
-    BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-            .setAmount(1.0)
-            .setCurrency("BTC");
-    auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank);
+    @Test
+    @DisplayName("Create Bank Offer")
+    public void createOffer() {
 
-  }
+        BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
+                .setAmount(1.0)
+                .setCurrency("BTC");
+        auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank);
 
-  @Test
-  @DisplayName("Create Bank Transfer")
-  public void createTransfer() {
+    }
 
-    BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-            .setAmount(1.0)
-            .setCurrency("BTC");
-    BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
-            .as(BankWithdrawalRespOffer.class);
+    @Test
+    @Financial
+    @DisplayName("Create Bank Transfer")
+    public void createTransfer() {
 
-    BankWithdrawalReqTransfer transfer = new BankWithdrawalReqTransfer()
-            .setOfferId(offer.getId())
-            .setTransferToMyself(true)
-            .setAccountNumber("40817810123456789012")
-            .setBankCorrAccountNumber("30101810345250000745")
-            .setBic("044525745")
-            .setPayeeFirstName("Тест")
-            .setPayeeMiddleName("Тест")
-            .setPayeeLastName("Тест");
-    auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
+        BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
+                .setAmount(1.0)
+                .setCurrency("BTC");
+        BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
+                .as(BankWithdrawalRespOffer.class);
 
-  }
+        BankWithdrawalReqTransfer transfer = new BankWithdrawalReqTransfer()
+                .setOfferId(offer.getId())
+                .setTransferToMyself(true)
+                .setAccountNumber("40817810123456789012")
+                .setBankCorrAccountNumber("30101810345250000745")
+                .setBic("044525745")
+                .setPayeeFirstName("Тест")
+                .setPayeeMiddleName("Тест")
+                .setPayeeLastName("Тест");
+        auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
+
+    }
 }
