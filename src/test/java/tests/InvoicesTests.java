@@ -4,6 +4,7 @@ import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import org.hamcrest.Matchers;
 import org.junit.*;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -82,9 +83,25 @@ public class InvoicesTests {
     }
 
     @Test
+    @DisplayName(EndPoints.invoices_bpay_billers_code + " GET")
+    public void testGetInvoicesBpayBillersCode() {
+        given().pathParam("code", "96479")
+                .get(EndPoints.invoices_bpay_billers_code)
+                .then().body("name", Matchers.equalTo("Red Balloon"));
+    }
+
+    @Test
     @DisplayName(EndPoints.invoices_bsb + " POST")
     public void testPostInvoicesBsb() {
         auth().post(EndPoints.invoices_bsb);
+    }
+
+    @Test
+    @DisplayName(EndPoints.invoices_bsb_banks_code + " GET")
+    public void testGetInvoicesBsbBanksCode() {
+        given().pathParam("code", "911001")
+                .get(EndPoints.invoices_bsb_banks_code)
+                .then().body("name", Matchers.equalTo("Sumitomo Mitsui"));
     }
 
     @Test
@@ -111,6 +128,14 @@ public class InvoicesTests {
         given().get(EndPoints.invoices_mobile_codes);
     }
 
+    @Test
+    @DisplayName(EndPoints.invoices_mobile_country_providers + " GET")
+    public void testGetInvoicesMobileCountryProviders() {
+        given().pathParam("country", "RU")
+                .get(EndPoints.invoices_mobile_country_providers)
+                .then().body("size()", greaterThan(0));
+    }
+    
     @Test
     @DisplayName(EndPoints.invoices_voucher_services + " GET")
     public void testGetInvoicesVoucherServices() {

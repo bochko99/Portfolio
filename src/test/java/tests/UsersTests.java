@@ -49,14 +49,14 @@ public class UsersTests {
     @Test
     @DisplayName("User registration")
     public void testRegisterUser() {
-        String id = registerUser();
+        String id = registerUser(true);
         Assert.assertNotNull(id);
     }
 
     @Test
     @DisplayName(("KYC 1 Completion"))
     public void testKYC1Completion() {
-        String id = registerUser();
+        String id = registerUser(true);
 
         UsersProfileKyc1Model model = new UsersProfileKyc1Model()
                 .setIdentificationDocument("Passport")
@@ -77,7 +77,7 @@ public class UsersTests {
     @Ignore
     @DisplayName("KYC 2 Completion")
     public void testKYC2Completion() {
-        String id = registerUser();
+        String id = registerUser(false);
 
         UsersProfileKyc2Model model = new UsersProfileKyc2Model()
                 .setRegistrationCountry("RU")
@@ -141,22 +141,29 @@ public class UsersTests {
     }
 
     @Step("Register user")
-    private String registerUser() {
+    private String registerUser(Boolean isAustralian) {
         String email = CommonFunctions.generateFreeEmail();
         String phone = CommonFunctions.generateFreePhoneNumber();
-        CountryItem country = CommonFunctions.getRandomCountryByCryptoRestrictions(false);
         String password = "1234567";
         String pin = "1111";
-
+        CountryItem country;
         UsersProfileModel body = new UsersProfileModel()
                 .setEmail(email)
                 .setMobile(phone)
-                .setCitizenshipCountry(country.getCode())
                 .setPassword(password)
                 .setPin(pin)
                 .setLogin("akjsdklkv")
                 .setFirstName("Hello1")
                 .setLastName("World1");
+
+        if (isAustralian) {
+            country = new CountryItem();
+            country.setName("Australia");
+            body.setCitizenshipCountry("AU").setCitizenshipState("CX");
+        } else {
+            country = CommonFunctions.getRandomCountryByCryptoRestrictions(false);
+            body.setCitizenshipCountry(country.getCode());
+        }
         //create user by createUser and PUT data to it
         createUser()
                 .body(body)

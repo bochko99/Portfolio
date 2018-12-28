@@ -80,20 +80,20 @@ public class InvoiceBodyModel {
         return this;
     }
 
-    public String getbPayBiller() {
+    public String getBPayBiller() {
         return bPayBiller;
     }
 
-    public InvoiceBodyModel setbPayBiller(String bPayBiller) {
+    public InvoiceBodyModel setBPayBiller(String bPayBiller) {
         this.bPayBiller = bPayBiller;
         return this;
     }
 
-    public String getbPayRef() {
+    public String getBPayRef() {
         return bPayRef;
     }
 
-    public InvoiceBodyModel setbPayRef(String bPayRef) {
+    public InvoiceBodyModel setBPayRef(String bPayRef) {
         this.bPayRef = bPayRef;
         return this;
     }
