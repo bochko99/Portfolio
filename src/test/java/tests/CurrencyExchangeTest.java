@@ -54,7 +54,7 @@ public class CurrencyExchangeTest {
     @DisplayName(EndPoints.currencyexchange_transfers_path + " POST")
     public void currencyExchangeTransfers() {
 
-        auth().pathParam("path", "").post(EndPoints.currencyexchange_transfers_path);
+        auth().post(EndPoints.currencyexchange_transfers_path);
 
     }
 
