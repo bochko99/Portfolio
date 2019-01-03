@@ -4,13 +4,14 @@ package pojos.exchange;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class ExchangeOfferReqModel {
 
     @Expose
-    private Long amount;
+    private BigDecimal amount;
     @Expose
     private String amountKind;
     @Expose
@@ -18,11 +19,11 @@ public class ExchangeOfferReqModel {
     @Expose
     private String targetCurrencyCode;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public ExchangeOfferReqModel setAmount(Long amount) {
+    public ExchangeOfferReqModel setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

@@ -13,7 +13,10 @@ import rules.FinancialAnnotationRule;
 import utils.EndPoints;
 import utils.Environment;
 
+import java.math.BigDecimal;
+
 import static core.Auth.auth;
+import static core.Currency.*;
 
 
 public class BankWithdrawalTest {
@@ -62,7 +65,7 @@ public class BankWithdrawalTest {
     @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
     public void testBanksRates() {
 
-        auth().queryParam("currency", "BTC").get(EndPoints.bankwithdrawals_rates_rubank);
+        auth().queryParam("currency", BTC).get(EndPoints.bankwithdrawals_rates_rubank);
 
     }
 
@@ -71,8 +74,8 @@ public class BankWithdrawalTest {
     public void createOffer() {
 
         BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-                .setAmount(1.0)
-                .setCurrency("BTC");
+                .setAmount(new BigDecimal(1.0))
+                .setCurrency(BTC);
         auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank);
 
     }
@@ -83,8 +86,8 @@ public class BankWithdrawalTest {
     public void createTransfer() {
 
         BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-                .setAmount(1.0)
-                .setCurrency("BTC");
+                .setAmount(new BigDecimal(1.0))
+                .setCurrency(BTC);
         BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
                 .as(BankWithdrawalRespOffer.class);
 

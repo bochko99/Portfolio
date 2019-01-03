@@ -4,20 +4,22 @@ package pojos.deposit;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
+import java.math.BigDecimal;
+
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class Payment {
 
     @Expose
-    private Double amount;
+    private BigDecimal amount;
     @Expose
     private String currency;
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Payment setAmount(Double amount) {
+    public Payment setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

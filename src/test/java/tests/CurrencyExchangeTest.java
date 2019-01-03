@@ -9,7 +9,11 @@ import rules.FinancialAnnotationRule;
 import utils.EndPoints;
 import utils.Environment;
 
+import java.math.BigDecimal;
+
 import static core.Auth.auth;
+import static core.Currency.*;
+
 
 public class CurrencyExchangeTest {
 
@@ -30,31 +34,31 @@ public class CurrencyExchangeTest {
     }
 
     @Test
-    @DisplayName(EndPoints.currencyexchange_directions_path + " GET")
+    @DisplayName(EndPoints.currencyexchange_directions + " GET")
     public void currencyExchangeDirection() {
 
-        auth().get(EndPoints.currencyexchange_directions_path);
+        auth().get(EndPoints.currencyexchange_directions);
 
     }
 
     @Test
-    @DisplayName(EndPoints.currencyexchange_offers_path + " POST")
+    @DisplayName(EndPoints.currencyexchange_offers + " POST")
     public void currencyExchangeOffers() {
         ExchangeOfferReqModel model = new ExchangeOfferReqModel()
-                .setAmount(0L)
+                .setAmount(new BigDecimal(0.0))
                 .setAmountKind("SourceAmount")
-                .setSourceCurrencyCode("BTC")
-                .setTargetCurrencyCode("ETH");
+                .setSourceCurrencyCode(ETH)
+                .setTargetCurrencyCode(BTC);
 
-        auth().body(model).post(EndPoints.currencyexchange_offers_path);
+        auth().body(model).post(EndPoints.currencyexchange_offers);
 
     }
 
     @Test
-    @DisplayName(EndPoints.currencyexchange_transfers_path + " POST")
+    @DisplayName(EndPoints.currencyexchange_transfers + " POST")
     public void currencyExchangeTransfers() {
 
-        auth().post(EndPoints.currencyexchange_transfers_path);
+        auth().post(EndPoints.currencyexchange_transfers);
 
     }
 
