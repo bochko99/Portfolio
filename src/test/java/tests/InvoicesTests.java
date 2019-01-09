@@ -302,6 +302,7 @@ public class InvoicesTests {
     }
 
     @Test
+    @Financial
     @DisplayName("Exchange")
     public void testExchange() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Generated("net.hexar.json2pojo")
@@ -15,7 +16,7 @@ public class FundswalletModel {
     @Expose
     private List<String> allowOperations;
     @Expose
-    private Long amount;
+    private BigDecimal amount;
     @Expose
     private String color;
     @Expose
@@ -48,11 +49,11 @@ public class FundswalletModel {
         return this;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public FundswalletModel setAmount(Long amount) {
+    public FundswalletModel setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

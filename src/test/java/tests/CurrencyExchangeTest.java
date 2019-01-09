@@ -1,5 +1,6 @@
 package tests;
 
+import annotations.Financial;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
@@ -38,6 +39,7 @@ public class CurrencyExchangeTest {
     }
 
     @Test
+    @Financial
     @DisplayName(EndPoints.currencyexchange_offers_path + " POST")
     public void currencyExchangeOffers() {
         ExchangeOfferReqModel model = new ExchangeOfferReqModel()
@@ -51,6 +53,7 @@ public class CurrencyExchangeTest {
     }
 
     @Test
+    @Financial
     @DisplayName(EndPoints.currencyexchange_transfers_path + " POST")
     public void currencyExchangeTransfers() {
 
