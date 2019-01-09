@@ -1,5 +1,6 @@
 package tests;
 
+import annotations.Financial;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;

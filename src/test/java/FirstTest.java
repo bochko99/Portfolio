@@ -1,10 +1,19 @@
+import core.Auth;
 import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.LoginModel;
+import pojos.bitgo.BitgoReqModel;
+import pojos.fundsWallet.FundswalletModel;
+import utils.Constants;
 import utils.EndPoints;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 import static core.Auth.auth;
 import static core.Currency.BTC;
@@ -18,7 +27,6 @@ public class FirstTest {
         RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
         RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
     }
-
 
     @Test
     @DisplayName(EndPoints.users_login + " POST")
@@ -75,6 +83,46 @@ public class FirstTest {
         auth().get(EndPoints.transfers_frequent);
     }
 
+    @Test
+    @DisplayName(EndPoints.transfers_recent + " GET")
+    public void testGetTransfersRecent() {
+        auth().get(EndPoints.transfers_recent);
+    }
+
+    @Test
+    @DisplayName(EndPoints.bitgo + " POST")
+    public void testPostBitgo() {
+        BigDecimal amount = new BigDecimal(1000);
+        FundswalletModel[] wallets = auth("70000026914", "1234567")
+                .get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        FundswalletModel oldBitGoWallet = Stream.of(wallets)
+                .filter(w -> "bitgo".equalsIgnoreCase(w.getType()))
+                .findFirst().orElse(null);
+
+        Assert.assertNotNull("Wallet with type bitgo not found", oldBitGoWallet);
+
+        BitgoReqModel model = new BitgoReqModel()
+                .setAmount(amount)
+                .setCurrency(oldBitGoWallet.getCurrency())
+                .setToAddress(oldBitGoWallet.getDescription())
+                .setIdempotentId(UUID.randomUUID().toString());
+
+        auth().basePath(Constants.CALLBACK).body(model).post(EndPoints.bitgo);
+
+        FundswalletModel[] newWallets = auth()
+                .get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        Auth.flush();
+
+        FundswalletModel newBitGoWallet = Stream.of(newWallets)
+                .filter(w -> w.getCurrency().equalsIgnoreCase(oldBitGoWallet.getCurrency()))
+                .findFirst().orElse(null);
+
+        Assert.assertNotNull("Cannot find wallet after transaction", newBitGoWallet);
+
+        BigDecimal expectedResult = oldBitGoWallet.getAmount().add(amount).stripTrailingZeros();
+        Assert.assertEquals("Wallet sum updated incorrectly", expectedResult, newBitGoWallet.getAmount().stripTrailingZeros());
+
+    }
 
 
 }

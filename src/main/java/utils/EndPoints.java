@@ -108,6 +108,7 @@ public class EndPoints {
 
   //transfers
   public static final String transfers_frequent = "/transfers/frequent";
+  public static final String transfers_recent = "/transfers/recent";
 
   // users
   public static final String users_profile = "/users/profile";
@@ -140,4 +141,6 @@ public class EndPoints {
   public static final String testers_mobile = "/testers/mobile";
   public static final String testers_email = "/testers/email";
 
+  //CALLBACK
+    public static final String bitgo = "/bitgo";
 }

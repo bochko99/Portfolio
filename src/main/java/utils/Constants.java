@@ -8,6 +8,7 @@ public class Constants {
 
     public static final String MOBILE = "/mobile/1.0";
     public static final String MANAGEMENT = "/management";
+    public static final String CALLBACK = "/callback";
 
     public static final String X_AUTHORIZATION = "X-Authorization";
     public static final String X_USER_ID = "X-UserId";

@@ -70,6 +70,7 @@ public class BankWithdrawalTest {
     }
 
     @Test
+    @Financial
     @DisplayName("Create Bank Offer")
     public void createOffer() {
 

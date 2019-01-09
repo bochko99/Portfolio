@@ -242,7 +242,7 @@ public class InvoicesTests {
 
     @Financial
     @Test
-    @DisplayName("Send crypto by address : BTC")
+    @DisplayName("Send crypto by userID : BTC")
     public void testSendCryptoByUserIDBtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(0.00001f)
@@ -254,7 +254,7 @@ public class InvoicesTests {
 
     @Financial
     @Test
-    @DisplayName("Send crypto by address : ETH")
+    @DisplayName("Send crypto by userID : ETH")
     public void testSendCryptoByUserIDEth() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(0.00001f)
@@ -266,7 +266,7 @@ public class InvoicesTests {
 
     @Financial
     @Test
-    @DisplayName("Send crypto by address : LTC")
+    @DisplayName("Send crypto by userID : LTC")
     public void testSendCryptoByUserIDLtc() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(0.00001f)
@@ -278,7 +278,8 @@ public class InvoicesTests {
 
     @Ignore
     @Test
-    @DisplayName(EndPoints.invoices_id + " PUT")
+    @DisplayName("Bank transfer: IBAN")
+    //TODO
     public void testPutInvoicesId() {
         String iban = "gb77barc20201530093459";
         String code = given().pathParam("iban", iban).get(EndPoints.invoices_iban_banks_iban).then().extract().body().jsonPath().getString("code");
@@ -302,6 +303,7 @@ public class InvoicesTests {
     }
 
     @Test
+    @Financial
     @DisplayName("Exchange")
     public void testExchange() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
