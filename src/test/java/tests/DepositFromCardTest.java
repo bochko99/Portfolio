@@ -2,38 +2,18 @@ package tests;
 
 import annotations.Financial;
 import core.Auth;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
-import org.junit.*;
+import org.junit.Test;
 import pojos.deposit.DepositReqOfferModel;
 import pojos.deposit.DepositReqTransferModel;
 import pojos.deposit.DepositRespOfferModel;
 import pojos.deposit.Order;
-import rules.FinancialAnnotationRule;
 import utils.EndPoints;
-import utils.Environment;
 
 import static core.Auth.auth;
 
-public class DepositFromCardTest {
-
-    @Rule
-    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
-
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
-
-    @Before
-    public void checkSkipNeed() {
-        Assume.assumeTrue(annotation.getAnnotation() == null
-                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
-    }
+public class DepositFromCardTest extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.depositfromcard_limits + " GET")

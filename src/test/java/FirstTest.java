@@ -1,13 +1,11 @@
 import core.Auth;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.LoginModel;
 import pojos.bitgo.BitgoReqModel;
 import pojos.fundsWallet.FundswalletModel;
+import tests.BaseTest;
 import utils.Constants;
 import utils.EndPoints;
 
@@ -20,13 +18,7 @@ import static core.Currency.BTC;
 import static io.restassured.RestAssured.given;
 
 
-public class FirstTest {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class FirstTest extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.users_login + " POST")

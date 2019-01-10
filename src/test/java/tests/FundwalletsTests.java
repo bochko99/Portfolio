@@ -1,10 +1,7 @@
 package tests;
 
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import pojos.fundsWallet.FundswalletModel;
@@ -13,13 +10,7 @@ import utils.EndPoints;
 import static core.Auth.auth;
 import static core.Currency.BTC;
 
-public class FundwalletsTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class FundwalletsTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.fundswallets + " GET")

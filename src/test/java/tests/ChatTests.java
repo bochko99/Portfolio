@@ -1,9 +1,6 @@
 package tests;
 
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.chat.ChatCreateMessageModel;
 import utils.EndPoints;
@@ -13,13 +10,7 @@ import java.util.Date;
 
 import static core.Auth.auth;
 
-public class ChatTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class ChatTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.chat_messages + " GET")

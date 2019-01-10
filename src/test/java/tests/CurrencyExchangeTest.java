@@ -1,34 +1,14 @@
 package tests;
 
 import annotations.Financial;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import org.junit.*;
+import org.junit.Test;
 import pojos.exchange.ExchangeOfferReqModel;
-import rules.FinancialAnnotationRule;
 import utils.EndPoints;
-import utils.Environment;
 
 import static core.Auth.auth;
 
-public class CurrencyExchangeTest {
-
-    @Rule
-    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
-
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
-
-    @Before
-    public void checkSkipNeed() {
-        Assume.assumeTrue(annotation.getAnnotation() == null
-                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
-    }
+public class CurrencyExchangeTest extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.currencyexchange_directions_path + " GET")
