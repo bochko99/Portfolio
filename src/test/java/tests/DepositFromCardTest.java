@@ -2,28 +2,26 @@ package tests;
 
 import annotations.Financial;
 import core.Auth;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
+import org.junit.Test;
 import org.junit.*;
 import pojos.LoginModel;
 import pojos.deposit.DepositReqOfferModel;
 import pojos.deposit.DepositReqTransferModel;
 import pojos.deposit.DepositRespOfferModel;
 import pojos.deposit.Order;
-import rules.FinancialAnnotationRule;
 import utils.EndPoints;
-import utils.Environment;
 
 import java.math.BigDecimal;
 
 import static core.Auth.auth;
-
 import static core.Currency.*;
 import static io.restassured.RestAssured.given;
+public class DepositFromCardTest extends BaseTest {
 
-public class DepositFromCardTest {
+
+
 
     @Rule
     public FinancialAnnotationRule annotation = new FinancialAnnotationRule();

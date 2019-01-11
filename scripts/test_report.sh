@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-TARGET_FOLDER="$(date '+%d-%m-%Y_%H:%M:%S')"
+TARGET_FOLDER="$(date '+%Y-%m-%d_%H:%M:%S')"
 cd ~/IdeaProjects/cryptApi/
 gradle clean test
 gradle allureReport

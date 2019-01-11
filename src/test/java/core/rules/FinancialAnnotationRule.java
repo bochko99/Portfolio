@@ -1,4 +1,4 @@
-package rules;
+package core.rules;
 
 import annotations.Financial;
 import org.junit.rules.TestWatcher;

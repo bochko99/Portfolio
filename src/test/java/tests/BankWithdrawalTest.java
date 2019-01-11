@@ -2,16 +2,12 @@ package tests;
 
 
 import annotations.Financial;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import org.junit.*;
+import org.junit.Test;
 import pojos.bankwithdrawal.BankWithdrawalReqOffer;
 import pojos.bankwithdrawal.BankWithdrawalReqTransfer;
 import pojos.bankwithdrawal.BankWithdrawalRespOffer;
-import rules.FinancialAnnotationRule;
 import utils.EndPoints;
-import utils.Environment;
 
 import java.math.BigDecimal;
 
@@ -19,23 +15,7 @@ import static core.Auth.auth;
 import static core.Currency.*;
 
 
-public class BankWithdrawalTest {
-
-    @Rule
-    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
-
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
-
-    @Before
-    public void checkSkipNeed() {
-        Assume.assumeTrue(annotation.getAnnotation() == null
-                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
-    }
+public class BankWithdrawalTest extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.bankwithdrawals_banks + " GET")

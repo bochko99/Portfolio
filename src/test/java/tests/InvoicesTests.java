@@ -1,20 +1,17 @@
 package tests;
 
 import annotations.Financial;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.hamcrest.Matchers;
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
 import pojos.fundsWallet.FundswalletModel;
 import pojos.invoices.InvoiceBodyModel;
 import pojos.invoices.InvoiceFundsWalletModel;
 import pojos.invoices.InvoicesPaymentModel;
 import pojos.users.UsersProfileResponseModel;
-import rules.FinancialAnnotationRule;
 import utils.EndPoints;
-import utils.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,23 +22,7 @@ import static core.Currency.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class InvoicesTests {
-
-    @Rule
-    public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
-
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
-
-    @Before
-    public void checkSkipNeed() {
-        Assume.assumeTrue(annotation.getAnnotation() == null
-                || "true".equalsIgnoreCase(Environment.FINANCE_OPERATIONS_ALLOWED));
-    }
+public class InvoicesTests extends BaseTest {
 
     public static Pair p(String currency, Float amount) {
         return new Pair(currency, amount);
@@ -106,7 +87,7 @@ public class InvoicesTests {
                 .get(EndPoints.invoices_mobile_country_providers)
                 .then().body("size()", greaterThan(0));
     }
-    
+
     @Test
     @DisplayName(EndPoints.invoices_voucher_services + " GET")
     public void testGetInvoicesVoucherServices() {

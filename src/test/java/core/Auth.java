@@ -17,8 +17,8 @@ import static io.restassured.RestAssured.given;
 
 public class Auth {
 
-    private static String defaultLogin = Environment.BASE_LOGIN;
-    private static String defaultPassword = Environment.BASE_PASSWORD;
+    private static String defaultLogin = Environment.CREDENTIALS.get("default").getLogin();
+    private static String defaultPassword = Environment.CREDENTIALS.get("default").getPassword();
     private static String X_AUTH = "";
     private static String X_USER_ID = "";
 

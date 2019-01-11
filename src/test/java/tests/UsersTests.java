@@ -2,12 +2,9 @@ package tests;
 
 import core.Auth;
 import core.CommonFunctions;
-import core.SpecStorage;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import pojos.CountryItem;
@@ -26,13 +23,7 @@ import static core.Auth.createUser;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
-public class UsersTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class UsersTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.users_profile + " GET")
