@@ -26,7 +26,7 @@ public class CurrencyExchangeTest extends BaseTest {
     @DisplayName(EndPoints.currencyexchange_offers + " POST")
     public void currencyExchangeOffers() {
         ExchangeOfferReqModel model = new ExchangeOfferReqModel()
-                .setAmount(new BigDecimal(0.0))
+                .setAmount(BigDecimal.ZERO)
                 .setAmountKind("SourceAmount")
                 .setSourceCurrencyCode(ETH)
                 .setTargetCurrencyCode(BTC);
