@@ -17,6 +17,7 @@ import utils.ExcelWriter;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
@@ -99,6 +100,25 @@ public class UsersTests extends BaseTest {
     @DisplayName(EndPoints.users_profile_loyalty + " GET")
     public void testGetUsersProfileLoyalty() {
         auth().get(EndPoints.users_profile_loyalty);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_number + " GET")
+    public void testGetUsersNumber() {
+        given().pathParam("number","4269550783").get(EndPoints.users_number);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_profile_check + " POST")
+    public void testPostUsersProfileCheck() {
+        UsersProfileCheckModel model = new UsersProfileCheckModel().setEmail("oldtest77@gmail.com");
+        given().body(model).post(EndPoints.users_profile_check);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_logins + " POST")
+    public void testPostUsersLogins() {
+        auth().body(new String[]{"70000000001"}).post(EndPoints.users_logins);
     }
 
     @Test
