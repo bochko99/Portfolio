@@ -31,11 +31,6 @@ public class DepositFromCardTest extends BaseTest {
     Auth.flush();
   }
 
-  @Test
-  public void Test() {
-    given().body(new LoginModel().setLogin("79854430122").setPassword("12re8876").setCode("33948")).post(EndPoints.users_login_verify);
-  }
-
   @Before
   public void checkSkipNeed() {
     Assume.assumeTrue(annotation.getAnnotation() == null
