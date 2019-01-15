@@ -11,10 +11,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.*;
 import pojos.LoginModel;
-import pojos.deposit.DepositReqOfferModel;
-import pojos.deposit.DepositReqTransferModel;
-import pojos.deposit.DepositRespOfferModel;
-import pojos.deposit.Order;
+import pojos.deposit.*;
 import utils.EndPoints;
 import utils.Environment;
 
@@ -64,7 +61,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create new Offer: BTC")
   public void testCreateOfferBTC() {
 
-    createOffer(BTC);
+    createOffer(BTC, new BigDecimal(0.02));
 
   }
 
@@ -73,7 +70,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create new Offer: LTC")
   public void testCreateOfferLTC() {
 
-    createOffer(LTC);
+    createOffer(LTC, new BigDecimal(0.253));
 
   }
 
@@ -82,7 +79,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create new Offer: ETH")
   public void testCreateOfferETH() {
 
-    createOffer(ETH);
+    createOffer(ETH, new BigDecimal(0.02));
 
   }
 
@@ -91,17 +88,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create transfer BTC")
   public void testCreateTransferBTC() {
 
-    DepositRespOfferModel offer = createOffer(BTC);
-
-    DepositReqTransferModel transfer = new DepositReqTransferModel()
-            .setOfferId(offer.getId())
-            .setPan("4200000000000000")
-            .setHolder("TEST TEST")
-            .setExpiredAt("202312")
-            .setCvv("369");
-
-    auth().body(transfer).post(EndPoints.depositfromcard_transfers);
-
+    createTransfer(BTC, new BigDecimal(0.002));
 
   }
 
@@ -110,17 +97,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create transfer LTC")
   public void testCreateTransferLTC() {
 
-    DepositRespOfferModel offer = createOffer(LTC);
-
-    DepositReqTransferModel transfer = new DepositReqTransferModel()
-            .setOfferId(offer.getId())
-            .setPan("4200000000000000")
-            .setHolder("TEST TEST")
-            .setExpiredAt("202312")
-            .setCvv("369");
-
-    auth().body(transfer).post(EndPoints.depositfromcard_transfers);
-
+    createTransfer(LTC, new BigDecimal(0.26));
 
   }
 
@@ -129,17 +106,7 @@ public class DepositFromCardTest extends BaseTest {
   @DisplayName("Create transfer ETH")
   public void testCreateTransferETH() {
 
-    DepositRespOfferModel offer = createOffer(ETH);
-
-    DepositReqTransferModel transfer = new DepositReqTransferModel()
-            .setOfferId(offer.getId())
-            .setPan("4200000000000000")
-            .setHolder("TEST TEST")
-            .setExpiredAt("202312")
-            .setCvv("369");
-
-    auth().body(transfer).post(EndPoints.depositfromcard_transfers);
-
+    createTransfer(ETH, new BigDecimal(0.02));
 
   }
 
@@ -147,7 +114,7 @@ public class DepositFromCardTest extends BaseTest {
   @Credentials(type = "au")
   @DisplayName("Create redirect")
   public void createRedirect() {
-    DepositRespOfferModel offer = createOffer(BTC);
+    DepositRespOfferModel offer = createOffer(BTC, new BigDecimal(0.002));
 
     DepositReqTransferModel transfer = new DepositReqTransferModel()
             .setOfferId(offer.getId())
@@ -158,17 +125,15 @@ public class DepositFromCardTest extends BaseTest {
     String id = auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
             .body("status", Matchers.equalTo("Redirect"))
             .extract().body().jsonPath().getString("id");
-    //DepositRespTransferModel mod = auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
-    auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
-//        Auth.flush();
 
+    auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
 
   }
 
-  private DepositRespOfferModel createOffer(String currency) {
+  private DepositRespOfferModel createOffer(String currency, BigDecimal amount) {
 
     Order order = new Order()
-            .setAmount(new BigDecimal("0.3"))
+            .setAmount(amount)
             .setCurrency(currency);
     DepositReqOfferModel model = new DepositReqOfferModel()
             .setOrder(order);
@@ -177,6 +142,19 @@ public class DepositFromCardTest extends BaseTest {
 
   }
 
+  private DepositRespTransferModel createTransfer(String currency, BigDecimal amount){
 
+    DepositRespOfferModel offer = createOffer(currency, amount);
+
+    DepositReqTransferModel transfer = new DepositReqTransferModel()
+            .setOfferId(offer.getId())
+            .setPan("4200000000000000")
+            .setHolder("TEST TEST")
+            .setExpiredAt("202312")
+            .setCvv("369");
+
+    return auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
+
+  }
 
 }
