@@ -17,71 +17,81 @@ import static core.Currency.*;
 
 public class BankWithdrawalTest extends BaseTest {
 
-    @Test
-    @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
-    public void testBanks() {
+  @Test
+  @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
+  public void testBanks() {
 
-        auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
+    auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
 
-    }
+  }
 
-    @Test
-    @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
-    public void testBanksLimitsRub() {
+  @Test
+  @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
+  public void testBanksLimitsRub() {
 
-        auth().get(EndPoints.bankwithdrawals_limits_rubank);
+    auth().get(EndPoints.bankwithdrawals_limits_rubank);
 
-    }
+  }
 
-    @Test
-    @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
-    public void testBanksLimitsCountries() {
+  @Test
+  @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
+  public void testBanksLimitsCountries() {
 
-        auth().get(EndPoints.bankwithdrawals_limits_countries);
+    auth().get(EndPoints.bankwithdrawals_limits_countries);
 
-    }
+  }
 
-    @Test
-    @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
-    public void testBanksRates() {
+  @Test
+  @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
+  public void testBanksRates() {
 
-        auth().queryParam("currency", BTC).get(EndPoints.bankwithdrawals_rates_rubank);
+    auth().queryParam("currency", BTC).get(EndPoints.bankwithdrawals_rates_rubank);
 
-    }
+  }
 
-    @Test
-    @Financial
-    @DisplayName("Create Bank Offer")
-    public void createOffer() {
+  @Test
+  @Financial
+  @DisplayName("Create Bank Offer")
+  public void createOfferTest() {
 
-        BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-                .setAmount(new BigDecimal(1.0))
-                .setCurrency(BTC);
-        auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank);
+    createOffer();
 
-    }
+  }
 
-    @Test
-    @Financial
-    @DisplayName("Create Bank Transfer")
-    public void createTransfer() {
+  @Test
+  @Financial
+  @DisplayName("Create Bank Transfer")
+  public void createTransferTest() {
 
-        BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
-                .setAmount(new BigDecimal(1.0))
-                .setCurrency(BTC);
-        BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
-                .as(BankWithdrawalRespOffer.class);
+    BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
+            .setAmount(new BigDecimal(1.0))
+            .setCurrency(BTC);
+    BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
+            .as(BankWithdrawalRespOffer.class);
 
-        BankWithdrawalReqTransfer transfer = new BankWithdrawalReqTransfer()
-                .setOfferId(offer.getId())
-                .setTransferToMyself(true)
-                .setAccountNumber("40817810123456789012")
-                .setBankCorrAccountNumber("30101810345250000745")
-                .setBic("044525745")
-                .setPayeeFirstName("Тест")
-                .setPayeeMiddleName("Тест")
-                .setPayeeLastName("Тест");
-        auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
+    BankWithdrawalReqTransfer transfer = new BankWithdrawalReqTransfer()
+            .setOfferId(offer.getId())
+            .setTransferToMyself(true)
+            .setAccountNumber("40817810123456789012")
+            .setBankCorrAccountNumber("30101810345250000745")
+            .setBic("044525745")
+            .setPayeeFirstName("Тест")
+            .setPayeeMiddleName("Тест")
+            .setPayeeLastName("Тест");
+    auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
 
-    }
+  }
+
+  public BankWithdrawalRespOffer createOffer() {
+
+    BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
+            .setAmount(new BigDecimal(0.002))
+            .setCurrency(BTC);
+    return auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
+            .as(BankWithdrawalRespOffer.class);
+
+
+  }
+
+
 }

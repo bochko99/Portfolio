@@ -1,5 +1,6 @@
 package tests;
 
+import annotations.Credentials;
 import annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
@@ -26,10 +27,10 @@ public class CurrencyExchangeTest extends BaseTest {
     @DisplayName(EndPoints.currencyexchange_offers + " POST")
     public void currencyExchangeOffers() {
         ExchangeOfferReqModel model = new ExchangeOfferReqModel()
-                .setAmount(BigDecimal.ZERO)
+                .setAmount(new BigDecimal(0.02))
                 .setAmountKind("SourceAmount")
-                .setSourceCurrencyCode(ETH)
-                .setTargetCurrencyCode(BTC);
+                .setSourceCurrencyCode(BTC)
+                .setTargetCurrencyCode(ETH);
 
         auth().body(model).post(EndPoints.currencyexchange_offers);
 
