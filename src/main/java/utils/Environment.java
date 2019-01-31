@@ -21,6 +21,7 @@ public class Environment {
     }
 
     public static final String TARGET = props.getProperty("target", "BETA");
+    public static final String KYC = "kyc.crypterium.io";
     public static final String FINANCE_OPERATIONS_ALLOWED = props.getProperty("allowFinanceOperations", "false");
     public static final String BASE_PATH = props.getProperty("basePath", Constants.MOBILE);
     public static final String BASE_URL = props.getProperty("baseUrl", Constants.BETA);

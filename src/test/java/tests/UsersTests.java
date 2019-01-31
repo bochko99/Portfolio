@@ -17,9 +17,7 @@ import utils.EndPoints;
 import utils.Environment;
 import utils.ExcelWriter;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
@@ -49,27 +47,26 @@ public class UsersTests {
     @Test
     @DisplayName("User registration")
     public void testRegisterUser() {
-        String id = registerUser(true);
+        String id = registerUser(false);
         Assert.assertNotNull(id);
     }
 
     @Test
     @DisplayName(("KYC 1 Completion"))
     public void testKYC1Completion() {
-        String id = registerUser(true);
+        String id = registerUser(false);
 
         UsersProfileKyc1Model model = new UsersProfileKyc1Model()
-                .setIdentificationDocument("Passport")
-                .setIdentificationDocumentNumber("123456")
-                .setIdentificationDocumentIssuedCountry("RU")
-                .setIdentificationDocumentIssuedBy("Authority")
-                .setIdentificationDocumentIssuedDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
-                .setIdentificationDocumentUrls(Collections.singletonList("https://s3-us-west-1.amazonaws.com/crypterium.mobile.upload.beta2/KYC1/DEBD6A60-6326-450D-AB5C-D0A453439FAF.jpg"))
-                .setIdentificationDocumentSelfieUrls(Collections.singletonList("https://s3-us-west-1.amazonaws.com/crypterium.mobile.upload.beta2/KYC1/8876977C-6FE1-44C6-B9EE-2B698E55C2BA.jpg"));
+                .setType(UsersProfileKyc1Model.Type.DRIVER_LICENSE)
+                .setFrontsideUrl("https://cdn.pbrd.co/images/HYxoyol.jpg")
+                .setSelfieUrl("https://cdn.pbrd.co/images/HYwn7de.jpg");
 
-        auth().body(model).put(EndPoints.users_profile_kyc1);
-        auth().post(EndPoints.users_profile_kyc1_verify);
-        auth().get(EndPoints.users_profile_kyc1).then().body("status", equalToIgnoringCase("SUBMITTED"));
+        given()
+                .baseUri(Environment.KYC)
+                .body(model)
+                .header(Constants.X_USER_ID, id)
+            .when()
+                .post(EndPoints.identity);
         Auth.flush();
     }
 
@@ -162,7 +159,7 @@ public class UsersTests {
             body.setCitizenshipCountry("AU").setCitizenshipState("CX");
         } else {
             country = CommonFunctions.getRandomCountryByCryptoRestrictions(false);
-            body.setCitizenshipCountry(country.getCode());
+            body.setCitizenshipCountry("RU");
         }
         //create user by createUser and PUT data to it
         createUser()
@@ -176,12 +173,12 @@ public class UsersTests {
                 .body(new UsersProfileMobileconfirmModel()
                         .setCode(phoneConfirmationCode)
                         .setMobile(phone))
-                .post(EndPoints.users_profile_kyc0_mobile_confirm);
+                .post(EndPoints.users_profile_mobile_confirm);
         String userId = given()
                 .body(new UsersProfileEmailConfirmModel()
                         .setCode(emailConfirmationCode)
                         .setEmail(email))
-                .post(EndPoints.users_profile_kyc0_email_confirm).then().extract().header(Constants.X_USER_ID);
+                .post(EndPoints.users_profile_email_confirm).then().extract().header(Constants.X_USER_ID);
         auth()
                 .body((new UsersProfilePinVerifyModel()
                         .setPin(pin)))

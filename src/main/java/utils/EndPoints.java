@@ -143,4 +143,7 @@ public class EndPoints {
 
   //CALLBACK
     public static final String bitgo = "/bitgo";
+
+    //KYC
+    public static final String identity = "/identity";
 }
