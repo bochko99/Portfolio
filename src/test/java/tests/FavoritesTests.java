@@ -1,9 +1,6 @@
 package tests;
 
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.favorite.FavoritesInvoiceModel;
 import pojos.favorite.FavoritesQuoteModel;
@@ -20,13 +17,7 @@ import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class FavoritesTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class FavoritesTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.favorites_invoices + "POST -> GET -> DELETE")
@@ -52,14 +43,14 @@ public class FavoritesTests {
         //get
         auth()
                 .get(EndPoints.favorites_quotes)
-            .then()
+                .then()
                 .body("$", hasItem(hasEntry("currency", currency)));
         //delete
         auth().pathParam("currency", currency).delete(EndPoints.favorites_quotes_currency);
 
         auth()
                 .get(EndPoints.favorites_quotes)
-            .then()
+                .then()
                 .body("$", not(hasItem(hasEntry("currency", currency))));
 
     }

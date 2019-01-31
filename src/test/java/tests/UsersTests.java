@@ -2,12 +2,9 @@ package tests;
 
 import core.Auth;
 import core.CommonFunctions;
-import core.SpecStorage;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import pojos.CountryItem;
@@ -18,19 +15,15 @@ import utils.Environment;
 import utils.ExcelWriter;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
-public class UsersTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class UsersTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.users_profile + " GET")
@@ -47,7 +40,7 @@ public class UsersTests {
     @Test
     @DisplayName("User registration")
     public void testRegisterUser() {
-        String id = registerUser(false);
+        String id = registerUser(true);
         Assert.assertNotNull(id);
     }
 
@@ -105,6 +98,25 @@ public class UsersTests {
     @DisplayName(EndPoints.users_profile_loyalty + " GET")
     public void testGetUsersProfileLoyalty() {
         auth().get(EndPoints.users_profile_loyalty);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_number + " GET")
+    public void testGetUsersNumber() {
+        given().pathParam("number","4269550783").get(EndPoints.users_number);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_profile_check + " POST")
+    public void testPostUsersProfileCheck() {
+        UsersProfileCheckModel model = new UsersProfileCheckModel().setEmail("oldtest77@gmail.com");
+        given().body(model).post(EndPoints.users_profile_check);
+    }
+
+    @Test
+    @DisplayName(EndPoints.users_logins + " POST")
+    public void testPostUsersLogins() {
+        auth().body(new String[]{"70000000001"}).post(EndPoints.users_logins);
     }
 
     @Test

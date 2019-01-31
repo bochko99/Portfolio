@@ -1,9 +1,6 @@
 package tests;
 
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojos.operations.OperationModel;
 import pojos.operations.OperationsCommentModel;
@@ -15,13 +12,7 @@ import java.util.Date;
 import static core.Auth.auth;
 import static org.hamcrest.Matchers.equalTo;
 
-public class OperationsTests {
-
-    @BeforeClass
-    public static void init() {
-        RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
-        RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-    }
+public class OperationsTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.operations + " GET")

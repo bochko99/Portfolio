@@ -1,8 +1,16 @@
 package tests;
 
+import annotations.Credentials;
+import annotations.Financial;
 import core.Auth;
+import core.SpecStorage;
+import core.rules.FinancialAnnotationRule;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.junit.*;
+import pojos.LoginModel;
+import pojos.deposit.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 import pojos.deposit.DepositReqOfferModel;
@@ -17,86 +25,126 @@ import static core.Auth.auth;
 
 public class DepositFromCardTest extends BaseTest {
 
-    @Test
-    @DisplayName(EndPoints.depositfromcard_limits + " GET")
-    public void testDepositFromCardLimits() {
-        auth().get(EndPoints.depositfromcard_limits);
-    }
+  @Test
+  @Credentials(type = "au")
+  @DisplayName(EndPoints.depositfromcard_limits + " GET")
+  public void testDepositFromCardLimits() {
+    auth().get(EndPoints.depositfromcard_limits);
+  }
 
-    @Test
-    @DisplayName(EndPoints.depositfromcard_success + " GET")
-    public void testDepositFromCardSuccess() {
-        auth().get(EndPoints.depositfromcard_success);
-    }
+  @Test
+  @Credentials(type = "au")
+  @DisplayName(EndPoints.depositfromcard_success + " GET")
+  public void testDepositFromCardSuccess() {
+    auth().get(EndPoints.depositfromcard_success);
+  }
 
-    @Test
-    @DisplayName(EndPoints.depositfromcard_failed + " GET")
-    public void testDepositFromCardFailed() {
-        auth().get(EndPoints.depositfromcard_failed);
-    }
+  @Test
+  @Credentials(type = "au")
+  @DisplayName(EndPoints.depositfromcard_failed + " GET")
+  public void testDepositFromCardFailed() {
+    auth().get(EndPoints.depositfromcard_failed);
+  }
 
-    @Test
-    @DisplayName("Create new Offer")
-    public void testCreateOffer() {
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create new Offer: BTC")
+  public void testCreateOfferBTC() {
 
-        createOffer();
+    createOffer(BTC, new BigDecimal(0.02));
 
-    }
+  }
 
-    @Test
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create new Offer: LTC")
+  public void testCreateOfferLTC() {
 
-    @DisplayName("Create transfer")
-    public void testCreateTransfer() {
+    createOffer(LTC, new BigDecimal(0.253));
 
-        DepositRespOfferModel offer = createOffer();
+  }
 
-        DepositReqTransferModel transfer = new DepositReqTransferModel()
-                .setOfferId(offer.getId())
-                .setPan("4200000000000000")
-                .setHolder("TEST TEST")
-                .setExpiredAt("202312")
-                .setCvv("369");
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create new Offer: ETH")
+  public void testCreateOfferETH() {
 
-        auth().body(transfer).post(EndPoints.depositfromcard_transfers);
+    createOffer(ETH, new BigDecimal(0.02));
 
+  }
 
-    }
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create transfer BTC")
+  public void testCreateTransferBTC() {
 
-    @Test
-    @DisplayName("Create redirect")
-    public void createRedirect() {
-        DepositRespOfferModel offer = createOffer();
+    createTransfer(BTC, new BigDecimal(0.002));
 
-        DepositReqTransferModel transfer = new DepositReqTransferModel()
-                .setOfferId(offer.getId())
-                .setPan("4711100000000000")
-                .setHolder("TEST TEST")
-                .setExpiredAt("202312")
-                .setCvv("369");
-        String id = auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
-                .body("status", Matchers.equalTo("Redirect"))
-                .extract().body().jsonPath().getString("id");
-        //DepositRespTransferModel mod = auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
-        auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
-//        Auth.flush();
+  }
 
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create transfer LTC")
+  public void testCreateTransferLTC() {
 
-    }
-    @AfterClass
-    public static void stop(){
-        Auth.flush();
-    }
+    createTransfer(LTC, new BigDecimal(0.26));
 
-    public DepositRespOfferModel createOffer(){
+  }
 
-        Order order = new Order()
-                .setAmount(new BigDecimal(0.2))
-                .setCurrency(LTC);
-        DepositReqOfferModel model = new DepositReqOfferModel()
-                .setOrder(order);
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create transfer ETH")
+  public void testCreateTransferETH() {
 
-        return auth().body(model).post(EndPoints.depositfromcard_offers).as(DepositRespOfferModel.class);
+    createTransfer(ETH, new BigDecimal(0.02));
 
-    }
+  }
+
+  @Test
+  @Credentials(type = "au")
+  @DisplayName("Create redirect")
+  public void createRedirect() {
+    DepositRespOfferModel offer = createOffer(BTC, new BigDecimal(0.002));
+
+    DepositReqTransferModel transfer = new DepositReqTransferModel()
+            .setOfferId(offer.getId())
+            .setPan("4711100000000000")
+            .setHolder("TEST TEST")
+            .setExpiredAt("202312")
+            .setCvv("369");
+    String id = auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
+            .body("status", Matchers.equalTo("Redirect"))
+            .extract().body().jsonPath().getString("id");
+
+    auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
+
+  }
+
+  private DepositRespOfferModel createOffer(String currency, BigDecimal amount) {
+
+    Order order = new Order()
+            .setAmount(amount)
+            .setCurrency(currency);
+    DepositReqOfferModel model = new DepositReqOfferModel()
+            .setOrder(order);
+
+    return auth().body(model).post(EndPoints.depositfromcard_offers).as(DepositRespOfferModel.class);
+
+  }
+
+  private DepositRespTransferModel createTransfer(String currency, BigDecimal amount){
+
+    DepositRespOfferModel offer = createOffer(currency, amount);
+
+    DepositReqTransferModel transfer = new DepositReqTransferModel()
+            .setOfferId(offer.getId())
+            .setPan("4200000000000000")
+            .setHolder("TEST TEST")
+            .setExpiredAt("202312")
+            .setCvv("369");
+
+    return auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
+
+  }
 
 }

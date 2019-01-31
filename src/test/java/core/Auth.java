@@ -6,6 +6,7 @@ import io.restassured.specification.RequestSpecification;
 import pojos.LoginModel;
 import pojos.MobileVerification;
 import utils.Constants;
+import utils.CredentialEntry;
 import utils.EndPoints;
 import utils.Environment;
 
@@ -17,10 +18,18 @@ import static io.restassured.RestAssured.given;
 
 public class Auth {
 
-    private static String defaultLogin = Environment.BASE_LOGIN;
-    private static String defaultPassword = Environment.BASE_PASSWORD;
+    private static String defaultLogin;
+    private static String defaultPassword;
     private static String X_AUTH = "";
     private static String X_USER_ID = "";
+
+    static {
+        CredentialEntry defaultEntry = Environment.CREDENTIALS.get("default");
+        if (defaultEntry != null) {
+            defaultLogin = defaultEntry.getLogin();
+            defaultPassword =  defaultEntry.getPassword();
+        }
+    }
 
 
     public Auth() {
