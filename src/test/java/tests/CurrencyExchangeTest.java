@@ -1,7 +1,5 @@
 package tests;
 
-import annotations.Credentials;
-import annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import pojos.exchange.ExchangeOfferReqModel;
@@ -10,7 +8,8 @@ import utils.EndPoints;
 import java.math.BigDecimal;
 
 import static core.Auth.auth;
-import static core.Currency.*;
+import static core.Currency.BTC;
+import static core.Currency.ETH;
 
 
 public class CurrencyExchangeTest extends BaseTest {

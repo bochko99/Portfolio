@@ -12,7 +12,7 @@ import utils.EndPoints;
 import java.math.BigDecimal;
 
 import static core.Auth.auth;
-import static core.Currency.*;
+import static core.Currency.BTC;
 
 
 public class BankWithdrawalTest extends BaseTest {

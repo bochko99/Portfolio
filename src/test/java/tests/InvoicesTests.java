@@ -2,8 +2,6 @@ package tests;
 
 import annotations.Credentials;
 import annotations.Financial;
-import core.Auth;
-import core.SpecStorage;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.path.json.JsonPath;
 import org.hamcrest.Matchers;
@@ -19,7 +17,6 @@ import utils.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static core.Auth.auth;
