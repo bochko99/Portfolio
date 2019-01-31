@@ -4,6 +4,7 @@ import core.Auth;
 import core.CommonFunctions;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class UsersTests extends BaseTest {
     }
 
     @Test
-    @DisplayName(("KYC 1 Completion"))
+    @DisplayName(("KYC 1 Returned"))
     public void testKYC1Completion() {
         String id = registerUser(false);
 
@@ -54,10 +55,15 @@ public class UsersTests extends BaseTest {
 
         given()
                 .baseUri(Environment.KYC)
+                .basePath("")
                 .body(model)
                 .header(Constants.X_USER_ID, id)
             .when()
-                .post(EndPoints.identity);
+                .post(EndPoints.identity)
+            .then()
+                .body("success", Matchers.equalTo(true));
+
+
         Auth.flush();
     }
 
@@ -123,29 +129,6 @@ public class UsersTests extends BaseTest {
         auth().get(EndPoints.users_profile_kyc0);
     }
 
-    @Test
-    @DisplayName(EndPoints.users_profile_kyc1 + " GET")
-    public void testGetUsersProfileKyc1() {
-        auth().get(EndPoints.users_profile_kyc1);
-    }
-
-    @Test
-    @DisplayName(EndPoints.users_profile_kyc1_verify + " POST")
-    public void testPostUsersProfileKyc1Verify() {
-        auth().post(EndPoints.users_profile_kyc1_verify);
-    }
-
-    @Test
-    @DisplayName(EndPoints.users_profile_kyc2 + " GET")
-    public void testGetUsersProfileKyc2() {
-        auth().get(EndPoints.users_profile_kyc2);
-    }
-
-    @Test
-    @DisplayName(EndPoints.users_profile_kyc2_verify + " POST")
-    public void testPostUsersProfileKyc2Verify() {
-        auth().post(EndPoints.users_profile_kyc2_verify);
-    }
 
     @Step("Register user")
     private String registerUser(Boolean isAustralian) {

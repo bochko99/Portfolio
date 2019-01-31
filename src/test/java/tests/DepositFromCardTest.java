@@ -8,6 +8,8 @@ import pojos.deposit.*;
 import utils.EndPoints;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 import static core.Auth.auth;
 import static core.Currency.*;
@@ -40,7 +42,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create new Offer: BTC")
     public void testCreateOfferBTC() {
 
-        createOffer(BTC, new BigDecimal(0.02));
+        createOffer(BTC);
 
     }
 
@@ -49,7 +51,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create new Offer: LTC")
     public void testCreateOfferLTC() {
 
-        createOffer(LTC, new BigDecimal(0.253));
+        createOffer(LTC);
 
     }
 
@@ -58,7 +60,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create new Offer: ETH")
     public void testCreateOfferETH() {
 
-        createOffer(ETH, new BigDecimal(0.02));
+        createOffer(ETH);
 
     }
 
@@ -67,7 +69,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create transfer BTC")
     public void testCreateTransferBTC() {
 
-        createTransfer(BTC, new BigDecimal(0.002));
+        createTransfer(BTC);
 
     }
 
@@ -76,7 +78,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create transfer LTC")
     public void testCreateTransferLTC() {
 
-        createTransfer(LTC, new BigDecimal(0.26));
+        createTransfer(LTC);
 
     }
 
@@ -85,7 +87,7 @@ public class DepositFromCardTest extends BaseTest {
     @DisplayName("Create transfer ETH")
     public void testCreateTransferETH() {
 
-        createTransfer(ETH, new BigDecimal(0.02));
+        createTransfer(ETH);
 
     }
 
@@ -93,7 +95,7 @@ public class DepositFromCardTest extends BaseTest {
     @Credentials(type = "au")
     @DisplayName("Create redirect")
     public void createRedirect() {
-        DepositRespOfferModel offer = createOffer(BTC, new BigDecimal(0.002));
+        DepositRespOfferModel offer = createOffer(BTC);
 
         DepositReqTransferModel transfer = new DepositReqTransferModel()
                 .setOfferId(offer.getId())
@@ -109,7 +111,9 @@ public class DepositFromCardTest extends BaseTest {
 
     }
 
-    private DepositRespOfferModel createOffer(String currency, BigDecimal amount) {
+    private DepositRespOfferModel createOffer(String currency) {
+
+        BigDecimal amount = getMinAmountForCurrency(currency);
 
         Order order = new Order()
                 .setAmount(amount)
@@ -121,9 +125,9 @@ public class DepositFromCardTest extends BaseTest {
 
     }
 
-    private DepositRespTransferModel createTransfer(String currency, BigDecimal amount) {
+    private DepositRespTransferModel createTransfer(String currency) {
 
-        DepositRespOfferModel offer = createOffer(currency, amount);
+        DepositRespOfferModel offer = createOffer(currency);
 
         DepositReqTransferModel transfer = new DepositReqTransferModel()
                 .setOfferId(offer.getId())
@@ -134,6 +138,16 @@ public class DepositFromCardTest extends BaseTest {
 
         return auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
 
+    }
+
+    private BigDecimal getMinAmountForCurrency(String currency) {
+
+        List<MinAmountModel> limits = auth().get(EndPoints.depositfromcard_limits)
+                .then().extract().body().jsonPath().getList("cryptoLimits.minAmount", MinAmountModel.class);
+
+        Optional<MinAmountModel> model = limits.stream().filter(m -> m.getCurrency().equalsIgnoreCase(currency)).findFirst();
+
+        return model.isPresent() ? model.get().getAmount().add(new BigDecimal("0.001")) : new BigDecimal("0.01");
     }
 
 }

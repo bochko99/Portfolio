@@ -22,18 +22,6 @@ public class SettingsTests extends BaseTest {
     }
 
     @Test
-    @DisplayName(EndPoints.settings_kyc + " GET")
-    public void testGetSettingsKyc() {
-        auth().get(EndPoints.settings_kyc);
-    }
-
-    @Test
-    @DisplayName(EndPoints.settings_receipts + " GET")
-    public void testGetSettingsReceipts() {
-        auth().get(EndPoints.settings_receipts);
-    }
-
-    @Test
     @DisplayName(EndPoints.settings_receipts_countries + " GET")
     public void testGetSettingsReceiptsCountries() {
         auth().get(EndPoints.settings_receipts_countries);
