@@ -147,7 +147,7 @@ public class DepositFromCardTest extends BaseTest {
 
         Optional<MinAmountModel> model = limits.stream().filter(m -> m.getCurrency().equalsIgnoreCase(currency)).findFirst();
 
-        return model.isPresent() ? model.get().getAmount().add(new BigDecimal("0.001")) : new BigDecimal("0.01");
+        return model.isPresent() ? model.get().getAmount().add(new BigDecimal("0.01")) : new BigDecimal("0.01");
     }
 
 }

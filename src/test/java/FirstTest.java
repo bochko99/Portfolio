@@ -1,6 +1,7 @@
 import core.Auth;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import pojos.LoginModel;
 import pojos.bitgo.BitgoReqModel;
@@ -64,6 +65,7 @@ public class FirstTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     @DisplayName(EndPoints.transactions_history + " GET")
     public void testGetTransactionsHistory() {
         auth().get(EndPoints.transactions_history);
@@ -82,6 +84,7 @@ public class FirstTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     @DisplayName(EndPoints.bitgo + " POST")
     public void testPostBitgo() {
         BigDecimal amount = new BigDecimal(1000);

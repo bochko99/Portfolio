@@ -30,12 +30,14 @@ public class InvoicesTests extends BaseTest {
   }
 
   @Test
+  @Credentials(type = "au")
   @DisplayName(EndPoints.invoices_bpay + " POST")
   public void testPostInvoicesBpay() {
     auth().post(EndPoints.invoices_bpay);
   }
 
   @Test
+  @Credentials(type = "au")
   @DisplayName(EndPoints.invoices_bpay_billers_code + " GET")
   public void testGetInvoicesBpayBillersCode() {
     given().pathParam("code", "96479")
@@ -44,12 +46,14 @@ public class InvoicesTests extends BaseTest {
   }
 
   @Test
+  @Credentials(type = "au")
   @DisplayName(EndPoints.invoices_bsb + " POST")
   public void testPostInvoicesBsb() {
     auth().post(EndPoints.invoices_bsb);
   }
 
   @Test
+  @Credentials(type = "au")
   @DisplayName(EndPoints.invoices_bsb_banks_code + " GET")
   public void testGetInvoicesBsbBanksCode() {
     given().pathParam("code", "911001")
@@ -98,7 +102,7 @@ public class InvoicesTests extends BaseTest {
   @Test
   @DisplayName(EndPoints.invoices_commissions + " GET")
   public void testGetInvoicesCommissions() {
-    given().get(EndPoints.invoices_commissions);
+    auth().get(EndPoints.invoices_commissions);
   }
 
   @Test
