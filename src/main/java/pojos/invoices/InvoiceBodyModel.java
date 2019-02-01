@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 
 @Generated("net.hexar.json2pojo")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -14,7 +15,7 @@ public class InvoiceBodyModel {
     @Expose
     private String accountNumber;
     @Expose
-    private Float amount;
+    private BigDecimal amount;
     @Expose
     private String bPayBiller;
     @Expose
@@ -71,11 +72,11 @@ public class InvoiceBodyModel {
         return this;
     }
 
-    public Float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public InvoiceBodyModel setAmount(Float amount) {
+    public InvoiceBodyModel setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
