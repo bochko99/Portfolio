@@ -30,7 +30,7 @@ public class KycTests extends NewUserTests {
                 .setSelfieUrl("https://cdn.pbrd.co/images/HYwn7de.jpg");
 
         given()
-                .baseUri(Environment.KYC)
+                .baseUri(Environment.KYC_URL)
                 .basePath("")
                 .body(model)
                 .header(Constants.X_USER_ID, id)

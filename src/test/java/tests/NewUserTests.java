@@ -46,8 +46,18 @@ public class NewUserTests extends BaseTest {
                 .put(EndPoints.users_profile).then().extract().header(Constants.X_USER_ID);
 
         //verify
-        String phoneConfirmationCode = given().basePath(Constants.MANAGEMENT).queryParam("mobile", phone).get(EndPoints.testers_mobile).body().jsonPath().getString("code");
-        String emailConfirmationCode = given().basePath(Constants.MANAGEMENT).queryParam("email", email).get(EndPoints.testers_email).body().jsonPath().getString("code");
+        String phoneConfirmationCode = given()
+                .baseUri(Environment.MANAGEMENT_URL)
+                .basePath(Constants.MANAGEMENT)
+                .queryParam("mobile", phone)
+                .get(EndPoints.testers_mobile).body().jsonPath().getString("code");
+
+        String emailConfirmationCode = given()
+                .baseUri(Environment.MANAGEMENT_URL)
+                .basePath(Constants.MANAGEMENT)
+                .queryParam("email", email)
+                .get(EndPoints.testers_email).body().jsonPath().getString("code");
+
         given()
                 .body(new UsersProfileMobileconfirmModel()
                         .setCode(phoneConfirmationCode)
