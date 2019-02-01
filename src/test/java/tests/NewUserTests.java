@@ -37,8 +37,8 @@ public class NewUserTests extends BaseTest {
             country.setName("Australia");
             body.setCitizenshipCountry("AU").setCitizenshipState("CX");
         } else {
-            country = CommonFunctions.getRandomCountryByCryptoRestrictions(false);
-            body.setCitizenshipCountry("RU");
+            country = CommonFunctions.getCountryByCode("RU");
+            body.setCitizenshipCountry(country.getCode());
         }
         //create user by createUser and PUT data to it
         createUser()
@@ -78,7 +78,7 @@ public class NewUserTests extends BaseTest {
                         .setPassword(password))
                 .put(EndPoints.users_profile_password_verify);
 
-        ExcelWriter.getInstance().addToReport(1, Environment.TARGET, phone, email, password, country.getName());
+        ExcelWriter.getInstance().addToReport(1, Environment.TARGET, phone, email, password, country.getName(), userId);
         return userId;
     }
 

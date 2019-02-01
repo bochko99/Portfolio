@@ -9,12 +9,21 @@ import utils.Environment;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
 public class CommonFunctions {
+
+    public static CountryItem getCountryByCode(String code) {
+        CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);
+        Optional<CountryItem> country = Arrays.stream(allCountries)
+                .filter(c -> c.getCode().equalsIgnoreCase(code))
+                .findFirst();
+        return country.orElse(new CountryItem().setCode("RU"));
+    }
 
     public static CountryItem getRandomCountryByCryptoRestrictions(boolean isRestricted) {
 
