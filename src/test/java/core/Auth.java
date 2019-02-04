@@ -51,6 +51,7 @@ public class Auth {
 
         if (headers.stream().noneMatch(h -> h.getName().equals(Constants.X_AUTHORIZATION))) {
             String code = given()
+                    .baseUri(Environment.MANAGEMENT_URL)
                     .basePath(Constants.MANAGEMENT)
                     .queryParam("mobile", login)
                     .when()

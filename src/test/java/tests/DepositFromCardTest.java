@@ -1,6 +1,5 @@
 package tests;
 
-import annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -17,28 +16,24 @@ import static core.Currency.*;
 public class DepositFromCardTest extends BaseTest {
 
     @Test
-    @Credentials(type = "au")
     @DisplayName(EndPoints.depositfromcard_limits + " GET")
     public void testDepositFromCardLimits() {
         auth().get(EndPoints.depositfromcard_limits);
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName(EndPoints.depositfromcard_success + " GET")
     public void testDepositFromCardSuccess() {
         auth().get(EndPoints.depositfromcard_success);
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName(EndPoints.depositfromcard_failed + " GET")
     public void testDepositFromCardFailed() {
         auth().get(EndPoints.depositfromcard_failed);
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create new Offer: BTC")
     public void testCreateOfferBTC() {
 
@@ -47,7 +42,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create new Offer: LTC")
     public void testCreateOfferLTC() {
 
@@ -56,7 +50,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create new Offer: ETH")
     public void testCreateOfferETH() {
 
@@ -65,7 +58,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create transfer BTC")
     public void testCreateTransferBTC() {
 
@@ -74,7 +66,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create transfer LTC")
     public void testCreateTransferLTC() {
 
@@ -83,7 +74,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create transfer ETH")
     public void testCreateTransferETH() {
 
@@ -92,7 +82,6 @@ public class DepositFromCardTest extends BaseTest {
     }
 
     @Test
-    @Credentials(type = "au")
     @DisplayName("Create redirect")
     public void createRedirect() {
         DepositRespOfferModel offer = createOffer(BTC);
@@ -147,7 +136,7 @@ public class DepositFromCardTest extends BaseTest {
 
         Optional<MinAmountModel> model = limits.stream().filter(m -> m.getCurrency().equalsIgnoreCase(currency)).findFirst();
 
-        return model.isPresent() ? model.get().getAmount().add(new BigDecimal("0.01")) : new BigDecimal("0.01");
+        return model.isPresent() ? model.get().getAmount().add(new BigDecimal("0.0001")) : new BigDecimal("0.01");
     }
 
 }

@@ -13,64 +13,69 @@ import java.util.List;
 public class CountryItem {
 
     @SerializedName("code")
-    private String mCode;
+    private String code;
     @SerializedName("hasCryptoRestrictions")
-    private Boolean mHasCryptoRestrictions;
+    private Boolean hasCryptoRestrictions;
     @SerializedName("imageUrl")
-    private String mImageUrl;
+    private String imageUrl;
     @SerializedName("mobilePrefixes")
-    private List<String> mMobilePrefixes;
+    private List<String> mobilePrefixes;
     @SerializedName("name")
-    private String mName;
+    private String name;
     @SerializedName("regions")
-    private List<Object> mRegions;
+    private List<Object> regions;
 
     public String getCode() {
-        return mCode;
+        return code;
     }
 
-    public void setCode(String code) {
-        mCode = code;
+    public CountryItem setCode(String code) {
+        this.code = code;
+        return this;
     }
 
     public Boolean getHasCryptoRestrictions() {
-        return mHasCryptoRestrictions;
+        return hasCryptoRestrictions;
     }
 
-    public void setHasCryptoRestrictions(Boolean hasCryptoRestrictions) {
-        mHasCryptoRestrictions = hasCryptoRestrictions;
+    public CountryItem setHasCryptoRestrictions(Boolean hasCryptoRestrictions) {
+        this.hasCryptoRestrictions = hasCryptoRestrictions;
+        return this;
     }
 
     public String getImageUrl() {
-        return mImageUrl;
+        return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public CountryItem setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        return this;
     }
 
     public List<String> getMobilePrefixes() {
-        return mMobilePrefixes;
+        return mobilePrefixes;
     }
 
-    public void setMobilePrefixes(List<String> mobilePrefixes) {
-        mMobilePrefixes = mobilePrefixes;
+    public CountryItem setMobilePrefixes(List<String> mobilePrefixes) {
+        this.mobilePrefixes = mobilePrefixes;
+        return this;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
-    public void setName(String name) {
-        mName = name;
+    public CountryItem setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public List<Object> getRegions() {
-        return mRegions;
+        return regions;
     }
 
-    public void setRegions(List<Object> regions) {
-        mRegions = regions;
+    public CountryItem setRegions(List<Object> regions) {
+        this.regions = regions;
+        return this;
     }
-
 }
