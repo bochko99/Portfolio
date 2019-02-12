@@ -42,6 +42,7 @@ public class CommonFunctions {
     public static String generateFreePhoneNumber() {
         for (int i = 0; i < 10; i++) {
             //700000 00001-700000 29999
+
             String phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
             Response r = given()
                     .baseUri(Environment.MANAGEMENT_URL)

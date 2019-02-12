@@ -337,7 +337,7 @@ public class InvoicesTests extends BaseTest {
 
     }
 
-    @Financial
+//    @Financial
     @Test
     @DisplayName("Mobile")
     public void testMobile() {
