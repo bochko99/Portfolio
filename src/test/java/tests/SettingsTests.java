@@ -34,6 +34,17 @@ public class SettingsTests extends BaseTest {
     }
 
     @Test
+    @DisplayName(EndPoints.settings_version + " GET")
+    public void testGetSettingsVersion() {
+
+        given()
+                .header("User-Agent", "Crypterium/1.7.0-beta (Android; 26): samsung SM-A530F")
+                .get(EndPoints.settings_version).then().statusCode(200);
+
+    }
+
+
+    @Test
     @DisplayName(EndPoints.settings_deposits + " GET")
     public void testGetSettingsDeposits() {
         auth().get(EndPoints.settings_deposits);

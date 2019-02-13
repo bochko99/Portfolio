@@ -102,6 +102,7 @@ public class EndPoints {
   public static final String settings_lending = "/settings/lending";
   public static final String settings_deposits = "/settings/deposits";
   public static final String settings_onboarding = "/settings/onboarding";
+  public static final String settings_version = "/settings/version";
 
   //transactions
   public static final String transactions_history = "/transactions/history";
