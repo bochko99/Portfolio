@@ -6,7 +6,7 @@ import org.junit.Test;
 import pojos.LoginModel;
 import pojos.bitgo.BitgoReqModel;
 import pojos.fundsWallet.FundswalletModel;
-import tests.BaseTest;
+import tests.core.MobileTest;
 import utils.Constants;
 import utils.EndPoints;
 
@@ -19,7 +19,7 @@ import static core.Currency.BTC;
 import static io.restassured.RestAssured.given;
 
 
-public class FirstTest extends BaseTest {
+public class FirstTest extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.users_login + " POST")

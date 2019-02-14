@@ -59,6 +59,9 @@ public class Environment {
     public static final String KYC_URL = props.getProperty("kycUrl", "https://kyc.crypterium.io");
     public static final String CARD_PREORDER= props.getProperty("cardPreorderUrl", "https://card-preorder.crypterium.io");
 
+    public static final String GL_URL = props.getProperty("gl.url", "");
+    public static final String GL_TOKEN = props.getProperty("gl.token", "");
+    public static final String GL_EXPECTED_ACCOUNT_COUNT = props.getProperty("gl.account_count", "40");
     public static void main(String[] args) {
         System.out.println("123");
     }

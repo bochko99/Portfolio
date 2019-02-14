@@ -7,6 +7,7 @@ import pojos.favorite.FavoritesQuoteModel;
 import pojos.operations.OperationModel;
 import pojos.quotes.Quote;
 import pojos.quotes.QuoteModel;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class FavoritesTests extends BaseTest {
+public class FavoritesTests extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.favorites_invoices + "POST -> GET -> DELETE")

@@ -25,7 +25,7 @@ public class InvoiceBodyModel {
     @Expose
     private String bsb;
     @Expose
-    private Float commissionAmount;
+    private BigDecimal commissionAmount;
     @Expose
     private String cryptoWalletAddress;
     @Expose
@@ -61,7 +61,7 @@ public class InvoiceBodyModel {
     @Expose
     private String withdrawPersonLogin;
     @Expose
-    private Float withdrawPersonNumber;
+    private String withdrawPersonNumber;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -117,11 +117,11 @@ public class InvoiceBodyModel {
         return this;
     }
 
-    public Float getCommissionAmount() {
+    public BigDecimal getCommissionAmount() {
         return commissionAmount;
     }
 
-    public InvoiceBodyModel setCommissionAmount(Float commissionAmount) {
+    public InvoiceBodyModel setCommissionAmount(BigDecimal commissionAmount) {
         this.commissionAmount = commissionAmount;
         return this;
     }
@@ -279,11 +279,11 @@ public class InvoiceBodyModel {
         return this;
     }
 
-    public Float getWithdrawPersonNumber() {
+    public String getWithdrawPersonNumber() {
         return withdrawPersonNumber;
     }
 
-    public InvoiceBodyModel setWithdrawPersonNumber(Float withdrawPersonNumber) {
+    public InvoiceBodyModel setWithdrawPersonNumber(String withdrawPersonNumber) {
         this.withdrawPersonNumber = withdrawPersonNumber;
         return this;
     }

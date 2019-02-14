@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import pojos.chat.ChatCreateMessageModel;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import java.text.SimpleDateFormat;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 import static core.Auth.auth;
 
-public class ChatTests extends BaseTest {
+public class ChatTests extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.chat_messages + " GET")

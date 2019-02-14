@@ -2,92 +2,92 @@ package utils;
 
 public class EndPoints {
 
-  //MOBILE
-  //bankwithdrawals
-  public static final String bankwithdrawals_offers_rubank = "/bankwithdrawals/offers/rubank";
-  public static final String bankwithdrawals_transfers_rubank = "bankwithdrawals_transfers_rubank";
-  public static final String bankwithdrawals_banks = "/bankwithdrawals/banks";
-  public static final String bankwithdrawals_limits_rubank = "/bankwithdrawals/limits/rubank";
-  public static final String bankwithdrawals_limits_countries = "/bankwithdrawals/limits/countries";
-  public static final String bankwithdrawals_rates_rubank = "/bankwithdrawals/rates/rubank";
+    //MOBILE
+    //bankwithdrawals
+    public static final String bankwithdrawals_offers_rubank = "/bankwithdrawals/offers/rubank";
+    public static final String bankwithdrawals_transfers_rubank = "bankwithdrawals_transfers_rubank";
+    public static final String bankwithdrawals_banks = "/bankwithdrawals/banks";
+    public static final String bankwithdrawals_limits_rubank = "/bankwithdrawals/limits/rubank";
+    public static final String bankwithdrawals_limits_countries = "/bankwithdrawals/limits/countries";
+    public static final String bankwithdrawals_rates_rubank = "/bankwithdrawals/rates/rubank";
 
-  //chat
-  public static final String chat_messages = "/chat/messages";
+    //chat
+    public static final String chat_messages = "/chat/messages";
 
-  //currencies
-  public static final String currencies = "/currencies";
-  public static final String rates_currency = "/rates/{currency}";
-  public static final String rates_currencyFrom_currencyTo = "/rates/{currencyFrom}/{currencyTo}";
+    //currencies
+    public static final String currencies = "/currencies";
+    public static final String rates_currency = "/rates/{currency}";
+    public static final String rates_currencyFrom_currencyTo = "/rates/{currencyFrom}/{currencyTo}";
 
-  //currencyexchange
-  public static final String currencyexchange_directions = "/currency-exchange/directions";
-  public static final String currencyexchange_offers = "/currency-exchange/offers";
-  public static final String currencyexchange_transfers = "/currency-exchange/transfers";
+    //currencyexchange
+    public static final String currencyexchange_directions = "/currency-exchange/directions";
+    public static final String currencyexchange_offers = "/currency-exchange/offers";
+    public static final String currencyexchange_transfers = "/currency-exchange/transfers";
 
-  //favorites
-  public static final String favorites_invoices = "/favorites/invoices";
-  public static final String favorites_invoices_invoiceId = "/favorites/invoices/{invoiceId}";
-  public static final String favorites_quotes = "/favorites/quotes";
-  public static final String favorites_quotes_currency = "/favorites/quotes/{currency}";
+    //favorites
+    public static final String favorites_invoices = "/favorites/invoices";
+    public static final String favorites_invoices_invoiceId = "/favorites/invoices/{invoiceId}";
+    public static final String favorites_quotes = "/favorites/quotes";
+    public static final String favorites_quotes_currency = "/favorites/quotes/{currency}";
 
-  //fundsWallets
-  public static final String fundswallets = "/fundswallets";
-  public static final String fundswallets_id = "/fundswallets/{id}";
-  public static final String fundswallets_id_invoice = "/fundswallets/{id}/invoice";
-  public static final String fundswallets_currency_invoice = "/fundswallets/{currency}/invoice";
-  public static final String fundswallets_invoices_id_pdf = "/fundswallets/invoices/{id}/pdf";
-  public static final String fundswallets_invoices_id_send = "/fundswallets/invoices/{id}/send";
+    //fundsWallets
+    public static final String fundswallets = "/fundswallets";
+    public static final String fundswallets_id = "/fundswallets/{id}";
+    public static final String fundswallets_id_invoice = "/fundswallets/{id}/invoice";
+    public static final String fundswallets_currency_invoice = "/fundswallets/{currency}/invoice";
+    public static final String fundswallets_invoices_id_pdf = "/fundswallets/invoices/{id}/pdf";
+    public static final String fundswallets_invoices_id_send = "/fundswallets/invoices/{id}/send";
 
-  //depositFromCard
-  public static final String depositfromcard_transfers = "/depositfromcard/transfers";
-  public static final String depositfromcard_offers = "/depositfromcard/offers";
-  public static final String depositfromcard_limits = "/depositfromcard/limits";
-  public static final String depositfromcard_success = "/depositfromcard/success";
-  public static final String depositfromcard_failed = "/depositfromcard/failed";
-  public static final String depositfromcard_redirect_id = "/depositfromcard/redirect/{id}";
+    //depositFromCard
+    public static final String depositfromcard_transfers = "/depositfromcard/transfers";
+    public static final String depositfromcard_offers = "/depositfromcard/offers";
+    public static final String depositfromcard_limits = "/depositfromcard/limits";
+    public static final String depositfromcard_success = "/depositfromcard/success";
+    public static final String depositfromcard_failed = "/depositfromcard/failed";
+    public static final String depositfromcard_redirect_id = "/depositfromcard/redirect/{id}";
 
-  //hotels
-  public static final String hotels_search = "/hotels/search";
+    //hotels
+    public static final String hotels_search = "/hotels/search";
 
-  //invoices
-  public static final String invoices_iban = "/invoices/iban";
-  public static final String invoices_iban_banks_iban = "/invoices/iban/banks/{iban}";
-  public static final String invoices_iban_rates = "/invoices/iban/rates";
-  public static final String invoices_bpay = "/invoices/bpay";
-  public static final String invoices_bpay_billers_code = "/invoices/bpay/billers/{code}";
-  public static final String invoices_bsb = "/invoices/bsb";
-  public static final String invoices_bsb_banks_code = "/invoices/bsb/banks/{code}";
-  public static final String invoices_mobile = "/invoices/mobile";
-  public static final String invoices_mobile_codes = "/invoices/mobile/codes";
-  public static final String invoices_mobile_country_providers = "/invoices/mobile/{country}/providers";
-  public static final String invoices_voucher_services = "/invoices/voucher/services";
-  public static final String invoices_voucher_service = "/invoices/voucher/{service}";
-  public static final String invoices_commissions = "/invoices/commissions";
-  public static final String invoices_withdraw = "/invoices/withdraw";
-  public static final String invoices_withdrawals_check = "/invoices/withdrawals/check";
-  public static final String invoices_exchange = "/invoices/exchange";
-  public static final String invoices_exchanges_rates = "/invoices/exchanges/rates";
-  public static final String invoices_id_checkout = "/invoices/{id}/checkout";
-  public static final String invoices_id_continue = "/invoices/{id}/continue";
-  public static final String invoices_id = "/invoices/{id}";
-  public static final String invoices_id_changescreen = "/invoices/{id}/changescreen";
-  public static final String invoices_id_payments = "/invoices/{id}/payments";
+    //invoices
+    public static final String invoices_iban = "/invoices/iban";
+    public static final String invoices_iban_banks_iban = "/invoices/iban/banks/{iban}";
+    public static final String invoices_iban_rates = "/invoices/iban/rates";
+    public static final String invoices_bpay = "/invoices/bpay";
+    public static final String invoices_bpay_billers_code = "/invoices/bpay/billers/{code}";
+    public static final String invoices_bsb = "/invoices/bsb";
+    public static final String invoices_bsb_banks_code = "/invoices/bsb/banks/{code}";
+    public static final String invoices_mobile = "/invoices/mobile";
+    public static final String invoices_mobile_codes = "/invoices/mobile/codes";
+    public static final String invoices_mobile_country_providers = "/invoices/mobile/{country}/providers";
+    public static final String invoices_voucher_services = "/invoices/voucher/services";
+    public static final String invoices_voucher_service = "/invoices/voucher/{service}";
+    public static final String invoices_commissions = "/invoices/commissions";
+    public static final String invoices_withdraw = "/invoices/withdraw";
+    public static final String invoices_withdrawals_check = "/invoices/withdrawals/check";
+    public static final String invoices_exchange = "/invoices/exchange";
+    public static final String invoices_exchanges_rates = "/invoices/exchanges/rates";
+    public static final String invoices_id_checkout = "/invoices/{id}/checkout";
+    public static final String invoices_id_continue = "/invoices/{id}/continue";
+    public static final String invoices_id = "/invoices/{id}";
+    public static final String invoices_id_changescreen = "/invoices/{id}/changescreen";
+    public static final String invoices_id_payments = "/invoices/{id}/payments";
 
 
-  //locations
-  public static final String countries = "/countries";
+    //locations
+    public static final String countries = "/countries";
 
-  //map
-  public static final String map_points = "/map/points";
+    //map
+    public static final String map_points = "/map/points";
 
-  //news
-  public static final String news = "/news";
+    //news
+    public static final String news = "/news";
 
-  //operations
+    //operations
 
-  public static final String operations = "/operations";
-  public static final String operations_id_comment = "/operations/{id}/comment";
-  public static final String operations_read = "/operations/read";
+    public static final String operations = "/operations";
+    public static final String operations_id_comment = "/operations/{id}/comment";
+    public static final String operations_read = "/operations/read";
 
   //quotes
   public static final String quotes = "/quotes";
@@ -149,5 +149,8 @@ public class EndPoints {
     public static final String bitgo = "/bitgo";
 
     //KYC
-    public static final String identity = "/identity";
+    public static final String identity = "kyc/identity";
+
+    //GL (BitGo)
+    public static final String account_records = "/account-records";
 }

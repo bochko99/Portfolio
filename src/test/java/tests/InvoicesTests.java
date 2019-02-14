@@ -3,31 +3,72 @@ package tests;
 import annotations.Credentials;
 import annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
+import pojos.UserPojo;
 import pojos.fundsWallet.FundswalletModel;
 import pojos.invoices.InvoiceBodyModel;
 import pojos.invoices.InvoiceFundsWalletModel;
 import pojos.invoices.InvoicesPaymentModel;
 import pojos.users.UsersProfileResponseModel;
+import tests.core.MobileTest;
 import utils.EndPoints;
 import utils.Environment;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static core.Auth.auth;
+import static core.Auth.authSingle;
 import static core.Currency.*;
 import static io.restassured.RestAssured.given;
+import static io.restassured.config.DecoderConfig.decoderConfig;
 import static org.hamcrest.Matchers.*;
 
-public class InvoicesTests extends BaseTest {
+public class InvoicesTests extends MobileTest {
+
+    private UserPojo recipient = new UserPojo()
+            .setPhone("70000000091")
+            .setPassword("testbeta91");
+
     public static Pair p(String currency, Float amount) {
         return new Pair(currency, amount);
+    }
+
+    @Test
+    @Credentials(login = "70000000090", password = "testbeta90")
+    public void transfersForEugene() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+        String time = sdf.format(new Date());
+        InvoiceBodyModel bodyModelCrpt = new InvoiceBodyModel()
+                .setAmount(new BigDecimal("0.11" + time))
+                .setCurrency(CRPT)
+                .setCryptoWalletAddress(getWallet(recipient.getPhone(), recipient.getPassword(), CRPT))
+                .setCommissionAmount(BigDecimal.ZERO);
+
+        InvoiceBodyModel bodyModelETH = new InvoiceBodyModel()
+                .setAmount(new BigDecimal("0.0013" + time))
+                .setCurrency(ETH)
+                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()))
+                .setCommissionAmount(BigDecimal.ZERO);
+
+        InvoiceBodyModel bodyModelBTC = new InvoiceBodyModel()
+                .setAmount(new BigDecimal("0.00014" + time))
+                .setCurrency(BTC)
+                .setWithdrawPersonLogin(recipient.getPhone())
+                .setCommissionAmount(BigDecimal.ZERO);
+
+        testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModelCrpt, commonInvoiceModelCallback(CRPT));
+        testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModelETH, commonInvoiceModelCallback(ETH));
+        testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModelBTC, commonInvoiceModelCallback(BTC));
+
     }
 
     @Test
@@ -77,7 +118,7 @@ public class InvoicesTests extends BaseTest {
     @Test
     @DisplayName(EndPoints.invoices_mobile + " POST")
     public void testPostInvoicesMobile() {
-        auth().post(EndPoints.invoices_mobile);
+        auth().config(RestAssured.config().decoderConfig(decoderConfig().noContentDecoders())).post(EndPoints.invoices_mobile);
     }
 
     @Test
@@ -382,10 +423,18 @@ public class InvoicesTests extends BaseTest {
 
     }
 
+    private String getWallet(String login, String password, String currency) {
+        FundswalletModel[] wallets = authSingle(login, password).get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        return Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(currency)).findFirst().get().getDescription();
+    }
 
     private String getWallet(String currency) {
         FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
         return Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(currency)).findFirst().get().getDescription();
+    }
+
+    private String getUserId(String login, String password) {
+        return authSingle(login, password).get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
     }
 
     private String getUserId() {
