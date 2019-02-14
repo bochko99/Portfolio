@@ -93,15 +93,16 @@ public class EndPoints {
     public static final String quotes = "/quotes";
     public static final String quotes_currency = "/quotes/{currency}";
 
-    //settings
-    public static final String settings = "/settings";
-    public static final String settings_operations = "/settings/operations";
-    public static final String settings_kyc = "/settings/kyc";
-    public static final String settings_receipts = "/settings/receipts";
-    public static final String settings_receipts_countries = "/settings/receipts/countries";
-    public static final String settings_lending = "/settings/lending";
-    public static final String settings_deposits = "/settings/deposits";
-    public static final String settings_onboarding = "/settings/onboarding";
+  //settings
+  public static final String settings = "/settings";
+  public static final String settings_operations = "/settings/operations";
+  public static final String settings_kyc = "/settings/kyc";
+  public static final String settings_receipts = "/settings/receipts";
+  public static final String settings_receipts_countries = "/settings/receipts/countries";
+  public static final String settings_lending = "/settings/lending";
+  public static final String settings_deposits = "/settings/deposits";
+  public static final String settings_onboarding = "/settings/onboarding";
+  public static final String settings_version = "/settings/version";
 
     //transactions
     public static final String transactions_history = "/transactions/history";

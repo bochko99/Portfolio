@@ -2,6 +2,7 @@ package tests;
 
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import pojos.deposit.*;
 import tests.core.MobileTest;
@@ -22,18 +23,21 @@ public class DepositFromCardTest extends MobileTest {
         auth().get(EndPoints.depositfromcard_limits);
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.depositfromcard_success + " GET")
     public void testDepositFromCardSuccess() {
         auth().get(EndPoints.depositfromcard_success);
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.depositfromcard_failed + " GET")
     public void testDepositFromCardFailed() {
         auth().get(EndPoints.depositfromcard_failed);
     }
 
+    @Ignore
     @Test
     @DisplayName("Create new Offer: BTC")
     public void testCreateOfferBTC() {
@@ -42,6 +46,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create new Offer: LTC")
     public void testCreateOfferLTC() {
@@ -50,6 +55,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create new Offer: ETH")
     public void testCreateOfferETH() {
@@ -58,6 +64,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create transfer BTC")
     public void testCreateTransferBTC() {
@@ -66,6 +73,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create transfer LTC")
     public void testCreateTransferLTC() {
@@ -74,6 +82,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create transfer ETH")
     public void testCreateTransferETH() {
@@ -82,6 +91,7 @@ public class DepositFromCardTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName("Create redirect")
     public void createRedirect() {
@@ -94,7 +104,7 @@ public class DepositFromCardTest extends MobileTest {
                 .setExpiredAt("202312")
                 .setCvv("369");
         String id = auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
-                .body("status", Matchers.equalTo("Redirect"))
+                .body("status", Matchers.equalTo("Verified"))
                 .extract().body().jsonPath().getString("id");
 
         auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
