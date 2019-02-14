@@ -1,30 +1,33 @@
 package tests;
 
 import core.CommonFunctions;
-import io.qameta.allure.Step;
-import pojos.CountryItem;
-import pojos.users.*;
+import io.qameta.allure.junit4.DisplayName;
+import org.junit.Test;
+import pojos.users.UsersProfileEmailConfirmModel;
+import pojos.users.UsersProfileMobileconfirmModel;
+import pojos.users.UsersProfileModel;
 import tests.core.MobileTest;
 import utils.Constants;
 import utils.EndPoints;
 import utils.Environment;
-import utils.ExcelWriter;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
+import static core.SpecStorage.gl;
 import static core.SpecStorage.management;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
-public class NewUserTests extends MobileTest {
+public class BitGoTest extends MobileTest {
 
+    @Test
+    @DisplayName("Wallets for new users")
+    public void testCreateWallets() {
 
-    @Step("Register user")
-    protected String registerUser(Boolean isAustralian) {
         String email = CommonFunctions.generateFreeEmail();
         String phone = CommonFunctions.generateFreePhoneNumber();
         String password = "1234567";
         String pin = "1111";
-        CountryItem country;
         UsersProfileModel body = new UsersProfileModel()
                 .setEmail(email)
                 .setMobile(phone)
@@ -32,22 +35,13 @@ public class NewUserTests extends MobileTest {
                 .setPin(pin)
                 .setLogin("akjsdklkv")
                 .setFirstName("Aleksandr")
-                .setLastName("Tolstov");
+                .setLastName("Tolstov")
+                .setCitizenshipCountry("RU");
 
-        if (isAustralian) {
-            country = new CountryItem();
-            country.setName("Australia");
-            body.setCitizenshipCountry("AU").setCitizenshipState("CX");
-        } else {
-            country = CommonFunctions.getCountryByCode("RU");
-            body.setCitizenshipCountry(country.getCode());
-        }
-        //create user by createUser and PUT data to it
         createUser()
                 .body(body)
                 .put(EndPoints.users_profile).then().extract().header(Constants.X_USER_ID);
 
-        //verify
         String phoneConfirmationCode = management()
                 .queryParam("mobile", phone)
                 .get(EndPoints.testers_mobile).body().jsonPath().getString("code");
@@ -61,23 +55,20 @@ public class NewUserTests extends MobileTest {
                         .setCode(phoneConfirmationCode)
                         .setMobile(phone))
                 .post(EndPoints.users_profile_mobile_confirm);
+
         String userId = given()
                 .body(new UsersProfileEmailConfirmModel()
                         .setCode(emailConfirmationCode)
                         .setEmail(email))
                 .post(EndPoints.users_profile_email_confirm).then().extract().header(Constants.X_USER_ID);
-        auth()
-                .body((new UsersProfilePinVerifyModel()
-                        .setPin(pin)))
-                .put(EndPoints.users_profile_pin_verify);
 
-        auth()
-                .body(new UsersProfilePasswordVerifyModel()
-                        .setPassword(password))
-                .put(EndPoints.users_profile_password_verify);
+        int expectedCount = Integer.parseInt(Environment.GL_EXPECTED_ACCOUNT_COUNT);
 
-        ExcelWriter.getInstance().addToReport(1, Environment.TARGET, phone, email, password, country.getName(), userId);
-        return userId;
+        gl().queryParam("ownerExternalId", userId)
+                .get(EndPoints.account_records)
+                .then().body("size()", equalTo(expectedCount));
+
+        auth().get(EndPoints.fundswallets).then().body("size()", equalTo(4));
     }
 
 }

@@ -1,5 +1,6 @@
 package tests;
 
+import annotations.Credentials;
 import core.Auth;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
@@ -7,38 +8,33 @@ import org.junit.Ignore;
 import org.junit.Test;
 import pojos.users.UsersProfileKyc1Model;
 import pojos.users.UsersProfileKyc2Model;
-import utils.Constants;
 import utils.EndPoints;
-import utils.Environment;
 
 import java.util.Collections;
 
 import static core.Auth.auth;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 public class KycTests extends NewUserTests {
 
     @Test
-    @DisplayName(("KYC 1 Returned"))
+    @Ignore
+    @DisplayName(("KYC 1 Green"))
+    @Credentials(creatingNewUser = true)
     public void testKYC1Completion() {
         String id = registerUser(false);
 
         UsersProfileKyc1Model model = new UsersProfileKyc1Model()
-                .setType(UsersProfileKyc1Model.Type.DRIVER_LICENSE)
-                .setFrontsideUrl("https://cdn.pbrd.co/images/HYxoyol.jpg")
-                .setSelfieUrl("https://cdn.pbrd.co/images/HYwn7de.jpg");
+                .setType(UsersProfileKyc1Model.Type.PASSPORT)
+                .setFrontsideUrl("https://cdn.pbrd.co/images/HZ0L695.jpg")
+                .setSelfieUrl("https://cdn.pbrd.co/images/HZ0LiNH.jpg");
 
-        given()
-                .baseUri(Environment.KYC_URL)
-                .basePath("")
+        auth()
                 .body(model)
-                .header(Constants.X_USER_ID, id)
                 .when()
                 .post(EndPoints.identity)
                 .then()
                 .body("success", Matchers.equalTo(true));
-
 
         Auth.flush();
     }
@@ -46,6 +42,7 @@ public class KycTests extends NewUserTests {
     @Test
     @Ignore
     @DisplayName("KYC 2 Completion")
+    @Credentials(creatingNewUser = true)
     public void testKYC2Completion() {
         String id = registerUser(false);
 

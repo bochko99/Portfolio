@@ -4,6 +4,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import pojos.deposit.*;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import static core.Auth.auth;
 import static core.Currency.*;
 
-public class DepositFromCardTest extends BaseTest {
+public class DepositFromCardTest extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.depositfromcard_limits + " GET")

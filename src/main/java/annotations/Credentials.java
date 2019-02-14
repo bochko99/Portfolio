@@ -13,4 +13,7 @@ public @interface Credentials {
     String password() default "";
 
     String type() default "";
+
+    boolean creatingNewUser() default false;
+
 }

@@ -2,12 +2,13 @@ package tests;
 
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import static core.Auth.auth;
 import static io.restassured.RestAssured.given;
 
-public class SettingsTests extends BaseTest {
+public class SettingsTests extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.settings + " GET")

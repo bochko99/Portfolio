@@ -1,5 +1,6 @@
 package tests;
 
+import annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,8 +26,9 @@ public class UsersTests extends NewUserTests {
 
     @Test
     @DisplayName("User registration")
+    @Credentials(creatingNewUser = true)
     public void testRegisterUser() {
-        String id = registerUser(false);
+        String id = registerUser(true);
         Assert.assertNotNull(id);
     }
 

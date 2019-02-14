@@ -5,6 +5,8 @@ import io.restassured.http.Headers;
 import io.restassured.specification.RequestSpecification;
 import pojos.LoginModel;
 import pojos.MobileVerification;
+import pojos.users.UsersLoginModel;
+import pojos.users.UsersProfilePinVerifyModel;
 import utils.Constants;
 import utils.CredentialEntry;
 import utils.EndPoints;
@@ -38,12 +40,13 @@ public class Auth {
     public static Auth basic(String defaultLogin, String defaultPassword) {
         Auth.defaultLogin = defaultLogin;
         Auth.defaultPassword = defaultPassword;
+        System.out.println(String.format("New login: %s ; new password: %s", defaultLogin, defaultPassword));
         return new Auth();
     }
 
     public static Map<String, String> getHeaders(String login, String password) {
         List<Header> headers = given()
-                .body(new LoginModel().setLogin(login).setPassword(password))
+                .body(new UsersLoginModel().setLogin(login).setPassword(password))
                 .when()
                 .post(EndPoints.users_login)
                 .then()
@@ -63,7 +66,14 @@ public class Auth {
             headers = given().spec(SpecStorage.commonRequestSpec()).body(new LoginModel().setLogin(login).setPassword(password).setCode(code))
                     .when().post(EndPoints.users_login_verify)
                     .then().statusCode(200).extract().headers().asList();
+            Header x_auth = headers.stream().filter(h -> h.getName().equalsIgnoreCase(Constants.X_AUTHORIZATION)).findFirst().orElse(new Header(Constants.X_AUTHORIZATION, ""));
+            Header x_userId = headers.stream().filter(h -> h.getName().equalsIgnoreCase(Constants.X_USER_ID)).findFirst().orElse(new Header(Constants.X_USER_ID, ""));
+            given().header(x_auth).header(x_userId).body((new UsersProfilePinVerifyModel()
+                            .setPin("1111")))
+                    .put(EndPoints.users_profile_pin_verify);
+
         }
+
         return headers.stream().collect(Collectors.toMap(Header::getName, Header::getValue, (k1, k2) -> k2));
     }
 
@@ -71,7 +81,6 @@ public class Auth {
         Map<String, String> headers = getHeaders(login, password);
         X_AUTH = headers.getOrDefault(Constants.X_AUTHORIZATION, "");
         X_USER_ID = headers.getOrDefault(Constants.X_USER_ID, "");
-        System.out.println(login + " : " + X_AUTH);
         return given()
                 .header(Constants.X_AUTHORIZATION, X_AUTH)
                 .header(Constants.X_USER_ID, X_USER_ID);
@@ -82,8 +91,8 @@ public class Auth {
             Map<String, String> headers = getHeaders(defaultLogin, defaultPassword);
             X_AUTH = headers.getOrDefault(Constants.X_AUTHORIZATION, "");
             X_USER_ID = headers.getOrDefault(Constants.X_USER_ID, "");
-            System.out.println(X_AUTH);
         }
+        System.out.println("UserID: " + X_USER_ID);
         return given()
                 .header(Constants.X_AUTHORIZATION, X_AUTH)
                 .header(Constants.X_USER_ID, X_USER_ID);
@@ -98,7 +107,15 @@ public class Auth {
                 .header(Constants.X_USER_ID, X_USER_ID);
     }
 
+    public static RequestSpecification authSingle(String login, String password) {
+        Map<String, String> headers = getHeaders(login, password);
+        return given()
+                .header(Constants.X_AUTHORIZATION, headers.getOrDefault(Constants.X_AUTHORIZATION, ""))
+                .header(Constants.X_USER_ID, headers.getOrDefault(Constants.X_USER_ID, ""));
+    }
+
     public static void flush() {
+        System.out.println("flush");
         X_AUTH = "";
         X_USER_ID = "";
     }

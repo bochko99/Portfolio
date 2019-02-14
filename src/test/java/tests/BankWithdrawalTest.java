@@ -7,6 +7,7 @@ import org.junit.Test;
 import pojos.bankwithdrawal.BankWithdrawalReqOffer;
 import pojos.bankwithdrawal.BankWithdrawalReqTransfer;
 import pojos.bankwithdrawal.BankWithdrawalRespOffer;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import static core.Auth.auth;
 import static core.Currency.BTC;
 
 
-public class BankWithdrawalTest extends BaseTest {
+public class BankWithdrawalTest extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
