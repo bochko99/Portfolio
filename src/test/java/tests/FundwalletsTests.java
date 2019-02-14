@@ -5,12 +5,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import pojos.fundsWallet.FundswalletModel;
+import tests.core.MobileTest;
 import utils.EndPoints;
 
 import static core.Auth.auth;
 import static core.Currency.BTC;
 
-public class FundwalletsTests extends BaseTest {
+public class FundwalletsTests extends MobileTest {
 
     @Test
     @DisplayName(EndPoints.fundswallets + " GET")
