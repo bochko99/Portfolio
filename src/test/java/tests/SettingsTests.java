@@ -1,6 +1,8 @@
 package tests;
 
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import io.restassured.builder.ResponseSpecBuilder;
 import org.junit.Test;
 import utils.EndPoints;
 
@@ -35,11 +37,21 @@ public class SettingsTests extends BaseTest {
 
     @Test
     @DisplayName(EndPoints.settings_version + " GET")
-    public void testGetSettingsVersion() {
+    public void testGetSettingsVersion406() {
+        given()
+                .header("User-Agent", "Crypterium/1.5 (Android; 26): samsung SM-A530F")
+                .expect().statusCode(406).when()
+                .get(EndPoints.settings_version);
+
+    }
+
+    @Test
+    @DisplayName(EndPoints.settings_version + " GET")
+    public void testGetSettingsVersion200() {
 
         given()
-                .header("User-Agent", "Crypterium/1.7.0-beta (Android; 26): samsung SM-A530F")
-                .get(EndPoints.settings_version).then().statusCode(200);
+                .header("User-Agent", "Crypterium/1.6.5 (Android; 26): samsung SM-A530F")
+                .get(EndPoints.settings_version);
 
     }
 

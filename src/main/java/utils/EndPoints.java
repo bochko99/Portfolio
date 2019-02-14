@@ -111,6 +111,9 @@ public class EndPoints {
   public static final String transfers_frequent = "/transfers/frequent";
   public static final String transfers_recent = "/transfers/recent";
 
+  //preorderedcard
+  public static final String card_preorders_PhoneNumber = "/api/v1.0/card-preorders/{PhoneNumber}";
+
   // users
   public static final String users_profile = "/users/profile";
   public static final String users_profile_terms_agree = "/users/profile/terms/agree";

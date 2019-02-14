@@ -26,7 +26,7 @@ public class UsersTests extends NewUserTests {
     @Test
     @DisplayName("User registration")
     public void testRegisterUser() {
-        String id = registerUser(false);
+        String id = registerUser(true);
         Assert.assertNotNull(id);
     }
 
