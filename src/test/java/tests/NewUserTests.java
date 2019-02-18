@@ -16,8 +16,8 @@ public class NewUserTests extends MobileTest {
 
     @Step("Register user")
     protected String registerUser(Boolean isAustralian) {
-        String email = CommonFunctions.generateFreeEmail();
-        String phone = CommonFunctions.generateFreePhoneNumber();
+        String email = ApiCommonFunctions.generateFreeEmail();
+        String phone = ApiCommonFunctions.generateFreePhoneNumber();
         String password = "1234567";
         String pin = "1111";
         CountryItem country;
@@ -35,7 +35,7 @@ public class NewUserTests extends MobileTest {
             country.setName("Australia");
             body.setCitizenshipCountry("AU").setCitizenshipState("CX");
         } else {
-            country = CommonFunctions.getCountryByCode("RU");
+            country = ApiCommonFunctions.getCountryByCode("RU");
             body.setCitizenshipCountry(country.getCode());
         }
         //create user by createUser and PUT data to it

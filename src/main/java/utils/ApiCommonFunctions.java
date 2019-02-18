@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
-public class CommonFunctions {
+public class ApiCommonFunctions {
 
     public static CountryItem getCountryByCode(String code) {
         CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);

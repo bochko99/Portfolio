@@ -6,7 +6,7 @@ import pojos.users.UsersProfileEmailConfirmModel;
 import pojos.users.UsersProfileMobileconfirmModel;
 import pojos.users.UsersProfileModel;
 import tests.core.MobileTest;
-import utils.CommonFunctions;
+import utils.ApiCommonFunctions;
 import utils.Constants;
 import utils.EndPoints;
 import utils.Environment;
@@ -24,8 +24,8 @@ public class BitGoTest extends MobileTest {
     @DisplayName("Wallets for new users")
     public void testCreateWallets() {
 
-        String email = CommonFunctions.generateFreeEmail();
-        String phone = CommonFunctions.generateFreePhoneNumber();
+        String email = ApiCommonFunctions.generateFreeEmail();
+        String phone = ApiCommonFunctions.generateFreePhoneNumber();
         String password = "1234567";
         String pin = "1111";
         UsersProfileModel body = new UsersProfileModel()
