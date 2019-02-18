@@ -365,7 +365,7 @@ public class InvoicesTests extends MobileTest {
     @Financial
     @Test
     @DisplayName("BSB")
-//    @Credentials(type = "au")
+    @Credentials(type = "au")
     public void testBSB() {
 
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
