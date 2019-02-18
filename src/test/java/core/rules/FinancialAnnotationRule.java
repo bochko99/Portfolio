@@ -1,6 +1,6 @@
 package core.rules;
 
-import annotations.Financial;
+import core.annotations.Financial;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 

@@ -1,7 +1,7 @@
 package core.rules;
 
-import annotations.Credentials;
 import core.Auth;
+import core.annotations.Credentials;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import utils.CredentialEntry;

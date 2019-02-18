@@ -1,6 +1,6 @@
 package tests;
 
-import annotations.Credentials;
+import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Test;

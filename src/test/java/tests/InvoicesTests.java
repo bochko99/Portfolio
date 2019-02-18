@@ -1,7 +1,7 @@
 package tests;
 
-import annotations.Credentials;
-import annotations.Financial;
+import core.annotations.Credentials;
+import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;

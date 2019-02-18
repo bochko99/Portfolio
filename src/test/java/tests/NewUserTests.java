@@ -1,19 +1,15 @@
 package tests;
 
-import core.CommonFunctions;
 import io.qameta.allure.Step;
 import pojos.CountryItem;
 import pojos.users.*;
 import tests.core.MobileTest;
-import utils.Constants;
-import utils.EndPoints;
-import utils.Environment;
-import utils.ExcelWriter;
+import utils.*;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
-import static core.SpecStorage.management;
 import static io.restassured.RestAssured.given;
+import static utils.SpecStorage.management;
 
 public class NewUserTests extends MobileTest {
 

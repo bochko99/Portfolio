@@ -1,7 +1,7 @@
 package tests;
 
-import annotations.Credentials;
 import core.Auth;
+import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;

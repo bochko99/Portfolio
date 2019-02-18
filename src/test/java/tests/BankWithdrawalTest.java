@@ -1,7 +1,7 @@
 package tests;
 
 
-import annotations.Financial;
+import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Ignore;
 import org.junit.Test;

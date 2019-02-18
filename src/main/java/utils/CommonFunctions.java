@@ -1,11 +1,8 @@
-package core;
+package utils;
 
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import pojos.CountryItem;
-import utils.Constants;
-import utils.EndPoints;
-import utils.Environment;
 
 import java.util.Arrays;
 import java.util.List;
