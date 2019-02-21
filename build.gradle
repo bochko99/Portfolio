@@ -21,8 +21,8 @@ apply plugin: 'io.qameta.allure'
 apply plugin: 'maven-publish'
 
 
-group 'cryptAft'
-version '1.0.1'
+group 'com.crypterium'
+version '1.0.0'
 
 sourceCompatibility = 1.8
 
