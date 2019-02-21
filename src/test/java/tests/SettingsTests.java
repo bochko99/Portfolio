@@ -35,15 +35,23 @@ public class SettingsTests extends MobileTest {
     }
 
     @Test
-    @DisplayName(EndPoints.settings_version + " GET")
+    @DisplayName(EndPoints.settings_version + " GET: 200")
     public void testGetSettingsVersion() {
 
         given()
-                .header("User-Agent", "Crypterium/1.7.0-beta (Android; 26): samsung SM-A530F")
+                .header("User-Agent", "Crypterium/1.6.3 (Android; 26): samsung SM-A530F")
                 .get(EndPoints.settings_version).then().statusCode(200);
-
     }
 
+    @Test
+    @DisplayName(EndPoints.settings_version + " GET: 406")
+    public void testGetSettingsVersion406() {
+
+        given().header("User-Agent", "Crypterium/1.6.2 (Android; 26): samsung SM-A530F")
+                .expect().statusCode(406).when()
+                .get(EndPoints.settings_version);
+
+    }
 
     @Test
     @DisplayName(EndPoints.settings_deposits + " GET")

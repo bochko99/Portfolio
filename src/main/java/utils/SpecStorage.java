@@ -4,6 +4,7 @@ import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.config.HeaderConfig;
 import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -18,6 +19,7 @@ import static org.hamcrest.Matchers.not;
 public class SpecStorage {
 
     private static final RequestSpecification commonRequestSpec = new RequestSpecBuilder()
+            .setConfig(RestAssured.config().headerConfig(HeaderConfig.headerConfig().overwriteHeadersWithName("User-Agent", "Content-Type")))
             .setAccept("application/json")
             .setContentType("application/json")
             .addHeader("X-PlatformId", "7B5237A5-996B-43BB-B9A5-747E32A3BCA5")
