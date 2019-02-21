@@ -13,8 +13,6 @@ buildscript {
     }
 }
 
-//test2
-
 plugins {
     id 'groovy'
     id 'java'
