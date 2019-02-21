@@ -1,14 +1,14 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.users.UsersProfileKyc1Model;
+import com.crypterium.cryptApi.pojos.users.UsersProfileKyc2Model;
+import com.crypterium.cryptApi.utils.EndPoints;
 import core.Auth;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.users.UsersProfileKyc1Model;
-import pojos.users.UsersProfileKyc2Model;
-import utils.EndPoints;
 
 import java.util.Collections;
 

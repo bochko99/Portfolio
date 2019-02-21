@@ -1,15 +1,15 @@
 package tests;
 
 
+import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalReqOffer;
+import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalReqTransfer;
+import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalRespOffer;
+import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.bankwithdrawal.BankWithdrawalReqOffer;
-import pojos.bankwithdrawal.BankWithdrawalReqTransfer;
-import pojos.bankwithdrawal.BankWithdrawalRespOffer;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.math.BigDecimal;
 

@@ -1,11 +1,11 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.exchange.ExchangeOfferReqModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.exchange.ExchangeOfferReqModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.math.BigDecimal;
 

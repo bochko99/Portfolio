@@ -1,15 +1,15 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.CountryItem;
+import com.crypterium.cryptApi.pojos.users.*;
+import com.crypterium.cryptApi.utils.*;
 import io.qameta.allure.Step;
-import pojos.CountryItem;
-import pojos.users.*;
 import tests.core.MobileTest;
-import utils.*;
 
+import static com.crypterium.cryptApi.utils.SpecStorage.management;
 import static core.Auth.auth;
 import static core.Auth.createUser;
 import static io.restassured.RestAssured.given;
-import static utils.SpecStorage.management;
 
 public class NewUserTests extends MobileTest {
 

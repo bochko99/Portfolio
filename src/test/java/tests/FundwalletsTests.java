@@ -1,12 +1,12 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.fundsWallet.FundswalletModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import static core.Auth.auth;
 import static core.Currency.BTC;

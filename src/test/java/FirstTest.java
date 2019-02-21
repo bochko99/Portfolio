@@ -1,14 +1,14 @@
+import com.crypterium.cryptApi.pojos.LoginModel;
+import com.crypterium.cryptApi.pojos.bitgo.BitgoReqModel;
+import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.utils.Constants;
+import com.crypterium.cryptApi.utils.EndPoints;
 import core.Auth;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.LoginModel;
-import pojos.bitgo.BitgoReqModel;
-import pojos.fundsWallet.FundswalletModel;
 import tests.core.MobileTest;
-import utils.Constants;
-import utils.EndPoints;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -1,13 +1,13 @@
 package core;
 
+import com.crypterium.cryptApi.pojos.LoginModel;
+import com.crypterium.cryptApi.pojos.MobileVerification;
+import com.crypterium.cryptApi.pojos.users.UsersLoginModel;
+import com.crypterium.cryptApi.pojos.users.UsersProfilePinVerifyModel;
+import com.crypterium.cryptApi.utils.*;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.specification.RequestSpecification;
-import pojos.LoginModel;
-import pojos.MobileVerification;
-import pojos.users.UsersLoginModel;
-import pojos.users.UsersProfilePinVerifyModel;
-import utils.*;
 
 import java.util.List;
 import java.util.Map;
