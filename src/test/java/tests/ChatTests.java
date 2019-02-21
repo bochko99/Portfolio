@@ -9,7 +9,7 @@ import tests.core.MobileTest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 
 public class ChatTests extends MobileTest {
 

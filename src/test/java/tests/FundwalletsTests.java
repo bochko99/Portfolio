@@ -8,7 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.MobileTest;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.BTC;
 
 public class FundwalletsTests extends MobileTest {

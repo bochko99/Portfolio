@@ -11,10 +11,10 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import tests.core.MobileTest;
 
+import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.createUser;
 import static com.crypterium.cryptApi.utils.SpecStorage.gl;
 import static com.crypterium.cryptApi.utils.SpecStorage.management;
-import static core.Auth.auth;
-import static core.Auth.createUser;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 

@@ -1,4 +1,4 @@
-package core;
+package com.crypterium.cryptApi;
 
 import com.crypterium.cryptApi.pojos.LoginModel;
 import com.crypterium.cryptApi.pojos.MobileVerification;

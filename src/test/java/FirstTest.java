@@ -1,9 +1,9 @@
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.pojos.LoginModel;
 import com.crypterium.cryptApi.pojos.bitgo.BitgoReqModel;
 import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
-import core.Auth;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.BTC;
 import static io.restassured.RestAssured.given;
 

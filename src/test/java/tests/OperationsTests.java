@@ -10,7 +10,7 @@ import tests.core.MobileTest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static org.hamcrest.Matchers.equalTo;
 
 public class OperationsTests extends MobileTest {

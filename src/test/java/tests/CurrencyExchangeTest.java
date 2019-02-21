@@ -9,7 +9,7 @@ import tests.core.MobileTest;
 
 import java.math.BigDecimal;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.BTC;
 import static core.Currency.ETH;
 

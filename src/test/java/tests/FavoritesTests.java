@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 

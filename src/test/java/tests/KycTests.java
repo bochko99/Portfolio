@@ -1,9 +1,9 @@
 package tests;
 
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.pojos.users.UsersProfileKyc1Model;
 import com.crypterium.cryptApi.pojos.users.UsersProfileKyc2Model;
 import com.crypterium.cryptApi.utils.EndPoints;
-import core.Auth;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 public class KycTests extends NewUserTests {

@@ -7,7 +7,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static io.restassured.RestAssured.given;
 
 public class UsersTests extends NewUserTests {

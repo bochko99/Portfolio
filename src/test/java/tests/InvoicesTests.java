@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static core.Auth.auth;
-import static core.Auth.authSingle;
+import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.authSingle;
 import static core.Currency.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.DecoderConfig.decoderConfig;

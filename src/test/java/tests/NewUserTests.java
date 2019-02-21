@@ -6,9 +6,9 @@ import com.crypterium.cryptApi.utils.*;
 import io.qameta.allure.Step;
 import tests.core.MobileTest;
 
+import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.createUser;
 import static com.crypterium.cryptApi.utils.SpecStorage.management;
-import static core.Auth.auth;
-import static core.Auth.createUser;
 import static io.restassured.RestAssured.given;
 
 public class NewUserTests extends MobileTest {

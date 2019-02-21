@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.*;
 
 public class DepositFromCardTest extends MobileTest {

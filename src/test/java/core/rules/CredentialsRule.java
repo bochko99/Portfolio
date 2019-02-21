@@ -1,8 +1,8 @@
 package core.rules;
 
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.Environment;
-import core.Auth;
 import core.annotations.Credentials;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
