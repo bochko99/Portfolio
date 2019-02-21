@@ -17,6 +17,7 @@ import static core.Currency.*;
 
 public class DepositFromCardTest extends MobileTest {
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.depositfromcard_limits + " GET")
     public void testDepositFromCardLimits() {

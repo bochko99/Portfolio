@@ -1,4 +1,4 @@
-package core;
+package utils;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -11,8 +11,6 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.Matchers;
-import utils.Constants;
-import utils.Environment;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;

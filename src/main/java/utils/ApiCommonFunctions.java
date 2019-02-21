@@ -1,11 +1,8 @@
-package core;
+package utils;
 
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import pojos.CountryItem;
-import utils.Constants;
-import utils.EndPoints;
-import utils.Environment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
-public class CommonFunctions {
+public class ApiCommonFunctions {
 
     public static CountryItem getCountryByCode(String code) {
         CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);

@@ -1,8 +1,9 @@
 package tests;
 
 
-import annotations.Financial;
+import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
+import org.junit.Ignore;
 import org.junit.Test;
 import pojos.bankwithdrawal.BankWithdrawalReqOffer;
 import pojos.bankwithdrawal.BankWithdrawalReqTransfer;
@@ -18,6 +19,7 @@ import static core.Currency.BTC;
 
 public class BankWithdrawalTest extends MobileTest {
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
     public void testBanks() {
@@ -26,6 +28,7 @@ public class BankWithdrawalTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
     public void testBanksLimitsRub() {
@@ -34,6 +37,7 @@ public class BankWithdrawalTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
     public void testBanksLimitsCountries() {
@@ -42,6 +46,7 @@ public class BankWithdrawalTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
     public void testBanksRates() {
@@ -50,6 +55,7 @@ public class BankWithdrawalTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @Financial
     @DisplayName("Create Bank Offer")
@@ -59,6 +65,7 @@ public class BankWithdrawalTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @Financial
     @DisplayName("Create Bank Transfer")

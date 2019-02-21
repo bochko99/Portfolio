@@ -1,6 +1,7 @@
 package tests;
 
 import io.qameta.allure.junit4.DisplayName;
+import org.junit.Ignore;
 import org.junit.Test;
 import pojos.exchange.ExchangeOfferReqModel;
 import tests.core.MobileTest;
@@ -15,6 +16,7 @@ import static core.Currency.ETH;
 
 public class CurrencyExchangeTest extends MobileTest {
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.currencyexchange_directions + " GET")
     public void currencyExchangeDirection() {
@@ -23,6 +25,7 @@ public class CurrencyExchangeTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.currencyexchange_offers + " POST")
     public void currencyExchangeOffers() {
@@ -36,6 +39,7 @@ public class CurrencyExchangeTest extends MobileTest {
 
     }
 
+    @Ignore
     @Test
     @DisplayName(EndPoints.currencyexchange_transfers + " POST")
     public void currencyExchangeTransfers() {

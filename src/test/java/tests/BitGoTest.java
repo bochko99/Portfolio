@@ -1,22 +1,22 @@
 package tests;
 
-import core.CommonFunctions;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import pojos.users.UsersProfileEmailConfirmModel;
 import pojos.users.UsersProfileMobileconfirmModel;
 import pojos.users.UsersProfileModel;
 import tests.core.MobileTest;
+import utils.ApiCommonFunctions;
 import utils.Constants;
 import utils.EndPoints;
 import utils.Environment;
 
 import static core.Auth.auth;
 import static core.Auth.createUser;
-import static core.SpecStorage.gl;
-import static core.SpecStorage.management;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static utils.SpecStorage.gl;
+import static utils.SpecStorage.management;
 
 public class BitGoTest extends MobileTest {
 
@@ -24,8 +24,8 @@ public class BitGoTest extends MobileTest {
     @DisplayName("Wallets for new users")
     public void testCreateWallets() {
 
-        String email = CommonFunctions.generateFreeEmail();
-        String phone = CommonFunctions.generateFreePhoneNumber();
+        String email = ApiCommonFunctions.generateFreeEmail();
+        String phone = ApiCommonFunctions.generateFreePhoneNumber();
         String password = "1234567";
         String pin = "1111";
         UsersProfileModel body = new UsersProfileModel()
