@@ -79,7 +79,7 @@ task incrementVersion << {
     String s = buildFile.getText().replaceFirst("version '$version'", "version '" + major + m + "'")
     println s
     buildFile.setText(s)
-}
+} etst
 
 apply plugin: "com.jfrog.artifactory"
 
