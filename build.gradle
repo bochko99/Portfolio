@@ -22,7 +22,7 @@ apply plugin: 'maven-publish'
 
 
 group 'com.crypterium'
-version '1.0.0'
+version '1.0.1'
 
 sourceCompatibility = 1.8
 
@@ -58,7 +58,7 @@ allure {
     version = "2.3.1"
 }
 
-task jarTest (type: Jar) {
+task jarTest(type: Jar) {
     from sourceSets.test.output
     classifier = 'test'
 }
@@ -71,7 +71,19 @@ artifacts {
     testOutput jarTest
 }
 
+task incrementVersion << {
+    String minor = version.substring(version.lastIndexOf('.') + 1)
+    println version
+    int m = minor.toInteger() + 1
+    String major = version.substring(0, version.length() - 1)
+    String s = buildFile.getText().replaceFirst("version '$version'", "version '" + major + m + "'")
+    println s
+    buildFile.setText(s)
+}
+
 apply plugin: "com.jfrog.artifactory"
+
+artifactoryPublish.dependsOn(incrementVersion)
 
 artifactory {
     contextUrl = 'https://artifactory.testessential.net/artifactory'
@@ -88,13 +100,12 @@ artifactory {
             publications('mavenJava')
             publishArtifacts = true
             // Properties to be attached to the published artifacts.
-            properties = ['qa.level': 'basic', 'dev.team' : 'core']
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
             // Publish generated POM files to Artifactory (true by default)
             publishPom = true
             maven = true
         }
     }
-    clientConfig.info.setBuildName('qa-optimus')
 }
 
 publishing {
