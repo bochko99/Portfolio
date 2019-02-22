@@ -22,7 +22,6 @@ apply plugin: 'maven-publish'
 
 
 group 'com.crypterium'
-version '1.0.1'
 
 sourceCompatibility = 1.8
 
@@ -72,18 +71,14 @@ artifacts {
 }
 
 task incrementVersion << {
-    String minor = version.substring(version.lastIndexOf('.') + 1)
-    println version
+    String v = "${version}"
+    String minor = v.substring(v.lastIndexOf('.') + 1)
     int m = minor.toInteger() + 1
-    String major = version.substring(0, version.length() - 1)
-    String s = buildFile.getText().replaceFirst("version '$version'", "version '" + major + m + "'")
-    println s
-    buildFile.setText(s)
+    String major = v.substring(0, v.length() - 1)
+    println "##teamcity[setParameter name='system.version' value='" + major + m + "']"
 } 
 
 apply plugin: "com.jfrog.artifactory"
-
-artifactoryPublish.dependsOn(incrementVersion)
 
 artifactory {
     contextUrl = 'https://artifactory.testessential.net/artifactory'
