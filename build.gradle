@@ -76,6 +76,7 @@ task incrementVersion << {
     int m = minor.toInteger() + 1
     String major = v.substring(0, v.length() - 1)
     println "##teamcity[setParameter name='system.version' value='" + major + m + "']"
+    version = "$major + $m"
 } 
 
 apply plugin: "com.jfrog.artifactory"
@@ -101,6 +102,7 @@ artifactory {
             maven = true
         }
     }
+
 }
 
 publishing {
