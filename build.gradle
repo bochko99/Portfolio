@@ -71,7 +71,7 @@ artifacts {
 }
 
 task incrementVersion << {
-    String v = "${version}"
+    String v = "${ver}"
     String minor = v.substring(v.lastIndexOf('.') + 1)
     int m = minor.toInteger() + 1
     String major = v.substring(0, v.length() - 1)
