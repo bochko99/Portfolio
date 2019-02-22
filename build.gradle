@@ -30,6 +30,7 @@ repositories {
 }
 
 dependencies {
+    compile gradleApi()
     compile files('libs/sqljdbc42.jar')
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
     compile 'org.codehaus.groovy:groovy-all:2.5.4'
@@ -69,15 +70,6 @@ configurations {
 artifacts {
     testOutput jarTest
 }
-
-task incrementVersion << {
-    String v = "${ver}"
-    String minor = v.substring(v.lastIndexOf('.') + 1)
-    int m = minor.toInteger() + 1
-    String major = v.substring(0, v.length() - 1)
-    println "##teamcity[setParameter name='system.version' value='" + major + m + "']"
-    version = "$major + $m"
-} 
 
 apply plugin: "com.jfrog.artifactory"
 
