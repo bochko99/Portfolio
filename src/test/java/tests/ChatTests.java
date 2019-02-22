@@ -1,15 +1,15 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.chat.ChatCreateMessageModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
-import pojos.chat.ChatCreateMessageModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 
 public class ChatTests extends MobileTest {
 

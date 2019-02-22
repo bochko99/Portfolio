@@ -1,8 +1,8 @@
 package tests.core;
 
+import com.crypterium.cryptApi.utils.SpecStorage;
 import io.restassured.RestAssured;
 import org.junit.BeforeClass;
-import utils.SpecStorage;
 
 public class MobileTest extends BaseTest {
 

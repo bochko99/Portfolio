@@ -1,20 +1,20 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.favorite.FavoritesInvoiceModel;
+import com.crypterium.cryptApi.pojos.favorite.FavoritesQuoteModel;
+import com.crypterium.cryptApi.pojos.operations.OperationModel;
+import com.crypterium.cryptApi.pojos.quotes.Quote;
+import com.crypterium.cryptApi.pojos.quotes.QuoteModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
-import pojos.favorite.FavoritesInvoiceModel;
-import pojos.favorite.FavoritesQuoteModel;
-import pojos.operations.OperationModel;
-import pojos.quotes.Quote;
-import pojos.quotes.QuoteModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 

@@ -1,13 +1,13 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.users.UsersProfileCheckModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Test;
-import pojos.users.UsersProfileCheckModel;
-import utils.EndPoints;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static io.restassured.RestAssured.given;
 
 public class UsersTests extends NewUserTests {

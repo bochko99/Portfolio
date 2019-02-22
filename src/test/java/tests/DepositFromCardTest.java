@@ -1,18 +1,18 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.deposit.*;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.deposit.*;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.*;
 
 public class DepositFromCardTest extends MobileTest {

@@ -1,16 +1,16 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.operations.OperationModel;
+import com.crypterium.cryptApi.pojos.operations.OperationsCommentModel;
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
-import pojos.operations.OperationModel;
-import pojos.operations.OperationsCommentModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static org.hamcrest.Matchers.equalTo;
 
 public class OperationsTests extends MobileTest {

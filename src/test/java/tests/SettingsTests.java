@@ -1,13 +1,11 @@
 package tests;
 
+import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
-import io.restassured.builder.ResponseSpecBuilder;
 import org.junit.Test;
 import tests.core.MobileTest;
-import utils.EndPoints;
 
-import static core.Auth.auth;
+import static com.crypterium.cryptApi.Auth.auth;
 import static io.restassured.RestAssured.given;
 
 public class SettingsTests extends MobileTest {
@@ -37,25 +35,23 @@ public class SettingsTests extends MobileTest {
     }
 
     @Test
-    @DisplayName(EndPoints.settings_version + " GET")
-    public void testGetSettingsVersion406() {
+    @DisplayName(EndPoints.settings_version + " GET: 200")
+    public void testGetSettingsVersion() {
+
         given()
-                .header("User-Agent", "Crypterium/1.5 (Android; 26): samsung SM-A530F")
+                .header("User-Agent", "Crypterium/1.6.3 (Android; 26): samsung SM-A530F")
+                .get(EndPoints.settings_version).then().statusCode(200);
+    }
+
+    @Test
+    @DisplayName(EndPoints.settings_version + " GET: 406")
+    public void testGetSettingsVersion406() {
+
+        given().header("User-Agent", "Crypterium/1.6.2 (Android; 26): samsung SM-A530F")
                 .expect().statusCode(406).when()
                 .get(EndPoints.settings_version);
 
     }
-
-    @Test
-    @DisplayName(EndPoints.settings_version + " GET")
-    public void testGetSettingsVersion200() {
-
-        given()
-                .header("User-Agent", "Crypterium/1.6.5 (Android; 26): samsung SM-A530F")
-                .get(EndPoints.settings_version);
-
-    }
-
 
     @Test
     @DisplayName(EndPoints.settings_deposits + " GET")

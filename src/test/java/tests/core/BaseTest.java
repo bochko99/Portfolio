@@ -1,11 +1,11 @@
 package tests.core;
 
+import com.crypterium.cryptApi.utils.Environment;
 import core.rules.CredentialsRule;
 import core.rules.FinancialAnnotationRule;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
-import utils.Environment;
 
 public class BaseTest {
 

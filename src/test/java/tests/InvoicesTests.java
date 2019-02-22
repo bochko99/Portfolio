@@ -1,5 +1,13 @@
 package tests;
 
+import com.crypterium.cryptApi.pojos.UserPojo;
+import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.pojos.invoices.InvoiceBodyModel;
+import com.crypterium.cryptApi.pojos.invoices.InvoiceFundsWalletModel;
+import com.crypterium.cryptApi.pojos.invoices.InvoicesPaymentModel;
+import com.crypterium.cryptApi.pojos.users.UsersProfileResponseModel;
+import com.crypterium.cryptApi.utils.EndPoints;
+import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Credentials;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
@@ -8,15 +16,7 @@ import io.restassured.path.json.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
-import pojos.UserPojo;
-import pojos.fundsWallet.FundswalletModel;
-import pojos.invoices.InvoiceBodyModel;
-import pojos.invoices.InvoiceFundsWalletModel;
-import pojos.invoices.InvoicesPaymentModel;
-import pojos.users.UsersProfileResponseModel;
 import tests.core.MobileTest;
-import utils.EndPoints;
-import utils.Environment;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static core.Auth.auth;
-import static core.Auth.authSingle;
+import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.authSingle;
 import static core.Currency.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.DecoderConfig.decoderConfig;
