@@ -207,15 +207,15 @@ public class EndPoints {
 
     //Wallet operations
     public static final String wallet_id = "/wallet/{walletId}";
-    public static final String address = "/wallet/address/{currency}";
+    public static final String wallet_address = "/wallet/address/{currency}";
     public static final String wallet_create = "/wallet/create";
     public static final String wallet_create_provider = "/wallet/create/{currency}";
-    public static final String currencies_ex = "/wallet/currencies";
+    public static final String wallet_currencies_ex = "/wallet/currencies";
     public static final String wallet_list = "/wallet/list";
     public static final String wallet_rates = "/wallet/rates";
-    public static final String rates_currencies = "/wallet/rates/{currency}";
+    public static final String wallet_rates_currencies = "/wallet/rates/{currency}";
     public static final String wallet_send = "/wallet/send";
     public static final String wallet_fee = "/wallet/send/fee/{currency}";
-    public static final String transaction_ex = "/wallet/transactions";
+    public static final String wallet_transaction_ex = "/wallet/transactions";
     public static final String wallet_verify = "/wallet/verify/{currency}/{address}";
 }

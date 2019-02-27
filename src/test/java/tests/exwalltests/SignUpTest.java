@@ -11,7 +11,7 @@ import static com.crypterium.cryptApi.Auth.createUser;
 //import static com.c
 import static io.restassured.RestAssured.given;
 
-public class SignUp extends ExwalTest {
+public class SignUpTest extends ExwalTest {
 
     @Test
     @DisplayName("Register new user")

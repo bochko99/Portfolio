@@ -72,8 +72,13 @@ public class ExwalAuth extends AuthProvider {
 
     @Override
     public RequestSpecification authSingle(String login, String password) {
-        return null;
-    }
+        String accessTokenSingle = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
+                .queryParam("number", login)
+                .queryParam("password", password)
+                .post(EndPoints.token)
+                .then().extract().body().jsonPath().getString("access_token");
+        return SpecStorage.exwal().header("Authorization", "Bearer " + accessTokenSingle);
+        }
 
     @Override
     public void flush() {
