@@ -42,6 +42,7 @@ public class InvoicesTests extends MobileTest {
     }
 
     @Test
+    @Ignore
     @Credentials(login = "70000000090", password = "testbeta90")
     public void transfersForEugene() {
         SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
