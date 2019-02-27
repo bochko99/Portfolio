@@ -1,9 +1,9 @@
 package tests;
 
 
-import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalReqOffer;
-import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalReqTransfer;
-import com.crypterium.cryptApi.pojos.bankwithdrawal.BankWithdrawalRespOffer;
+import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalReqOffer;
+import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalReqTransfer;
+import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalRespOffer;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;

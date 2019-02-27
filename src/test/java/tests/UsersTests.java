@@ -1,6 +1,6 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.users.UsersProfileCheckModel;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileCheckModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;

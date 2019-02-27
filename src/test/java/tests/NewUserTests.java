@@ -1,7 +1,7 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.CountryItem;
-import com.crypterium.cryptApi.pojos.users.*;
+import com.crypterium.cryptApi.oldback.pojos.CountryItem;
+import com.crypterium.cryptApi.oldback.pojos.users.*;
 import com.crypterium.cryptApi.utils.*;
 import io.qameta.allure.Step;
 import tests.core.MobileTest;
