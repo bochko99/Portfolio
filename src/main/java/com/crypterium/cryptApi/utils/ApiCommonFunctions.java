@@ -14,6 +14,14 @@ import static io.restassured.RestAssured.given;
 
 public class ApiCommonFunctions {
 
+    public static CredentialEntry getRecipient() {
+        CredentialEntry entry = new CredentialEntry()
+                .setLogin("70000012345")
+                .setPassword("1234567")
+                .setType("recipient");
+        return Environment.CREDENTIALS.getOrDefault("recipient", entry);
+    }
+
     public static CountryItem getCountryByCode(String code) {
         CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);
         Optional<CountryItem> country = Arrays.stream(allCountries)

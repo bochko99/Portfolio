@@ -1,11 +1,12 @@
 package tests;
 
-import com.crypterium.cryptApi.oldback.pojos.UserPojo;
 import com.crypterium.cryptApi.oldback.pojos.fundsWallet.FundswalletModel;
 import com.crypterium.cryptApi.oldback.pojos.invoices.InvoiceBodyModel;
 import com.crypterium.cryptApi.oldback.pojos.invoices.InvoiceFundsWalletModel;
 import com.crypterium.cryptApi.oldback.pojos.invoices.InvoicesPaymentModel;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileResponseModel;
+import com.crypterium.cryptApi.utils.ApiCommonFunctions;
+import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Credentials;
@@ -34,9 +35,7 @@ import static org.hamcrest.Matchers.*;
 
 public class InvoicesTests extends MobileTest {
 
-    private UserPojo recipient = new UserPojo()
-            .setPhone("70000000091")
-            .setPassword("testbeta91");
+    private CredentialEntry recipient = ApiCommonFunctions.getRecipient();
 
     public static Pair p(String currency, Float amount) {
         return new Pair(currency, amount);
@@ -50,19 +49,19 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModelCrpt = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.11" + time))
                 .setCurrency(CRPT)
-                .setCryptoWalletAddress(getWallet(recipient.getPhone(), recipient.getPassword(), CRPT))
+                .setCryptoWalletAddress(getWallet(recipient.getLogin(), recipient.getPassword(), CRPT))
                 .setCommissionAmount(BigDecimal.ZERO);
 
         InvoiceBodyModel bodyModelETH = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.0013" + time))
                 .setCurrency(ETH)
-                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()))
+                .setWithdrawPersonNumber(getUserId(recipient.getLogin(), recipient.getPassword()))
                 .setCommissionAmount(BigDecimal.ZERO);
 
         InvoiceBodyModel bodyModelBTC = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00014" + time))
                 .setCurrency(BTC)
-                .setWithdrawPersonLogin(recipient.getPhone())
+                .setWithdrawPersonLogin(recipient.getLogin())
                 .setCommissionAmount(BigDecimal.ZERO);
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModelCrpt, commonInvoiceModelCallback(CRPT));
@@ -179,7 +178,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(BTC)
-                .setWithdrawPersonLogin(recipient.getPhone());
+                .setWithdrawPersonLogin(recipient.getLogin());
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(BTC));
     }
@@ -191,7 +190,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(LTC)
-                .setWithdrawPersonLogin(recipient.getPhone());
+                .setWithdrawPersonLogin(recipient.getLogin());
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(LTC));
     }
@@ -203,7 +202,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(ETH)
-                .setWithdrawPersonLogin(recipient.getPhone());
+                .setWithdrawPersonLogin(recipient.getLogin());
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(ETH));
     }
@@ -215,7 +214,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(CRPT)
-                .setCryptoWalletAddress((getWallet(recipient.getPhone(), recipient.getPassword(), CRPT)));
+                .setCryptoWalletAddress((getWallet(recipient.getLogin(), recipient.getPassword(), CRPT)));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, feeInvoiceModelCallback(CRPT, ETH));
     }
@@ -227,7 +226,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(BTC)
-                .setCryptoWalletAddress((getWallet(recipient.getPhone(), recipient.getPassword(), BTC)));
+                .setCryptoWalletAddress((getWallet(recipient.getLogin(), recipient.getPassword(), BTC)));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(BTC));
     }
@@ -239,7 +238,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(ETH)
-                .setCryptoWalletAddress((getWallet(recipient.getPhone(), recipient.getPassword(), ETH)));
+                .setCryptoWalletAddress((getWallet(recipient.getLogin(), recipient.getPassword(), ETH)));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(ETH));
     }
@@ -251,7 +250,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(LTC)
-                .setCryptoWalletAddress((getWallet(recipient.getPhone(), recipient.getPassword(), LTC)));
+                .setCryptoWalletAddress((getWallet(recipient.getLogin(), recipient.getPassword(), LTC)));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(LTC));
     }
@@ -263,7 +262,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(CRPT)
-                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()));
+                .setWithdrawPersonNumber(getUserId(recipient.getLogin(), recipient.getPassword()));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, feeInvoiceModelCallback(CRPT, ETH));
     }
@@ -275,7 +274,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(BTC)
-                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()));
+                .setWithdrawPersonNumber(getUserId(recipient.getLogin(), recipient.getPassword()));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(BTC));
     }
@@ -287,7 +286,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(ETH)
-                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()));
+                .setWithdrawPersonNumber(getUserId(recipient.getLogin(), recipient.getPassword()));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(ETH));
     }
@@ -299,7 +298,7 @@ public class InvoicesTests extends MobileTest {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(LTC)
-                .setWithdrawPersonNumber(getUserId(recipient.getPhone(), recipient.getPassword()));
+                .setWithdrawPersonNumber(getUserId(recipient.getLogin(), recipient.getPassword()));
 
         testInvoice(commonInvoiceCreator(EndPoints.invoices_withdraw), bodyModel, commonInvoiceModelCallback(LTC));
     }
@@ -380,7 +379,7 @@ public class InvoicesTests extends MobileTest {
 
     }
 
-//    @Financial
+    //    @Financial
     @Test
     @DisplayName("Mobile")
     public void testMobile() {

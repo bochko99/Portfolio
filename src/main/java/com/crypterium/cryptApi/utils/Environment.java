@@ -2,6 +2,7 @@ package com.crypterium.cryptApi.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -9,7 +10,7 @@ import java.util.Properties;
 public class Environment {
 
     private static Properties props = new Properties();
-    public static final Map<String, CredentialEntry> CREDENTIALS = new HashMap<>();
+    private static final Map<String, CredentialEntry> CREDENTIALS_INIT = new HashMap<>();
 
     static {
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")) {
@@ -31,14 +32,14 @@ public class Environment {
                     type = parts[1];
                     keyword = parts[2];
                 }
-                CredentialEntry crnt = CREDENTIALS.getOrDefault(type, new CredentialEntry());
+                CredentialEntry crnt = CREDENTIALS_INIT.getOrDefault(type, new CredentialEntry());
                 if ("login".equalsIgnoreCase(keyword)) {
                     crnt.setLogin(value);
                 } else if ("password".equalsIgnoreCase(keyword)) {
                     crnt.setPassword(value);
                 }
                 crnt.setType(type);
-                CREDENTIALS.put(type, crnt);
+                CREDENTIALS_INIT.put(type, crnt);
             });
 
         } catch (IOException e) {
@@ -50,7 +51,7 @@ public class Environment {
         return props.getProperty(key);
     }
 
-
+    public static final Map<String, CredentialEntry> CREDENTIALS = Collections.unmodifiableMap(CREDENTIALS_INIT);
     public static final String TARGET = props.getProperty("target", "BETA");
     public static final String FINANCE_OPERATIONS_ALLOWED = props.getProperty("allowFinanceOperations", "false");
     public static final String BASE_PATH = props.getProperty("basePath", Constants.MOBILE);
