@@ -1,7 +1,7 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.operations.OperationModel;
-import com.crypterium.cryptApi.pojos.operations.OperationsCommentModel;
+import com.crypterium.cryptApi.oldback.pojos.operations.OperationModel;
+import com.crypterium.cryptApi.oldback.pojos.operations.OperationsCommentModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;

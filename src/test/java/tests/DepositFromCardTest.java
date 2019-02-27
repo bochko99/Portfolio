@@ -1,6 +1,6 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.deposit.*;
+import com.crypterium.cryptApi.oldback.pojos.deposit.*;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;

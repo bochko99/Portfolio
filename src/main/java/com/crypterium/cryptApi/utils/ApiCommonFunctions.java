@@ -1,6 +1,6 @@
 package com.crypterium.cryptApi.utils;
 
-import com.crypterium.cryptApi.pojos.CountryItem;
+import com.crypterium.cryptApi.oldback.pojos.CountryItem;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 

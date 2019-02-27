@@ -1,7 +1,7 @@
 import com.crypterium.cryptApi.Auth;
-import com.crypterium.cryptApi.pojos.LoginModel;
-import com.crypterium.cryptApi.pojos.bitgo.BitgoReqModel;
-import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.oldback.pojos.LoginModel;
+import com.crypterium.cryptApi.oldback.pojos.bitgo.BitgoReqModel;
+import com.crypterium.cryptApi.oldback.pojos.fundsWallet.FundswalletModel;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;

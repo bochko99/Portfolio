@@ -1,8 +1,8 @@
 package tests;
 
 import com.crypterium.cryptApi.Auth;
-import com.crypterium.cryptApi.pojos.users.UsersProfileKyc1Model;
-import com.crypterium.cryptApi.pojos.users.UsersProfileKyc2Model;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileKyc1Model;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileKyc2Model;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;

@@ -1,11 +1,11 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.UserPojo;
-import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
-import com.crypterium.cryptApi.pojos.invoices.InvoiceBodyModel;
-import com.crypterium.cryptApi.pojos.invoices.InvoiceFundsWalletModel;
-import com.crypterium.cryptApi.pojos.invoices.InvoicesPaymentModel;
-import com.crypterium.cryptApi.pojos.users.UsersProfileResponseModel;
+import com.crypterium.cryptApi.oldback.pojos.UserPojo;
+import com.crypterium.cryptApi.oldback.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.oldback.pojos.invoices.InvoiceBodyModel;
+import com.crypterium.cryptApi.oldback.pojos.invoices.InvoiceFundsWalletModel;
+import com.crypterium.cryptApi.oldback.pojos.invoices.InvoicesPaymentModel;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileResponseModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Credentials;
@@ -380,13 +380,13 @@ public class InvoicesTests extends MobileTest {
 
     }
 
-    @Financial
+//    @Financial
     @Test
     @DisplayName("Mobile")
     public void testMobile() {
         InvoiceBodyModel bodyModel = new InvoiceBodyModel()
-                .setMobile("79163164205")
-                .setAmount(new BigDecimal("10"));
+                .setMobile("79854430122")
+                .setAmount(new BigDecimal("20"));
         testInvoice(commonInvoiceCreator(EndPoints.invoices_mobile), bodyModel, feeTopUpMobileCallback());
 
 

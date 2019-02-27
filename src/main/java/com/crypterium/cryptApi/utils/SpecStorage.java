@@ -61,6 +61,30 @@ public class SpecStorage {
             .addFilter(new AllureRestAssured())
             .build();
 
+    private static final RequestSpecification exwalRequest = new RequestSpecBuilder()
+            .setConfig(RestAssured.config().headerConfig(HeaderConfig.headerConfig()
+                    .overwriteHeadersWithName("Authorization", "Content-Type")))
+            .setAccept(ContentType.JSON)
+            .setContentType(ContentType.JSON)
+            .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
+            .setBaseUri(Environment.EXWAL_BASE_URL)
+            .setBasePath(Constants.EXWAL_BASE)
+            .addFilter(new RequestLoggingFilter())
+            .addFilter(new ResponseLoggingFilter())
+            .addFilter(new ErrorLoggingFilter())
+            .addFilter(new AllureRestAssured())
+            .build();
+
+    private static final RequestSpecification oAuth = new RequestSpecBuilder()
+            .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
+            .setBaseUri(Environment.EXWAL_BASE_URL)
+            .setBasePath(Constants.EXWAL_OAUTH)
+            .addFilter(new RequestLoggingFilter())
+            .addFilter(new ResponseLoggingFilter())
+            .addFilter(new ErrorLoggingFilter())
+            .addFilter(new AllureRestAssured())
+            .build();
+
     public static RequestSpecification commonRequestSpec() {
         return commonRequestSpec;
     }
@@ -76,4 +100,8 @@ public class SpecStorage {
     public static RequestSpecification management() {
         return RestAssured.given().spec(managementRequest);
     }
+
+    public static RequestSpecification exwal(){return RestAssured.given().spec(exwalRequest);}
+
+    public static RequestSpecification exwalOauth(){return  RestAssured.given().spec(oAuth);}
 }

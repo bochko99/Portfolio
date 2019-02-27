@@ -1,8 +1,8 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.users.UsersProfileEmailConfirmModel;
-import com.crypterium.cryptApi.pojos.users.UsersProfileMobileconfirmModel;
-import com.crypterium.cryptApi.pojos.users.UsersProfileModel;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileEmailConfirmModel;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileMobileconfirmModel;
+import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileModel;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;

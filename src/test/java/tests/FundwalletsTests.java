@@ -1,6 +1,6 @@
 package tests;
 
-import com.crypterium.cryptApi.pojos.fundsWallet.FundswalletModel;
+import com.crypterium.cryptApi.oldback.pojos.fundsWallet.FundswalletModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
