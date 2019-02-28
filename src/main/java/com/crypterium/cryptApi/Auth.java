@@ -1,13 +1,12 @@
 package com.crypterium.cryptApi;
 
-import com.crypterium.cryptApi.newback.ExwalAuth;
 import com.crypterium.cryptApi.oldback.CAuth;
 import io.restassured.specification.RequestSpecification;
 
 public class Auth {
 
 
-    private static AuthProvider provider = new ExwalAuth();
+    private static AuthProvider provider = new CAuth();
 
 
     public Auth() {
