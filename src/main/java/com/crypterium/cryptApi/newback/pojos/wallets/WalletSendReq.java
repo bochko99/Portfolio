@@ -4,6 +4,8 @@ package com.crypterium.cryptApi.newback.pojos.wallets;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
+import java.math.BigDecimal;
+
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class WalletSendReq {
@@ -11,7 +13,7 @@ public class WalletSendReq {
     @Expose
     private String address;
     @Expose
-    private Long amount;
+    private BigDecimal amount;
     @Expose
     private String currency;
     @Expose
@@ -32,11 +34,11 @@ public class WalletSendReq {
         return this;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public WalletSendReq setAmount(Long amount) {
+    public WalletSendReq setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

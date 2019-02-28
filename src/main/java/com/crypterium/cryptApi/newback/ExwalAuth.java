@@ -3,11 +3,8 @@ package com.crypterium.cryptApi.newback;
 import com.crypterium.cryptApi.AuthProvider;
 import com.crypterium.cryptApi.newback.pojos.signupoperation.ConfirmPhone;
 import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;
-import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
-import com.crypterium.cryptApi.utils.Environment;
 import com.crypterium.cryptApi.utils.SpecStorage;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -52,7 +49,7 @@ public class ExwalAuth extends AuthProvider {
                     .setCountry("RU")
                     .setPhone(phoneNumber)
                     .setRegion("");
-            statusCode = given().body(signup).post(EndPoints.signup).statusCode();
+            statusCode = given().body(signup).post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
                 break;
             }
@@ -62,7 +59,7 @@ public class ExwalAuth extends AuthProvider {
                     .setPhone(phoneNumber)
                     .setFingerprint("ade713aa-bfa9-412d-a3d2-c39bfcea6e94")
                     .setSmsCode("12345");
-            accesstoken = given().body(confirmPhone).post(EndPoints.phone_confirm).then().extract().body().jsonPath().getString("access_token");
+            accesstoken = given().body(confirmPhone).post(EndPoints.mobile_phone_confirm).then().extract().body().jsonPath().getString("access_token");
             return SpecStorage.exwal().header("Authorization", "Bearer " + accesstoken);
         }
         else{

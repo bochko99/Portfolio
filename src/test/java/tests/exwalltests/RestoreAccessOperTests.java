@@ -10,39 +10,33 @@ import org.junit.Test;
 import tests.core.ExwalTest;
 
 import static com.crypterium.cryptApi.Auth.auth;
+import static io.restassured.RestAssured.given;
 
-public class RestoreAccessOperTest extends ExwalTest {
+public class RestoreAccessOperTests extends ExwalTest {
 
-    @Test
-    @DisplayName(EndPoints.password_change + " PUT")
-    public void testChangePass() {
-        ChangeReq changeReq = new ChangeReq()
-                .setCurrentPassword("1234567")
-                .setNewPassword("123456");
-        auth().body(changeReq).put(EndPoints.password_change);
-    }
+
 
     @Test
-    @DisplayName(EndPoints.password_reset + " POST")
+    @DisplayName(EndPoints.mobile_password_reset + " POST")
     public void testResetPass() {
         ResetReq resetReq = new ResetReq()
                 .setPhone("70000005400");
-        auth().body(resetReq).post(EndPoints.password_reset);
+        given().body(resetReq).post(EndPoints.mobile_password_reset);
 
     }
 
     @Test
-    @DisplayName(EndPoints.code_reset_pass + " POST")
+    @DisplayName(EndPoints.mobile_password_reset_confirm_code + " POST")
     public void testConfirmCode() {
         CheckCodeReq checkCodeReq = new CheckCodeReq()
                 .setCode("12345")
                 .setPhone("70000005400");
 
-        auth().body(checkCodeReq).post(EndPoints.code_reset_pass);
+        given().body(checkCodeReq).post(EndPoints.mobile_password_reset_confirm_code);
     }
 
     @Test
-    @DisplayName(EndPoints.set_new_password + " POST")
+    @DisplayName(EndPoints.mobile_password_reset_confirm + " POST")
     public void testSetNewPass() {
 
         SetNewPassReq setNewPassReq = new SetNewPassReq()
@@ -50,8 +44,17 @@ public class RestoreAccessOperTest extends ExwalTest {
                 .setPassword("123456")
                 .setPhone("70000005400");
 
-        auth().body(setNewPassReq).get(EndPoints.set_new_password);
+        given().body(setNewPassReq).post(EndPoints.mobile_password_reset_confirm);
 
+    }
+
+    @Test
+    @DisplayName(EndPoints.mobile_password_change + " PUT")
+    public void testChangePass() {
+        ChangeReq changeReq = new ChangeReq()
+                .setCurrentPassword("123456")
+                .setNewPassword("123456");
+        auth().body(changeReq).put(EndPoints.mobile_password_change);
     }
 
 
