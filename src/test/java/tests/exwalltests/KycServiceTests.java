@@ -2,8 +2,9 @@ package tests.exwalltests;
 
 import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.EndPoints;
+import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.builder.MultiPartSpecBuilder;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
@@ -35,16 +36,24 @@ public class KycServiceTests extends ExwalTest {
 
     //Дописать загрузку документаnew File("/resources/photofor/kyc/document.jpg")
     @Test
+    @Credentials(creatingNewUser = true)
     @DisplayName(EndPoints.kyc_upload_document + " POST")
     public void testUploadDocument() {
+        File document =
+                new File(this.getClass().getClassLoader().getResource("photoforkyc/document.jpg").getFile());
+        File selfie =
+                new File(this.getClass().getClassLoader().getResource("photoforkyc/selfie.jpg").getFile());
 
         registerNewUser();
-        auth().queryParam("docType", "PASSPORT_FRONT")
-                .multiPart(new MultiPartSpecBuilder(new File("/resources/photoforkyc/document.jpg")).build()).
-                when().
-                post(EndPoints.kyc_upload_document);
-//        auth().queryParam("docType", "SELFIE").multiPart(new File("/resources/photofor/kyc/selfie.jpg")).
-//                when().
-//                post(EndPoints.kyc_upload_document);
+        auth().header("Content-Type", "multipart/jpg")
+                .queryParam("docType", "PASSPORT_FRONT")
+                .multiPart("image", document)
+                .when().post(EndPoints.kyc_upload_document);
+        auth().header("Content-Type", "multipart/jpg")
+                .queryParam("docType", "SELFIE")
+                .multiPart("image", selfie)
+                .when().post(EndPoints.kyc_upload_document);
+        auth().get(EndPoints.kyc_identity_ex).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
+
     }
 }
