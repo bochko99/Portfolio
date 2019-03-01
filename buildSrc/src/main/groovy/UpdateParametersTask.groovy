@@ -5,6 +5,8 @@ import io.restassured.specification.RequestSpecification
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.stream.Collectors
 
 class UpdateParametersTask extends DefaultTask {
@@ -27,7 +29,12 @@ class UpdateParametersTask extends DefaultTask {
                 .build()
 
         //get test classes
-        List<File> allClasses = Arrays.asList(new File("${project.buildDir.path}/classes/java/test/tests").listFiles())
+        List<String> allClasses = Files.walk(Paths.get("${project.buildDir.path}/classes/java/test/tests"))
+                .filter {
+            return Files.isRegularFile(it) && it.fileName.toString().endsWith("Tests.class")
+        }.sorted().map {
+            return it.fileName.toString().split('\\.')[0]
+        }.collect(Collectors.toList())
 
         //delete each test checkbox in tc and add new for each test class
         RestAssured.given().spec(spec).body("")
@@ -40,18 +47,14 @@ class UpdateParametersTask extends DefaultTask {
             }
         }
 
-        def testClasses = allClasses.stream().filter {
-            it.name.endsWith("Tests.class")
-        }.sorted().collect(Collectors.toList())
-
         StringBuilder sb = new StringBuilder().append("\$defineScopeTemp\n")
         def template = "\$myArg = \"%myArg%\"\n" +
                 "if (\$myArg -eq \"true\") {\n" +
                 "   \$defineScopeTemp=\"\$defineScopeTemp --tests myArg\"\n" +
                 "}\n"
 
-        testClasses.forEach {
-            def name = it.name.split('\\.')[0]
+        allClasses.forEach {
+            def name = it.toString()
             RestAssured.given().spec(spec).body(true).put("${name}")
             RestAssured.given().spec(spec)
                     .body("checkbox uncheckedValue='false' display='prompt' checkedValue='true'")

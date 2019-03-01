@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import static core.Currency.BTC;
 
 
-public class BankWithdrawalTest extends MobileTest {
+public class BankWithdrawalTests extends MobileTest {
 
     @Ignore
     @Test

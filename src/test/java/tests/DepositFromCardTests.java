@@ -15,7 +15,7 @@ import java.util.Optional;
 import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.*;
 
-public class DepositFromCardTest extends MobileTest {
+public class DepositFromCardTests extends MobileTest {
 
     @Ignore
     @Test

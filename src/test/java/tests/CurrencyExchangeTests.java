@@ -14,7 +14,7 @@ import static core.Currency.BTC;
 import static core.Currency.ETH;
 
 
-public class CurrencyExchangeTest extends MobileTest {
+public class CurrencyExchangeTests extends MobileTest {
 
     @Ignore
     @Test
