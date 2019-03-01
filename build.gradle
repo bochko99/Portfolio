@@ -74,8 +74,6 @@ artifacts {
 
 apply plugin: "com.jfrog.artifactory"
 
-artifactoryPublish.dependsOn(update)
-
 artifactory {
     contextUrl = 'https://artifactory.testessential.net/artifactory'
     publish {
