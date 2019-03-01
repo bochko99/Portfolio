@@ -5,6 +5,7 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
@@ -16,6 +17,7 @@ import static io.restassured.RestAssured.given;
 public class KycServiceTests extends ExwalTest {
 
     @Test
+    @Ignore
     @DisplayName(EndPoints.kyc_customer_profile + " GET")
     public void testKycProfile() {
 
