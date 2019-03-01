@@ -10,10 +10,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Random;
 
+import static com.crypterium.cryptApi.Auth.exauth;
 import static io.restassured.RestAssured.given;
 
 public class ExwalAuth extends AuthProvider {
-    String accesstoken = "";
+    private String accesstoken = "";
+    private String adminToken = "";
 
     @Override
     public RequestSpecification auth(String login, String password) {
@@ -55,14 +57,17 @@ public class ExwalAuth extends AuthProvider {
             }
         }
         if (statusCode == 200) {
+            String smsCode = exauth().admin().queryParam("phone", phoneNumber)
+                    .queryParam("event", "MOBILE_SIGN_UP")
+                    .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
             ConfirmPhone confirmPhone = new ConfirmPhone()
                     .setPhone(phoneNumber)
                     .setFingerprint("ade713aa-bfa9-412d-a3d2-c39bfcea6e94")
-                    .setSmsCode("12345");
+                    .setSmsCode(smsCode);
             accesstoken = given().body(confirmPhone).post(EndPoints.mobile_phone_confirm).then().extract().body().jsonPath().getString("access_token");
+
             return SpecStorage.exwal().header("Authorization", "Bearer " + accesstoken);
-        }
-        else{
+        } else {
             throw new RuntimeException("Couldn't generate phone number after 10 attempts");
         }
     }
@@ -75,10 +80,22 @@ public class ExwalAuth extends AuthProvider {
                 .post(EndPoints.token)
                 .then().extract().body().jsonPath().getString("access_token");
         return SpecStorage.exwal().header("Authorization", "Bearer " + accessTokenSingle);
-        }
+    }
 
     @Override
     public void flush() {
 
+    }
+
+    public RequestSpecification admin() {
+        if (adminToken.isEmpty()) {
+            adminToken = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
+                    .queryParam("number", "70009999999")
+                    .queryParam("password", "PXx7Gk8E")
+                    .header("Authorization", "Basic c3VwcG9ydDpzdXBwb3J0XzFfMV9zZWNyZXQ=")
+                    .post(EndPoints.token)
+                    .then().extract().body().jsonPath().getString("access_token");
+        }
+        return SpecStorage.exwal().header("Authorization", "Bearer " + adminToken);
     }
 }

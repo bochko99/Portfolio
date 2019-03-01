@@ -2,41 +2,70 @@ package com.crypterium.cryptApi;
 
 import com.crypterium.cryptApi.newback.ExwalAuth;
 import com.crypterium.cryptApi.oldback.CAuth;
-import io.restassured.specification.RequestSpecification;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Auth {
 
+    private static final String DEFAULT_FINGERPRINT = UUID.randomUUID().toString();
 
-    private static AuthProvider provider = new ExwalAuth();
+    private static Map<String, CAuth> cauthCache = new HashMap<>();
+    private static Map<String, ExwalAuth> exauthCache = new HashMap<>();
 
+    private static AuthType defaultType = AuthType.EXWAL;
 
     public Auth() {
+
     }
 
-    public static Auth basic(String defaultLogin, String defaultPassword) {
-        provider.basic(defaultLogin, defaultPassword);
-        return new Auth();
+    public static CAuth cauth() {
+        return cauth(DEFAULT_FINGERPRINT);
     }
 
-
-    public static RequestSpecification auth(String login, String password) {
-        return provider.auth(login, password);
+    public static CAuth cauth(String fingerprint) {
+        CAuth instance = cauthCache.getOrDefault(fingerprint, new CAuth());
+        if (!cauthCache.containsKey(fingerprint)) {
+            cauthCache.put(fingerprint, instance);
+        }
+        return instance;
     }
 
-    public static RequestSpecification auth() {
-        return provider.auth();
+    public static ExwalAuth exauth() {
+        return exauth(DEFAULT_FINGERPRINT);
     }
 
-    public static RequestSpecification createUser() {
-        return provider.createUser();
+    public static ExwalAuth exauth(String fingerprint) {
+        ExwalAuth instance = exauthCache.getOrDefault(fingerprint, new ExwalAuth());
+        if (!exauthCache.containsKey(fingerprint)) {
+            exauthCache.put(fingerprint, instance);
+        }
+        return instance;
     }
 
-    public static RequestSpecification authSingle(String login, String password) {
-        return provider.authSingle(login, password);
+    public static void basic(AuthType type) {
+        defaultType = type;
     }
 
-    public static void flush() {
-        provider.flush();
+    public static <T extends AuthProvider> T service() {
+        return service(DEFAULT_FINGERPRINT);
     }
+
+    @SuppressWarnings("all")
+    public static <T extends AuthProvider> T service(String fingerprint) {
+        switch (defaultType) {
+            case EXWAL:
+                return (T) exauth(fingerprint);
+            case CSHARP:
+                return (T) cauth(fingerprint);
+        }
+        return null;
+    }
+
+    public enum AuthType {
+        EXWAL, CSHARP
+    }
+
 
 }

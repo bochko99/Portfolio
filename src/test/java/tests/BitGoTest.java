@@ -1,5 +1,6 @@
 package tests;
 
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileEmailConfirmModel;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileMobileconfirmModel;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileModel;
@@ -11,8 +12,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import tests.core.MobileTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
-import static com.crypterium.cryptApi.Auth.createUser;
+import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.utils.SpecStorage.gl;
 import static com.crypterium.cryptApi.utils.SpecStorage.management;
 import static io.restassured.RestAssured.given;
@@ -38,7 +38,7 @@ public class BitGoTest extends MobileTest {
                 .setLastName("Tolstov")
                 .setCitizenshipCountry("RU");
 
-        createUser()
+        service().createUser()
                 .body(body)
                 .put(EndPoints.users_profile).then().extract().header(Constants.X_USER_ID);
 
@@ -68,7 +68,7 @@ public class BitGoTest extends MobileTest {
                 .get(EndPoints.account_records)
                 .then().body("size()", equalTo(expectedCount));
 
-        auth().get(EndPoints.fundswallets).then().body("size()", equalTo(4));
+        Auth.service().auth().get(EndPoints.fundswallets).then().body("size()", equalTo(4));
     }
 
 }

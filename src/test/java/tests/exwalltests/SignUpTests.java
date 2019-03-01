@@ -1,6 +1,8 @@
 package tests.exwalltests;
 
-import com.crypterium.cryptApi.newback.pojos.signupoperation.*;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.ResendEmail;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.ResendPhone;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
@@ -11,9 +13,7 @@ import tests.core.ExwalTest;
 
 import java.util.Random;
 
-import static com.crypterium.cryptApi.Auth.auth;
-
-import static com.crypterium.cryptApi.Auth.createUser;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class SignUpTests extends ExwalTest {
@@ -47,18 +47,18 @@ public class SignUpTests extends ExwalTest {
         }
         ResendPhone resend = new ResendPhone()
                 .setPhone(phoneNumber);
-        auth().body(resend).post(EndPoints.mobile_phone_resend);
+        service().auth().body(resend).post(EndPoints.mobile_phone_resend);
     }
 
     @Test
     @DisplayName(EndPoints.mobile_email_resend + " POST")
     public void testResendEmailCode() {
-        createUser();
+        service().createUser();
         String email = ApiCommonFunctions.generateFreeEmail();
         ResendEmail resendEmail = new ResendEmail()
                 .setEmail(email);
 
-       auth().body(resendEmail).post(EndPoints.mobile_email_resend);
+        service().auth().body(resendEmail).post(EndPoints.mobile_email_resend);
     }
 
 

@@ -1,4 +1,3 @@
-import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.oldback.pojos.LoginModel;
 import com.crypterium.cryptApi.oldback.pojos.bitgo.BitgoReqModel;
 import com.crypterium.cryptApi.oldback.pojos.fundsWallet.FundswalletModel;
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.BTC;
 import static io.restassured.RestAssured.given;
 
@@ -68,19 +67,19 @@ public class FirstTest extends MobileTest {
     @Ignore
     @DisplayName(EndPoints.transactions_history + " GET")
     public void testGetTransactionsHistory() {
-        auth().get(EndPoints.transactions_history);
+        service().auth().get(EndPoints.transactions_history);
     }
 
     @Test
     @DisplayName(EndPoints.transfers_frequent + " GET")
     public void testGetTransfersFrequent() {
-        auth().get(EndPoints.transfers_frequent);
+        service().auth().get(EndPoints.transfers_frequent);
     }
 
     @Test
     @DisplayName(EndPoints.transfers_recent + " GET")
     public void testGetTransfersRecent() {
-        auth().get(EndPoints.transfers_recent);
+        service().auth().get(EndPoints.transfers_recent);
     }
 
     @Test
@@ -88,7 +87,7 @@ public class FirstTest extends MobileTest {
     @DisplayName(EndPoints.bitgo + " POST")
     public void testPostBitgo() {
         BigDecimal amount = new BigDecimal(1000);
-        FundswalletModel[] wallets = auth("70000026914", "1234567")
+        FundswalletModel[] wallets = service().auth("70000026914", "1234567")
                 .get(EndPoints.fundswallets).as(FundswalletModel[].class);
         FundswalletModel oldBitGoWallet = Stream.of(wallets)
                 .filter(w -> "bitgo".equalsIgnoreCase(w.getType()))
@@ -102,11 +101,11 @@ public class FirstTest extends MobileTest {
                 .setToAddress(oldBitGoWallet.getDescription())
                 .setIdempotentId(UUID.randomUUID().toString());
 
-        auth().basePath(Constants.CALLBACK).body(model).post(EndPoints.bitgo);
+        service().auth().basePath(Constants.CALLBACK).body(model).post(EndPoints.bitgo);
 
-        FundswalletModel[] newWallets = auth()
+        FundswalletModel[] newWallets = service().auth()
                 .get(EndPoints.fundswallets).as(FundswalletModel[].class);
-        Auth.flush();
+        service().flush();
 
         FundswalletModel newBitGoWallet = Stream.of(newWallets)
                 .filter(w -> w.getCurrency().equalsIgnoreCase(oldBitGoWallet.getCurrency()))

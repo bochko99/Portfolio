@@ -9,7 +9,7 @@ import tests.core.MobileTest;
 
 import java.math.BigDecimal;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.BTC;
 import static core.Currency.ETH;
 
@@ -21,7 +21,7 @@ public class CurrencyExchangeTest extends MobileTest {
     @DisplayName(EndPoints.currencyexchange_directions + " GET")
     public void currencyExchangeDirection() {
 
-        auth().get(EndPoints.currencyexchange_directions);
+        service().auth().get(EndPoints.currencyexchange_directions);
 
     }
 
@@ -35,7 +35,7 @@ public class CurrencyExchangeTest extends MobileTest {
                 .setSourceCurrencyCode(BTC)
                 .setTargetCurrencyCode(ETH);
 
-        auth().body(model).post(EndPoints.currencyexchange_offers);
+        service().auth().body(model).post(EndPoints.currencyexchange_offers);
 
     }
 
@@ -44,7 +44,7 @@ public class CurrencyExchangeTest extends MobileTest {
     @DisplayName(EndPoints.currencyexchange_transfers + " POST")
     public void currencyExchangeTransfers() {
 
-        auth().post(EndPoints.currencyexchange_transfers);
+        service().auth().post(EndPoints.currencyexchange_transfers);
 
     }
 

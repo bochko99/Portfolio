@@ -12,7 +12,7 @@ import tests.core.ExwalTest;
 
 import java.util.Random;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class CardOrderOperationsTests extends ExwalTest {
@@ -49,12 +49,12 @@ public class CardOrderOperationsTests extends ExwalTest {
     @DisplayName(EndPoints.mobile_card_order + " POST")
     public void testCardOrderPost() {
         registerNewUser();
-        auth().post(EndPoints.mobile_card_order);
+        service().auth().post(EndPoints.mobile_card_order);
     }
 
     @Test
     @DisplayName(EndPoints.mobile_card_order + " GET")
     public void testCardOrderGet() {
-        auth().get(EndPoints.mobile_card_order);
+        service().auth().get(EndPoints.mobile_card_order);
     }
 }

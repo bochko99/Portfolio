@@ -8,7 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.MobileTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.BTC;
 
 public class FundwalletsTests extends MobileTest {
@@ -16,7 +16,7 @@ public class FundwalletsTests extends MobileTest {
     @Test
     @DisplayName(EndPoints.fundswallets + " GET")
     public void testGetFundswallets() {
-        auth().get(EndPoints.fundswallets);
+        service().auth().get(EndPoints.fundswallets);
     }
 
     @Test
@@ -31,7 +31,7 @@ public class FundwalletsTests extends MobileTest {
                 .setDescription("Best MSC in the world!")
                 .setEncryptedKey(address);
 
-        String walletId = auth("70000005332", "1234567")
+        String walletId = service().auth("70000005332", "1234567")
                 .body(model)
                 .pathParam("id", uuid)
                 .post(EndPoints.fundswallets_id)

@@ -9,7 +9,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class RestoreAccessOperTests extends ExwalTest {
@@ -54,7 +54,7 @@ public class RestoreAccessOperTests extends ExwalTest {
         ChangeReq changeReq = new ChangeReq()
                 .setCurrentPassword("123456")
                 .setNewPassword("123456");
-        auth().body(changeReq).put(EndPoints.mobile_password_change);
+        service().auth().body(changeReq).put(EndPoints.mobile_password_change);
     }
 
 

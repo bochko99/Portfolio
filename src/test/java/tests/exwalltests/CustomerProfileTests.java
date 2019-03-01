@@ -8,14 +8,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 
 public class CustomerProfileTests extends ExwalTest {
 
     @Test
     @DisplayName(EndPoints.customer_profile + " GET")
     public void testProfile() {
-        auth().get(EndPoints.customer_profile);
+        service().auth().get(EndPoints.customer_profile);
     }
 
 
@@ -29,12 +29,12 @@ public class CustomerProfileTests extends ExwalTest {
                 RandomStringUtils.randomAlphabetic(5)
         );
         ProfileReq profileReq = new ProfileReq().setFirstName(name);
-        auth().body(profileReq).put(EndPoints.customer_profile);
+        service().auth().body(profileReq).put(EndPoints.customer_profile);
     }
 
     @Test
     @DisplayName(EndPoints.customer_profile_loyality + " GET")
     public void testLoyality() {
-        auth().get(EndPoints.customer_profile_loyality);
+        service().auth().get(EndPoints.customer_profile_loyality);
     }
 }

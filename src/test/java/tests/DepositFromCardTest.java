@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.*;
 
 public class DepositFromCardTest extends MobileTest {
@@ -21,21 +21,21 @@ public class DepositFromCardTest extends MobileTest {
     @Test
     @DisplayName(EndPoints.depositfromcard_limits + " GET")
     public void testDepositFromCardLimits() {
-        auth().get(EndPoints.depositfromcard_limits);
+        service().auth().get(EndPoints.depositfromcard_limits);
     }
 
     @Ignore
     @Test
     @DisplayName(EndPoints.depositfromcard_success + " GET")
     public void testDepositFromCardSuccess() {
-        auth().get(EndPoints.depositfromcard_success);
+        service().auth().get(EndPoints.depositfromcard_success);
     }
 
     @Ignore
     @Test
     @DisplayName(EndPoints.depositfromcard_failed + " GET")
     public void testDepositFromCardFailed() {
-        auth().get(EndPoints.depositfromcard_failed);
+        service().auth().get(EndPoints.depositfromcard_failed);
     }
 
     @Ignore
@@ -104,11 +104,11 @@ public class DepositFromCardTest extends MobileTest {
                 .setHolder("TEST TEST")
                 .setExpiredAt("202312")
                 .setCvv("369");
-        String id = auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
+        String id = service().auth().body(transfer).post(EndPoints.depositfromcard_transfers).then()
                 .body("status", Matchers.equalTo("Verified"))
                 .extract().body().jsonPath().getString("id");
 
-        auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
+        service().auth().pathParam("id", id).get(EndPoints.depositfromcard_redirect_id);
 
     }
 
@@ -122,7 +122,7 @@ public class DepositFromCardTest extends MobileTest {
         DepositReqOfferModel model = new DepositReqOfferModel()
                 .setOrder(order);
 
-        return auth().body(model).post(EndPoints.depositfromcard_offers).as(DepositRespOfferModel.class);
+        return service().auth().body(model).post(EndPoints.depositfromcard_offers).as(DepositRespOfferModel.class);
 
     }
 
@@ -137,13 +137,13 @@ public class DepositFromCardTest extends MobileTest {
                 .setExpiredAt("202312")
                 .setCvv("369");
 
-        return auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
+        return service().auth().body(transfer).post(EndPoints.depositfromcard_transfers).as(DepositRespTransferModel.class);
 
     }
 
     private BigDecimal getMinAmountForCurrency(String currency) {
 
-        List<MinAmountModel> limits = auth().get(EndPoints.depositfromcard_limits)
+        List<MinAmountModel> limits = service().auth().get(EndPoints.depositfromcard_limits)
                 .then().extract().body().jsonPath().getList("cryptoLimits.minAmount", MinAmountModel.class);
 
         Optional<MinAmountModel> model = limits.stream().filter(m -> m.getCurrency().equalsIgnoreCase(currency)).findFirst();

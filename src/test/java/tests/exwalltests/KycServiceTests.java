@@ -11,7 +11,7 @@ import tests.core.ExwalTest;
 
 import java.io.File;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class KycServiceTests extends ExwalTest {
@@ -23,7 +23,7 @@ public class KycServiceTests extends ExwalTest {
 
 
         UserProfileModel userProfileModel =
-                auth().get(EndPoints.customer_profile).as(UserProfileModel.class);
+                service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class);
         Long customerId = userProfileModel.getCustomerId();
         given().pathParam("customerId", customerId).get(EndPoints.kyc_customer_profile);
     }
@@ -32,7 +32,7 @@ public class KycServiceTests extends ExwalTest {
     @DisplayName(EndPoints.kyc_identity_ex + " GET")
     public void testKycIdentity() {
 
-        auth().get(EndPoints.kyc_identity_ex);
+        service().auth().get(EndPoints.kyc_identity_ex);
 
     }
 
@@ -47,15 +47,15 @@ public class KycServiceTests extends ExwalTest {
                 new File(this.getClass().getClassLoader().getResource("photoforkyc/selfie.jpg").getFile());
 
         registerNewUser();
-        auth().header("Content-Type", "multipart/jpg")
+        service().auth().header("Content-Type", "multipart/jpg")
                 .queryParam("docType", "PASSPORT_FRONT")
                 .multiPart("image", document)
                 .when().post(EndPoints.kyc_upload_document);
-        auth().header("Content-Type", "multipart/jpg")
+        service().auth().header("Content-Type", "multipart/jpg")
                 .queryParam("docType", "SELFIE")
                 .multiPart("image", selfie)
                 .when().post(EndPoints.kyc_upload_document);
-        auth().get(EndPoints.kyc_identity_ex).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
+        service().auth().get(EndPoints.kyc_identity_ex).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
 
     }
 }

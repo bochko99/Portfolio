@@ -16,21 +16,21 @@ public abstract class AuthProvider {
         }
     }
 
-    void basic(String login, String password) {
-        defaultLogin = defaultLogin;
-        defaultPassword = defaultPassword;
+    public void basic(String login, String password) {
+        defaultLogin = login;
+        defaultPassword = password;
         System.out.println(String.format("New login: %s ; new password: %s", defaultLogin, defaultPassword));
 
     }
 
-    protected abstract RequestSpecification auth(String login, String password);
+    public abstract RequestSpecification auth(String login, String password);
 
-    protected abstract RequestSpecification auth();
+    public abstract RequestSpecification auth();
 
-    protected abstract RequestSpecification createUser();
+    public abstract RequestSpecification createUser();
 
-    protected abstract RequestSpecification authSingle(String login, String password);
+    public abstract RequestSpecification authSingle(String login, String password);
 
-    protected abstract void flush();
+    public abstract void flush();
 
 }

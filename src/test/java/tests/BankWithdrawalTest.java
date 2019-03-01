@@ -1,6 +1,7 @@
 package tests;
 
 
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalReqOffer;
 import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalReqTransfer;
 import com.crypterium.cryptApi.oldback.pojos.bankwithdrawal.BankWithdrawalRespOffer;
@@ -13,7 +14,6 @@ import tests.core.MobileTest;
 
 import java.math.BigDecimal;
 
-import static com.crypterium.cryptApi.Auth.auth;
 import static core.Currency.BTC;
 
 
@@ -24,7 +24,7 @@ public class BankWithdrawalTest extends MobileTest {
     @DisplayName(EndPoints.bankwithdrawals_banks + " GET")
     public void testBanks() {
 
-        auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
+        Auth.service().auth().queryParam("bic", "044525745").get(EndPoints.bankwithdrawals_banks);
 
     }
 
@@ -33,7 +33,7 @@ public class BankWithdrawalTest extends MobileTest {
     @DisplayName(EndPoints.bankwithdrawals_limits_rubank + " GET")
     public void testBanksLimitsRub() {
 
-        auth().get(EndPoints.bankwithdrawals_limits_rubank);
+        Auth.service().auth().get(EndPoints.bankwithdrawals_limits_rubank);
 
     }
 
@@ -42,7 +42,7 @@ public class BankWithdrawalTest extends MobileTest {
     @DisplayName(EndPoints.bankwithdrawals_limits_countries + " GET")
     public void testBanksLimitsCountries() {
 
-        auth().get(EndPoints.bankwithdrawals_limits_countries);
+        Auth.service().auth().get(EndPoints.bankwithdrawals_limits_countries);
 
     }
 
@@ -51,7 +51,7 @@ public class BankWithdrawalTest extends MobileTest {
     @DisplayName(EndPoints.bankwithdrawals_rates_rubank + " GET")
     public void testBanksRates() {
 
-        auth().queryParam("currency", BTC).get(EndPoints.bankwithdrawals_rates_rubank);
+        Auth.service().auth().queryParam("currency", BTC).get(EndPoints.bankwithdrawals_rates_rubank);
 
     }
 
@@ -74,7 +74,7 @@ public class BankWithdrawalTest extends MobileTest {
         BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
                 .setAmount(new BigDecimal(1.0))
                 .setCurrency(BTC);
-        BankWithdrawalRespOffer offer = auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
+        BankWithdrawalRespOffer offer = Auth.service().auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
                 .as(BankWithdrawalRespOffer.class);
 
         BankWithdrawalReqTransfer transfer = new BankWithdrawalReqTransfer()
@@ -86,7 +86,7 @@ public class BankWithdrawalTest extends MobileTest {
                 .setPayeeFirstName("Тест")
                 .setPayeeMiddleName("Тест")
                 .setPayeeLastName("Тест");
-        auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
+        Auth.service().auth().body(transfer).post(EndPoints.bankwithdrawals_transfers_rubank);
 
     }
 
@@ -95,7 +95,7 @@ public class BankWithdrawalTest extends MobileTest {
         BankWithdrawalReqOffer model = new BankWithdrawalReqOffer()
                 .setAmount(new BigDecimal(0.002))
                 .setCurrency(BTC);
-        return auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
+        return Auth.service().auth().body(model).post(EndPoints.bankwithdrawals_offers_rubank)
                 .as(BankWithdrawalRespOffer.class);
 
 

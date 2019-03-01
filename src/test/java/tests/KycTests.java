@@ -1,6 +1,5 @@
 package tests;
 
-import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileKyc1Model;
 import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileKyc2Model;
 import com.crypterium.cryptApi.utils.EndPoints;
@@ -12,7 +11,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 public class KycTests extends NewUserTests {
@@ -29,14 +28,14 @@ public class KycTests extends NewUserTests {
                 .setFrontsideUrl("https://cdn.pbrd.co/images/HZ0L695.jpg")
                 .setSelfieUrl("https://cdn.pbrd.co/images/HZ0LiNH.jpg");
 
-        auth()
+        service().auth()
                 .body(model)
                 .when()
                 .post(EndPoints.identity)
                 .then()
                 .body("success", Matchers.equalTo(true));
 
-        Auth.flush();
+        service().flush();
     }
 
     @Test
@@ -53,10 +52,10 @@ public class KycTests extends NewUserTests {
                 .setRegistrationZip("123456")
                 .setRegistrationDocumentUrls(Collections.singletonList("https://s3-us-west-1.amazonaws.com/crypterium.mobile.upload.beta2/KYC1/DEBD6A60-6326-450D-AB5C-D0A453439FAF.jpg"));
 
-        auth().body(model).put(EndPoints.users_profile_kyc2);
-        auth().post(EndPoints.users_profile_kyc2_verify);
-        auth().get(EndPoints.users_profile_kyc2).then().body("status", equalToIgnoringCase("SUBMITTED"));
-        Auth.flush();
+        service().auth().body(model).put(EndPoints.users_profile_kyc2);
+        service().auth().post(EndPoints.users_profile_kyc2_verify);
+        service().auth().get(EndPoints.users_profile_kyc2).then().body("status", equalToIgnoringCase("SUBMITTED"));
+        service().flush();
     }
 
 }

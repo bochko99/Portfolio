@@ -7,7 +7,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class UsersTests extends NewUserTests {
@@ -15,7 +15,7 @@ public class UsersTests extends NewUserTests {
     @Test
     @DisplayName(EndPoints.users_profile + " GET")
     public void testGetUsersProfile() {
-        auth().get(EndPoints.users_profile);
+        service().auth().get(EndPoints.users_profile);
     }
 
     @Test
@@ -35,19 +35,19 @@ public class UsersTests extends NewUserTests {
     @Test
     @DisplayName(EndPoints.users_profile_terms_agree + " POST")
     public void testPostUsersProfileTermsAgree() {
-        auth().post(EndPoints.users_profile_terms_agree);
+        service().auth().post(EndPoints.users_profile_terms_agree);
     }
 
     @Test
     @DisplayName(EndPoints.users_profile_terms_iban_agree + " POST")
     public void testPostUsersProfileTermsIbanAgree() {
-        auth().post(EndPoints.users_profile_terms_iban_agree);
+        service().auth().post(EndPoints.users_profile_terms_iban_agree);
     }
 
     @Test
     @DisplayName(EndPoints.users_profile_loyalty + " GET")
     public void testGetUsersProfileLoyalty() {
-        auth().get(EndPoints.users_profile_loyalty);
+        service().auth().get(EndPoints.users_profile_loyalty);
     }
 
     @Test
@@ -66,13 +66,13 @@ public class UsersTests extends NewUserTests {
     @Test
     @DisplayName(EndPoints.users_logins + " POST")
     public void testPostUsersLogins() {
-        auth().body(new String[]{"70000000001"}).post(EndPoints.users_logins);
+        service().auth().body(new String[]{"70000000001"}).post(EndPoints.users_logins);
     }
 
     @Test
     @DisplayName(EndPoints.users_profile_kyc0 + " GET")
     public void testGetUsersProfileKyc0() {
-        auth().get(EndPoints.users_profile_kyc0);
+        service().auth().get(EndPoints.users_profile_kyc0);
     }
 
 

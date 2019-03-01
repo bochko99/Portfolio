@@ -26,8 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.crypterium.cryptApi.Auth.auth;
-import static com.crypterium.cryptApi.Auth.authSingle;
+import static com.crypterium.cryptApi.Auth.service;
 import static core.Currency.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.DecoderConfig.decoderConfig;
@@ -74,7 +73,7 @@ public class InvoicesTests extends MobileTest {
     @Credentials(type = "au")
     @DisplayName(EndPoints.invoices_bpay + " POST")
     public void testPostInvoicesBpay() {
-        auth().post(EndPoints.invoices_bpay);
+        service().auth().post(EndPoints.invoices_bpay);
     }
 
     @Test
@@ -90,7 +89,7 @@ public class InvoicesTests extends MobileTest {
     @Credentials(type = "au")
     @DisplayName(EndPoints.invoices_bsb + " POST")
     public void testPostInvoicesBsb() {
-        auth().post(EndPoints.invoices_bsb);
+        service().auth().post(EndPoints.invoices_bsb);
     }
 
     @Test
@@ -105,7 +104,7 @@ public class InvoicesTests extends MobileTest {
     @Test
     @DisplayName(EndPoints.invoices_iban + " POST")
     public void testPostInvoicesIban() {
-        auth().post(EndPoints.invoices_iban);
+        service().auth().post(EndPoints.invoices_iban);
     }
 
     @Test
@@ -117,7 +116,7 @@ public class InvoicesTests extends MobileTest {
     @Test
     @DisplayName(EndPoints.invoices_mobile + " POST")
     public void testPostInvoicesMobile() {
-        auth().config(RestAssured.config().decoderConfig(decoderConfig().noContentDecoders())).post(EndPoints.invoices_mobile);
+        service().auth().config(RestAssured.config().decoderConfig(decoderConfig().noContentDecoders())).post(EndPoints.invoices_mobile);
     }
 
     @Test
@@ -143,32 +142,32 @@ public class InvoicesTests extends MobileTest {
     @Test
     @DisplayName(EndPoints.invoices_commissions + " GET")
     public void testGetInvoicesCommissions() {
-        auth().get(EndPoints.invoices_commissions);
+        service().auth().get(EndPoints.invoices_commissions);
     }
 
     @Test
     @DisplayName(EndPoints.invoices_withdraw + " POST")
     public void testPostInvoicesWithdraw() {
-        auth().post(EndPoints.invoices_withdraw);
+        service().auth().post(EndPoints.invoices_withdraw);
     }
 
     @Test
     @DisplayName(EndPoints.invoices_exchange + " POST")
     public void testPostInvoicesExchange() {
-        auth().post(EndPoints.invoices_exchange);
+        service().auth().post(EndPoints.invoices_exchange);
     }
 
     @Test
     @DisplayName(EndPoints.invoices_exchanges_rates + " GET")
     public void testGetInvoicesExchangesRates() {
-        auth().get(EndPoints.invoices_exchanges_rates).then().body("size()", greaterThan(0));
+        service().auth().get(EndPoints.invoices_exchanges_rates).then().body("size()", greaterThan(0));
     }
 
     @Test
     @DisplayName(EndPoints.invoices_id + " GET")
     public void testGetInvoicesId() {
-        String id = auth().post(EndPoints.invoices_exchange).then().extract().body().jsonPath().get("id");
-        auth().pathParam("id", id).get(EndPoints.invoices_id);
+        String id = service().auth().post(EndPoints.invoices_exchange).then().extract().body().jsonPath().get("id");
+        service().auth().pathParam("id", id).get(EndPoints.invoices_id);
     }
 
     @Financial
@@ -312,7 +311,7 @@ public class InvoicesTests extends MobileTest {
         String code = given().pathParam("iban", iban).get(EndPoints.invoices_iban_banks_iban)
                 .then().extract().body().jsonPath().getString("code");
 
-        String invoiceId = auth().post(EndPoints.invoices_iban).jsonPath().getString("id");
+        String invoiceId = service().auth().post(EndPoints.invoices_iban).jsonPath().getString("id");
 
         InvoiceBodyModel model = new InvoiceBodyModel()
                 .setIban(iban)
@@ -321,12 +320,12 @@ public class InvoicesTests extends MobileTest {
                 .setReceiverLastName("LastName")
                 .setAmount(new BigDecimal("3"));
 
-        JsonPath response = auth().body(model).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
+        JsonPath response = service().auth().body(model).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
         Float feeAmount = response.getFloat("fee.customerCommissionAmount");
         Float totalAmount = response.getFloat("totalAmount");
         InvoicesPaymentModel paymentModel = createInvoicesPaymentModel("1111", p(BTC, totalAmount), p(CRPT, feeAmount));
 
-        auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
+        service().auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
 
     }
 
@@ -401,7 +400,7 @@ public class InvoicesTests extends MobileTest {
                 .setMobile(Environment.CREDENTIALS.get("default").getLogin())
                 .setAmount(new BigDecimal("0.00001"))
                 .setCurrency(BTC);
-        InvoiceCreator voucherCreator = () -> auth().pathParam("service", "Viber")
+        InvoiceCreator voucherCreator = () -> service().auth().pathParam("service", "Viber")
                 .post(EndPoints.invoices_voucher_service).jsonPath().getString("id");
         testInvoice(voucherCreator, bodyModel, feeInvoiceModelCallback(BTC, CRPT));
 
@@ -425,21 +424,21 @@ public class InvoicesTests extends MobileTest {
     }
 
     private String getWallet(String login, String password, String currency) {
-        FundswalletModel[] wallets = authSingle(login, password).get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        FundswalletModel[] wallets = service().authSingle(login, password).get(EndPoints.fundswallets).as(FundswalletModel[].class);
         return Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(currency)).findFirst().get().getDescription();
     }
 
     private String getWallet(String currency) {
-        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        FundswalletModel[] wallets = service().auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
         return Stream.of(wallets).filter(w -> w.getCurrency().equalsIgnoreCase(currency)).findFirst().get().getDescription();
     }
 
     private String getUserId(String login, String password) {
-        return authSingle(login, password).get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
+        return service().authSingle(login, password).get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
     }
 
     private String getUserId() {
-        return auth().get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
+        return service().auth().get(EndPoints.users_profile).as(UsersProfileResponseModel.class).getNumber().toString();
     }
 
     private void testInvoice(InvoiceCreator invoiceCreator, InvoiceBodyModel bodyModel, InvoiceModelCallback modelCallback) {
@@ -447,26 +446,26 @@ public class InvoicesTests extends MobileTest {
         String invoiceId = invoiceCreator.create();
 
         //Put data to invoice
-        JsonPath response = auth().body(bodyModel).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
+        JsonPath response = service().auth().body(bodyModel).pathParam("id", invoiceId).put(EndPoints.invoices_id).jsonPath();
 
         //Post payment
         InvoicesPaymentModel paymentModel = modelCallback.create(response);
-        auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
+        service().auth().body(paymentModel).pathParam("id", invoiceId).post(EndPoints.invoices_id_payments);
 
-        auth().queryParam("take", 5).get(EndPoints.operations)
+        service().auth().queryParam("take", 5).get(EndPoints.operations)
                 .then().assertThat().body("id", hasItem(invoiceId))
                 .body("find { it.id == '" + invoiceId + "'}.status", not("Failed"));
 
     }
 
     private String createInvoice(String endpoint) {
-        return auth().post(endpoint).jsonPath().getString("id");
+        return service().auth().post(endpoint).jsonPath().getString("id");
     }
 
 
     private InvoicesPaymentModel createInvoicesPaymentModel(String pin, Pair... pairs) {
         List<InvoiceFundsWalletModel> walletsData = new ArrayList<>();
-        FundswalletModel[] wallets = auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
+        FundswalletModel[] wallets = service().auth().get(EndPoints.fundswallets).as(FundswalletModel[].class);
 
 
         for (Pair p : pairs) {

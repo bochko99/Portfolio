@@ -14,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.cauth;
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -23,12 +24,12 @@ public class FavoritesTests extends MobileTest {
     @Test
     @DisplayName(EndPoints.favorites_invoices + "POST -> GET -> DELETE")
     public void testGetFavoritesInvoices() {
-        List<OperationModel> operations = Arrays.asList(auth().get(EndPoints.operations).as(OperationModel[].class));
+        List<OperationModel> operations = Arrays.asList(cauth().auth().get(EndPoints.operations).as(OperationModel[].class));
         String invoiceId = operations.get(new Random().nextInt(operations.size())).getId();
 
-        auth().body(new FavoritesInvoiceModel().setInvoiceId(invoiceId).setName("Test check")).post(EndPoints.favorites_invoices);
+        cauth().auth().body(new FavoritesInvoiceModel().setInvoiceId(invoiceId).setName("Test check")).post(EndPoints.favorites_invoices);
 
-        auth().get(EndPoints.favorites_invoices);
+        cauth().auth().get(EndPoints.favorites_invoices);
     }
 
 
@@ -40,16 +41,16 @@ public class FavoritesTests extends MobileTest {
         String currency = quote.getCurrency();
 
         //post
-        auth().body(new FavoritesQuoteModel().setCurrency(currency)).post(EndPoints.favorites_quotes);
+        service().auth().body(new FavoritesQuoteModel().setCurrency(currency)).post(EndPoints.favorites_quotes);
         //get
-        auth()
+        service().auth()
                 .get(EndPoints.favorites_quotes)
                 .then()
                 .body("$", hasItem(hasEntry("currency", currency)));
         //delete
-        auth().pathParam("currency", currency).delete(EndPoints.favorites_quotes_currency);
+        service().auth().pathParam("currency", currency).delete(EndPoints.favorites_quotes_currency);
 
-        auth()
+        service().auth()
                 .get(EndPoints.favorites_quotes)
                 .then()
                 .body("$", not(hasItem(hasEntry("currency", currency))));

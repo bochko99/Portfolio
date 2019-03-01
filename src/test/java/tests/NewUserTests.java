@@ -6,8 +6,7 @@ import com.crypterium.cryptApi.utils.*;
 import io.qameta.allure.Step;
 import tests.core.MobileTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
-import static com.crypterium.cryptApi.Auth.createUser;
+import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.utils.SpecStorage.management;
 import static io.restassured.RestAssured.given;
 
@@ -39,7 +38,7 @@ public class NewUserTests extends MobileTest {
             body.setCitizenshipCountry(country.getCode());
         }
         //create user by createUser and PUT data to it
-        createUser()
+        service().createUser()
                 .body(body)
                 .put(EndPoints.users_profile).then().extract().header(Constants.X_USER_ID);
 
@@ -62,12 +61,12 @@ public class NewUserTests extends MobileTest {
                         .setCode(emailConfirmationCode)
                         .setEmail(email))
                 .post(EndPoints.users_profile_email_confirm).then().extract().header(Constants.X_USER_ID);
-        auth()
+        service().auth()
                 .body((new UsersProfilePinVerifyModel()
                         .setPin(pin)))
                 .put(EndPoints.users_profile_pin_verify);
 
-        auth()
+        service().auth()
                 .body(new UsersProfilePasswordVerifyModel()
                         .setPassword(password))
                 .put(EndPoints.users_profile_password_verify);

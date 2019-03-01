@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
-import static com.crypterium.cryptApi.Auth.auth;
+import static com.crypterium.cryptApi.Auth.service;
 
 public class ExchangeSxTests extends ExwalTest {
 
@@ -14,7 +14,7 @@ public class ExchangeSxTests extends ExwalTest {
     @Ignore
     @DisplayName(EndPoints.mobile_sx_exchange + " POST")
     public void testExchange() {
-        auth().post(EndPoints.mobile_sx_exchange);
+        service().auth().post(EndPoints.mobile_sx_exchange);
     }
 
 
@@ -22,14 +22,14 @@ public class ExchangeSxTests extends ExwalTest {
     @Ignore
     @DisplayName(EndPoints.mobile_sx_exchange_rate + " POST")
     public void testExchangeRate() {
-        auth().post(EndPoints.mobile_sx_exchange_rate);
+        service().auth().post(EndPoints.mobile_sx_exchange_rate);
     }
 
     @Test
     @Ignore
     @DisplayName(EndPoints.mobile_sx_exchange_rate_transactionid + " POST")
     public void testExchangeRateTranId() {
-        auth().post(EndPoints.mobile_sx_exchange_rate_transactionid);
+        service().auth().post(EndPoints.mobile_sx_exchange_rate_transactionid);
     }
 
 
@@ -37,6 +37,6 @@ public class ExchangeSxTests extends ExwalTest {
     @Ignore
     @DisplayName(EndPoints.mobile_sx_rates + " GET")
     public void testCountry() {
-        auth().get(EndPoints.mobile_sx_rates);
+        service().auth().get(EndPoints.mobile_sx_rates);
     }
 }

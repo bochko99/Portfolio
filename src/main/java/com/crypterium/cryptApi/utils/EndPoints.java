@@ -159,6 +159,10 @@ public class EndPoints {
     //EXWAL
     public static final String token = "/token";
 
+    //Admin
+    public static final String admin_email_code = "/admin/email/code";
+    public static final String admin_sms_code = "/admin/sms/code";
+
     //API ex_settings_version controller
     public static final String ex_settings_version = "/settings/version";
 
