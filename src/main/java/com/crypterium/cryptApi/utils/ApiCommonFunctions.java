@@ -1,5 +1,7 @@
 package com.crypterium.cryptApi.utils;
 
+import com.crypterium.cryptApi.newback.pojos.catalogs.CountriesModel;
+import com.crypterium.cryptApi.newback.pojos.catalogs.Country;
 import com.crypterium.cryptApi.oldback.pojos.CountryItem;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -30,14 +32,14 @@ public class ApiCommonFunctions {
         return country.orElse(new CountryItem().setCode("RU"));
     }
 
-    public static CountryItem getRandomCountryByCryptoRestrictions(boolean isRestricted) {
+    public static Country getRandomCountryByCryptoRestrictions(boolean isRestricted) {
 
-        CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);
-        List<CountryItem> countries = Arrays.stream(allCountries)
+        List<Country> allCountries = given().get(EndPoints.catalog_countries).as(CountriesModel.class).getCountries();
+        List<Country> countries = allCountries.stream()
                 .filter(c -> c.getHasCryptoRestrictions().equals(isRestricted))
                 .filter(c -> !c.getName().contains(" ")).collect(Collectors.toList());
         if (countries.isEmpty()) {
-            return new CountryItem();
+            return new Country();
         } else {
             return countries.get(new Random().nextInt(countries.size()));
         }
