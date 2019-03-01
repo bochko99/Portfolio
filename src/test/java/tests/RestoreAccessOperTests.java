@@ -1,4 +1,4 @@
-package tests.exwalltests;
+package tests;
 
 import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.ChangeReq;
 import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.CheckCodeReq;

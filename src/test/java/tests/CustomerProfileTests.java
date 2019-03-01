@@ -1,4 +1,4 @@
-package tests.exwalltests;
+package tests;
 
 import com.crypterium.cryptApi.newback.pojos.customerprofile.ProfileReq;
 import com.crypterium.cryptApi.utils.EndPoints;

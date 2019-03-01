@@ -1,4 +1,4 @@
-package tests.exwalltests;
+package tests;
 
 import com.crypterium.cryptApi.newback.pojos.cardorderoperation.OrderReq;
 import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;

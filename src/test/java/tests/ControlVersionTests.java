@@ -1,4 +1,4 @@
-package tests.exwalltests;
+package tests;
 
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.junit4.DisplayName;
