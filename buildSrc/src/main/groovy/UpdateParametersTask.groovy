@@ -47,11 +47,10 @@ class UpdateParametersTask extends DefaultTask {
             }
         }
 
-        StringBuilder sb = new StringBuilder().append("\$defineScopeTemp\n")
-        def template = "\$myArg = \"%myArg%\"\n" +
-                "if (\$myArg -eq \"true\") {\n" +
-                "   \$defineScopeTemp=\"\$defineScopeTemp --tests myArg\"\n" +
-                "}\n"
+        StringBuilder sb = new StringBuilder().append("export defineScopeTemp=\"\"\n")
+        def template = "if [ %myArg% == true ]; then\n" +
+                "export defineScopeTemp=\"\$defineScopeTemp --tests myArg\"\n" +
+                "fi\n"
 
         allClasses.forEach {
             def name = it.toString()
@@ -64,7 +63,7 @@ class UpdateParametersTask extends DefaultTask {
             println name
         }
 
-        sb.append("Write-Host \"##teamcity[setParameter name='testClasses' value='\$defineScopeTemp']\"")
+        sb.append("printf \"##teamcity[setParameter name='testClasses' value='\$defineScopeTemp']\"")
         RestAssured.given().spec(spec).body(sb.toString())
                 .put("/defineScope")
 
