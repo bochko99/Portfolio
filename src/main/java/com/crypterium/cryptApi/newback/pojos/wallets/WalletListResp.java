@@ -1,9 +1,10 @@
 
 package com.crypterium.cryptApi.newback.pojos.wallets;
 
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
+
+import javax.annotation.Generated;
+import java.util.List;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")

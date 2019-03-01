@@ -5,7 +5,7 @@ public class EndPoints {
     //MOBILE
     //bankwithdrawals
     public static final String bankwithdrawals_offers_rubank = "/bankwithdrawals/offers/rubank";
-    public static final String bankwithdrawals_transfers_rubank = "bankwithdrawals_transfers_rubank";
+    public static final String bankwithdrawals_transfers_rubank = "bankwithdrawals/transfers/rubank";
     public static final String bankwithdrawals_banks = "/bankwithdrawals/banks";
     public static final String bankwithdrawals_limits_rubank = "/bankwithdrawals/limits/rubank";
     public static final String bankwithdrawals_limits_countries = "/bankwithdrawals/limits/countries";
@@ -159,63 +159,67 @@ public class EndPoints {
     //EXWAL
     public static final String token = "/token";
 
-    //API version controller
-    public static final String version = "/settings/version";
+    //Admin
+    public static final String admin_email_code = "/admin/email/code";
+    public static final String admin_sms_code = "/admin/sms/code";
+
+    //API ex_settings_version controller
+    public static final String ex_settings_version = "/settings/version";
 
     //API fro KYC service
-    public static final String kyc_profile = "/kyc/customer/{customerId}/profile";
-    public static final String identity_ex = "/kyc/identity";
-    public static final String upload_document = "/kyc/upload/document";
+    public static final String kyc_customer_profile = "/kyc/customer/{customerId}/profile";
+    public static final String kyc_identity_ex = "/kyc/identity";
+    public static final String kyc_upload_document = "/kyc/upload/document";
 
     //Card order operation
-    public static final String create_card_web = "/card/order";
-    public static final String create_card_auth_user = "/mobile/card/order";
+    public static final String card_order = "/card/order";
+    public static final String mobile_card_order = "/mobile/card/order";
 
     //Catalogs
-    public static final String comissions = "/catalog/commissions";
-    public static final String countries_ex = "/catalog/countries";
+    public static final String catalog_comissions = "/catalog/commissions";
+    public static final String catalog_countries = "/catalog/countries";
     public static final String catalog_currencies = "/catalog/currencies";
-    public static final String faq = "/catalog/faq";
-    public static final String operations_ex = "/catalog/operations";
+    public static final String catalog_faq = "/catalog/faq";
+    public static final String catalogs_operations_ex = "/catalog/operations";
 
-    //Customer profile
-    public static final String profile = "/customer/profile";
-    public static final String loyality = "/customer/profile/loyalty";
+    //Customer customer_profile
+    public static final String customer_profile = "/customer/profile";
+    public static final String customer_profile_loyality = "/customer/profile/loyalty";
 
     //Exchange sx
-    public static final String exchange = "/mobile/sx/exchange";
-    public static final String exchange_rate = "/mobile/sx/exchange/rate";
-    public static final String rate_transactionid = "/mobile/sx/exchange/rate/{transactionId}";
-    public static final String rates = "/mobile/sx/rates";
+    public static final String mobile_sx_exchange = "/mobile/sx/mobile_sx_exchange";
+    public static final String mobile_sx_exchange_rate = "/mobile/sx/mobile_sx_exchange/rate";
+    public static final String mobile_sx_exchange_rate_transactionid = "/mobile/sx/mobile_sx_exchange/rate/{transactionId}";
+    public static final String mobile_sx_rates = "/mobile/sx/mobile_sx_rates";
 
     //Restore access operations
-    public static final String password_change = "/mobile/password/change";
-    public static final String password_reset = "/mobile/password/reset";
-    public static final String set_new_password = "/mobile/password/reset/confirm";
-    public static final String code_reset_pass = "/mobile/password/reset/confirm/code";
+    public static final String mobile_password_change = "/mobile/password/change";
+    public static final String mobile_password_reset = "/mobile/password/reset";
+    public static final String mobile_password_reset_confirm = "/mobile/password/reset/confirm";
+    public static final String mobile_password_reset_confirm_code = "/mobile/password/reset/confirm/code";
 
     //SignUp
-    public static final String email_confirm = "/mobile/email/confirm";
-    public static final String email_verify = "/mobile/email/verify";
-    public static final String email_resend = "/mobile/email/verify/resend";
-    public static final String name_add = "/mobile/name/add";
-    public static final String phone_confirm = "/mobile/phone/confirm";
-    public static final String phone_resend = "/mobile/phone/verify/resend";
-    public static final String pin_setup = "/mobile/pin/setup";
-    public static final String password_setup = "/mobile/pwd/setup";
-    public static final String signup = "/mobile/signup";
+    public static final String mobile_email_confirm = "/mobile/email/confirm";
+    public static final String mobile_email_verify = "/mobile/email/verify";
+    public static final String mobile_email_resend = "/mobile/email/verify/resend";
+    public static final String mobile_name_add = "/mobile/name/add";
+    public static final String mobile_phone_confirm = "/mobile/phone/confirm";
+    public static final String mobile_phone_resend = "/mobile/phone/verify/resend";
+    public static final String mobile_pin_setup = "/mobile/pin/setup";
+    public static final String mobile_pwd_setup = "/mobile/pwd/setup";
+    public static final String mobile_signup = "/mobile/signup";
 
     //Wallet operations
-    public static final String wallet_id = "/wallet/{walletId}";
-    public static final String address = "/wallet/address/{currency}";
+    public static final String wallet_wallet_id = "/wallet/{walletId}";
+    public static final String wallet_address_currency = "/wallet/address/{currency}";
     public static final String wallet_create = "/wallet/create";
-    public static final String wallet_create_provider = "/wallet/create/{currency}";
-    public static final String currencies_ex = "/wallet/currencies";
+    public static final String wallet_create_currency = "/wallet/create/{currency}";
+    public static final String wallet_currencies_ex = "/wallet/currencies";
     public static final String wallet_list = "/wallet/list";
-    public static final String wallet_rates = "/wallet/rates";
-    public static final String rates_currencies = "/wallet/rates/{currency}";
+    public static final String wallet_mobile_sx_rates = "/wallet/rates";
+    public static final String wallet_mobile_sx_rates_currency = "/wallet/rates/{currency}";
     public static final String wallet_send = "/wallet/send";
-    public static final String wallet_fee = "/wallet/send/fee/{currency}";
-    public static final String transaction_ex = "/wallet/transactions";
-    public static final String wallet_verify = "/wallet/verify/{currency}/{address}";
+    public static final String wallet_send_fee_currency = "/wallet/send/fee/{currency}";
+    public static final String wallet_transaction_ex = "/wallet/transactions";
+    public static final String wallet_verify_currency_address = "/wallet/verify/{currency}/{address}";
 }

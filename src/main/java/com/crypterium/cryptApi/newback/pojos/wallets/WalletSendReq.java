@@ -1,9 +1,9 @@
 
 package com.crypterium.cryptApi.newback.pojos.wallets;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 
+import javax.annotation.Generated;
 import java.math.BigDecimal;
 
 @Generated("net.hexar.json2pojo")

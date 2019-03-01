@@ -1,8 +1,9 @@
 
 package com.crypterium.cryptApi.newback.pojos.exchangesx;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
+
+import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
