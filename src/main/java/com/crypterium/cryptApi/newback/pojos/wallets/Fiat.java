@@ -4,13 +4,14 @@ package com.crypterium.cryptApi.newback.pojos.wallets;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class Fiat {
 
     @Expose
-    private Long amount;
+    private BigDecimal amount;
     @Expose
     private Long change;
     @Expose
@@ -20,11 +21,11 @@ public class Fiat {
     @Expose
     private Long rate;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Fiat setAmount(Long amount) {
+    public Fiat setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

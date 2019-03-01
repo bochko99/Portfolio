@@ -4,6 +4,7 @@ package com.crypterium.cryptApi.newback.pojos.wallets;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Generated("net.hexar.json2pojo")
@@ -15,9 +16,9 @@ public class Wallet {
     @Expose
     private List<String> allowOperations;
     @Expose
-    private Long avaliableBalance;
+    private BigDecimal avaliableBalance;
     @Expose
-    private Long balance;
+    private BigDecimal balance;
     @Expose
     private String color;
     @Expose
@@ -53,20 +54,20 @@ public class Wallet {
         return this;
     }
 
-    public Long getAvaliableBalance() {
+    public BigDecimal getAvaliableBalance() {
         return avaliableBalance;
     }
 
-    public Wallet setAvaliableBalance(Long avaliableBalance) {
+    public Wallet setAvaliableBalance(BigDecimal avaliableBalance) {
         this.avaliableBalance = avaliableBalance;
         return this;
     }
 
-    public Long getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public Wallet setBalance(Long balance) {
+    public Wallet setBalance(BigDecimal balance) {
         this.balance = balance;
         return this;
     }
