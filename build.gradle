@@ -72,6 +72,10 @@ artifacts {
     testOutput jarTest
 }
 
+test {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+}
+
 apply plugin: "com.jfrog.artifactory"
 
 artifactory {

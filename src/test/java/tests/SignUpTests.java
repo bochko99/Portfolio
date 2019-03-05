@@ -47,7 +47,7 @@ public class SignUpTests extends ExwalTest {
         }
         ResendPhone resend = new ResendPhone()
                 .setPhone(phoneNumber);
-        service().auth().body(resend).post(EndPoints.mobile_phone_resend);
+        given().body(resend).post(EndPoints.mobile_phone_resend);
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
@@ -25,11 +26,9 @@ public class CustomerProfileTests extends ExwalTest {
     public void testProfilePUT() {
         registerNewUser();
 
-        String name = String.format("%s",
-                RandomStringUtils.randomAlphabetic(5)
-        );
+        String name = RandomStringUtils.randomAlphabetic(5);
         ProfileReq profileReq = new ProfileReq().setFirstName(name);
-        service().auth().body(profileReq).put(EndPoints.customer_profile);
+        service().auth().body(profileReq).put(EndPoints.customer_profile).then().body("firstName", Matchers.equalToIgnoringCase(name));
     }
 
     @Test

@@ -10,7 +10,6 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
@@ -82,7 +81,7 @@ public class WalletsTests extends ExwalTest {
 
         service().auth().queryParam("address", address)
                 .pathParams("currency", "BTC")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
     }
 
@@ -116,7 +115,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("phone", recipient.getLogin())
                 .pathParams("currency", "LTC")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -138,7 +137,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("phone", recipient.getLogin())
                 .pathParams("currency", "BTC")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -158,7 +157,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("phone", recipient.getLogin())
                 .pathParams("currency", "ETH")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -172,13 +171,12 @@ public class WalletsTests extends ExwalTest {
     }
 
     @Test
-    @Ignore
     @Financial
     @DisplayName("Sendcrypto CRPT by phone")
     public void testCRPTbyPhone() {
         GetFee getFee = service().auth().queryParam("phone", recipient.getLogin())
                 .pathParams("currency", "CRPT")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -203,7 +201,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("address", address)
                 .pathParams("currency", "LTC")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -230,7 +228,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("address", address)
                 .pathParams("currency", "BTC")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -256,7 +254,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("address", address)
                 .pathParams("currency", "ETH")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 
@@ -271,7 +269,6 @@ public class WalletsTests extends ExwalTest {
     }
 
     @Test
-    @Ignore
     @Financial
     @DisplayName("Sendcrypto CRPT by address")
     public void testCRPTbyAddress() {
@@ -283,7 +280,7 @@ public class WalletsTests extends ExwalTest {
 
         GetFee getFee = service().auth().queryParam("address", address)
                 .pathParams("currency", "CRPT")
-                .queryParam("amount", 0.0001).get(EndPoints.wallet_send_fee_currency)
+                .queryParam("amount", "0.0001").get(EndPoints.wallet_send_fee_currency)
                 .as(GetFee.class);
         Long fee = getFee.getFee();
 

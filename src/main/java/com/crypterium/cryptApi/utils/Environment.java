@@ -15,8 +15,6 @@ public class Environment {
     static {
         try (InputStream is = Environment.class.getClassLoader().getResourceAsStream("application.properties")) {
             props.load(is);
-            System.out.println("Reading properties");
-            props.forEach((e1, e2) -> System.out.println(e1 + " / " + e2));
 
             props.entrySet().stream().filter(e -> e.getKey().toString().startsWith("credentials")).forEach(e -> {
                 String key = e.getKey().toString();
