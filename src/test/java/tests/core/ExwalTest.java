@@ -2,7 +2,10 @@ package tests.core;
 
 import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.*;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.AddName;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.ConfirmEmail;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.Password;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.SetupPin;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
@@ -30,9 +33,6 @@ public class ExwalTest extends BaseTest {
         service().createUser().body(name).put(EndPoints.mobile_name_add);
 
         String email = ApiCommonFunctions.generateFreeEmail();
-        VerifyEmail verifyEmail = new VerifyEmail()
-                .setEmail(email);
-        service().auth().body(verifyEmail).post(EndPoints.mobile_email_verify);
 
         String emailCode = exauth().admin().queryParam("email", email)
                 .queryParam("event", "CRYPTERIUM_EMAIL_CONFIRM")

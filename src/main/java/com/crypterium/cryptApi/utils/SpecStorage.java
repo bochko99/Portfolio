@@ -79,10 +79,10 @@ public class SpecStorage {
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
             .setBasePath(Constants.EXWAL_OAUTH)
-            .addFilter(new RequestLoggingFilter())
-            .addFilter(new ResponseLoggingFilter())
-            .addFilter(new ErrorLoggingFilter())
-            .addFilter(new AllureRestAssured())
+//            .addFilter(new RequestLoggingFilter())
+//            .addFilter(new ResponseLoggingFilter())
+//            .addFilter(new ErrorLoggingFilter())
+//            .addFilter(new AllureRestAssured())
             .build();
 
     public static RequestSpecification commonRequestSpec() {

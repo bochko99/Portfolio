@@ -1,4 +1,3 @@
-
 package com.crypterium.cryptApi.newback.pojos.wallets;
 
 import com.google.gson.annotations.Expose;
@@ -15,13 +14,13 @@ public class WalletSendReq {
     @Expose
     private BigDecimal amount;
     @Expose
-    private String currency;
+    private Currency currency;
     @Expose
     private Long customerId;
     @Expose
     private String description;
     @Expose
-    private Long fee;
+    private BigDecimal fee;
     @Expose
     private String phone;
 
@@ -43,11 +42,11 @@ public class WalletSendReq {
         return this;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public WalletSendReq setCurrency(String currency) {
+    public WalletSendReq setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }
@@ -70,11 +69,11 @@ public class WalletSendReq {
         return this;
     }
 
-    public Long getFee() {
+    public BigDecimal getFee() {
         return fee;
     }
 
-    public WalletSendReq setFee(Long fee) {
+    public WalletSendReq setFee(BigDecimal fee) {
         this.fee = fee;
         return this;
     }

@@ -24,7 +24,7 @@ public class Wallet {
     @Expose
     private String createdAt;
     @Expose
-    private String currency;
+    private Currency currency;
     @Expose
     private Long customerId;
     @Expose
@@ -90,11 +90,11 @@ public class Wallet {
         return this;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public Wallet setCurrency(String currency) {
+    public Wallet setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }

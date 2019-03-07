@@ -2,6 +2,7 @@ package com.crypterium.cryptApi.utils;
 
 import com.crypterium.cryptApi.newback.pojos.catalogs.CountriesModel;
 import com.crypterium.cryptApi.newback.pojos.catalogs.Country;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.VerifyEmail;
 import com.crypterium.cryptApi.oldback.pojos.CountryItem;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
 public class ApiCommonFunctions {
@@ -65,18 +67,14 @@ public class ApiCommonFunctions {
 
     public static String generateFreeEmail() {
         for (int i = 0; i < 10; i++) {
-            //%+test@%.com
             String email = String.format("%s+test@%s.com",
                     RandomStringUtils.randomAlphabetic(5),
                     RandomStringUtils.randomAlphabetic(3)
             );
-            Response r = given()
-                    .baseUri(Environment.MANAGEMENT_URL)
-                    .basePath(Constants.MANAGEMENT)
-                    .queryParam("email", email)
-                    .get(EndPoints.testers_email);
-
-            if (r.prettyPrint().equals("null")) {
+            VerifyEmail verifyEmail = new VerifyEmail()
+                    .setEmail(email);
+            int statusCode = service().auth().body(verifyEmail).post(EndPoints.mobile_email_verify).statusCode();
+            if (statusCode == 200) {
                 return email;
             }
         }

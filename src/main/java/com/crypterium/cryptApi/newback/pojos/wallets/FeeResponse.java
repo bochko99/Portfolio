@@ -1,33 +1,33 @@
-
 package com.crypterium.cryptApi.newback.pojos.wallets;
 
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
-public class GetFee {
+public class FeeResponse {
 
     @Expose
-    private Long fee;
+    private BigDecimal fee;
     @Expose
-    private String sourceCurrency;
+    private Currency sourceCurrency;
 
-    public Long getFee() {
+    public BigDecimal getFee() {
         return fee;
     }
 
-    public GetFee setFee(Long fee) {
+    public FeeResponse setFee(BigDecimal fee) {
         this.fee = fee;
         return this;
     }
 
-    public String getSourceCurrency() {
+    public Currency getSourceCurrency() {
         return sourceCurrency;
     }
 
-    public GetFee setSourceCurrency(String sourceCurrency) {
+    public FeeResponse setSourceCurrency(Currency sourceCurrency) {
         this.sourceCurrency = sourceCurrency;
         return this;
     }
