@@ -60,6 +60,7 @@ public class Environment {
     public static final String KYC_URL = props.getProperty("kycUrl", "https://kyc.crypterium.io");
     public static final String CARD_PREORDER = props.getProperty("cardPreorderUrl", "https://crpt-back-develop.testessential.net");
     public static final String EXWAL_BASE_URL = props.getProperty("exwalUrl",Constants.EXWAL);
+    public static final String BANKS_BASE_URL = props.getProperty("banksUrl",Constants.BANKS);
 
     public static final String GL_URL = props.getProperty("gl.url", "");
     public static final String GL_TOKEN = props.getProperty("gl.token", "");

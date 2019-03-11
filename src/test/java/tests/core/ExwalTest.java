@@ -32,6 +32,7 @@ public class ExwalTest extends BaseTest {
                 .setLastName("Test");
         service().createUser().body(name).put(EndPoints.mobile_name_add);
 
+//        String email = "testirovshik182+test2@gmail.com";
         String email = ApiCommonFunctions.generateFreeEmail();
 
         String emailCode = exauth().admin().queryParam("email", email)

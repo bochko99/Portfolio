@@ -222,4 +222,27 @@ public class EndPoints {
     public static final String wallet_send_fee_currency = "/wallet/send/fee/{currency}";
     public static final String wallet_transaction_ex = "/wallet/transactions";
     public static final String wallet_verify_currency_address = "/wallet/verify/{currency}/{address}";
+
+
+    //Bank withdrawals
+    public static final String banks_ru = "/banks/ru";
+    public static final String banks_eu = "/banks/eu";
+    
+    public static final String clearJunction_callbacksk_type = "/ClearJunction/callbacksk/{type}";
+
+    public static final String limits_countries = "/Limits/countries";
+    public static final String limits_iban = "/Limits/iban";
+    public static final String limits_rubank = "/Limits/rubank";
+
+    public static final String offers_rubank = "/Offers/rubank";
+    public static final String offers_iban = "/Offers/iban";
+    public static final String offers_id = "/Offers/{id}";
+
+    public static final String rates_from_to_to = "/Rates/{from}to{to}";
+
+    public static final String withdrawals_ru_individual = "/Withdrawals/ru/individual";
+    public static final String withdrawals_eu_individual = "/Withdrawals/eu/individual";
+    public static final String withdrawals_eu_corporate = "/Withdrawals/eu/corporate";
+    public static final String withdrawals_withdrawalId = "/Withdrawals/{withdrawalId}";
+
 }

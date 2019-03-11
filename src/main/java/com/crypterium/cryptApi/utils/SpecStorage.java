@@ -85,6 +85,12 @@ public class SpecStorage {
 //            .addFilter(new AllureRestAssured())
             .build();
 
+    private static final RequestSpecification banks = new RequestSpecBuilder()
+            .setBaseUri(Environment.BANKS_BASE_URL)
+            .setBasePath(Constants.BANKS_BASE)
+            .build();
+
+
     public static RequestSpecification commonRequestSpec() {
         return commonRequestSpec;
     }
@@ -104,4 +110,8 @@ public class SpecStorage {
     public static RequestSpecification exwal(){return RestAssured.given().spec(exwalRequest);}
 
     public static RequestSpecification exwalOauth(){return  RestAssured.given().spec(oAuth);}
+
+    public static RequestSpecification banks() {
+        return RestAssured.given().spec(banks);
+    }
 }

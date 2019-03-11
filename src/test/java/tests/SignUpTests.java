@@ -31,7 +31,7 @@ public class SignUpTests extends ExwalTest {
     @DisplayName(EndPoints.mobile_phone_resend + " POST")
     public void testResendPhone() {
         String phoneNumber = "";
-        int statusCode = -1;
+        int statusCode;
         for (int i = 0; i < 10; i++) {
             //700000 00001-700000 29999
 
