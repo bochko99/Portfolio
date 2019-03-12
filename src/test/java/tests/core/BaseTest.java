@@ -9,6 +9,8 @@ import org.junit.Rule;
 
 public class BaseTest {
 
+
+
     @Rule
     public FinancialAnnotationRule annotation = new FinancialAnnotationRule();
 

@@ -5,7 +5,6 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.config.HeaderConfig;
-import io.restassured.filter.log.ErrorLoggingFilter;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
@@ -18,6 +17,13 @@ import static org.hamcrest.Matchers.not;
 
 public class SpecStorage {
 
+    static {
+        RestAssured.requestSpecification = RestAssured.given()
+                .filter(new RequestLoggingFilter())
+                .filter(new ResponseLoggingFilter())
+                .filter(new AllureRestAssured());
+    }
+
     private static final RequestSpecification commonRequestSpec = new RequestSpecBuilder()
             .setConfig(RestAssured.config().headerConfig(HeaderConfig.headerConfig().overwriteHeadersWithName("User-Agent", "Content-Type")))
             .setAccept("application/json")
@@ -27,10 +33,6 @@ public class SpecStorage {
             .addHeader("User-Agent", "Crypterium/1.7.0(iPhone;12.1):x86_64")
             .setBaseUri(Environment.BASE_URL)
             .setBasePath(Constants.MOBILE)
-            .addFilter(new RequestLoggingFilter())
-            .addFilter(new ResponseLoggingFilter())
-            .addFilter(new ErrorLoggingFilter())
-            .addFilter(new AllureRestAssured())
             .build();
 
     private static final ResponseSpecification commonResponseSpec = new ResponseSpecBuilder()
@@ -44,10 +46,6 @@ public class SpecStorage {
             .setBaseUri(Environment.GL_URL)
             .setBasePath(Constants.GL_EXTERNAL)
             .addHeader("Authorization", Environment.GL_TOKEN)
-            .addFilter(new RequestLoggingFilter())
-            .addFilter(new ResponseLoggingFilter())
-            .addFilter(new ErrorLoggingFilter())
-            .addFilter(new AllureRestAssured())
             .build();
 
     private static final RequestSpecification managementRequest = new RequestSpecBuilder()
@@ -55,10 +53,6 @@ public class SpecStorage {
             .setContentType("application/json")
             .setBaseUri(Environment.MANAGEMENT_URL)
             .setBasePath(Constants.MANAGEMENT)
-            .addFilter(new RequestLoggingFilter())
-            .addFilter(new ResponseLoggingFilter())
-            .addFilter(new ErrorLoggingFilter())
-            .addFilter(new AllureRestAssured())
             .build();
 
     private static final RequestSpecification exwalRequest = new RequestSpecBuilder()
@@ -69,20 +63,12 @@ public class SpecStorage {
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
             .setBasePath(Constants.EXWAL_BASE)
-            .addFilter(new RequestLoggingFilter())
-            .addFilter(new ResponseLoggingFilter())
-            .addFilter(new ErrorLoggingFilter())
-            .addFilter(new AllureRestAssured())
             .build();
 
     private static final RequestSpecification oAuth = new RequestSpecBuilder()
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
             .setBasePath(Constants.EXWAL_OAUTH)
-//            .addFilter(new RequestLoggingFilter())
-//            .addFilter(new ResponseLoggingFilter())
-//            .addFilter(new ErrorLoggingFilter())
-//            .addFilter(new AllureRestAssured())
             .build();
 
     private static final RequestSpecification banks = new RequestSpecBuilder()

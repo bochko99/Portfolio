@@ -20,7 +20,7 @@ public class ExwalTest extends BaseTest {
 
     @BeforeClass
     public static void init() {
-        RestAssured.requestSpecification = SpecStorage.exwal();
+        RestAssured.requestSpecification = RestAssured.given().spec(SpecStorage.exwal());
         RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
         Auth.basic(Auth.AuthType.EXWAL);
     }

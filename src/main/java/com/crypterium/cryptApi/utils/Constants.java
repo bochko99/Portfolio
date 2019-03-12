@@ -23,4 +23,6 @@ public class Constants {
 
     public static final String DEFAULT_LOGIN = "70000000040";
     public static final String DEFAULT_PASSWORD = "1234567";
+
+    public static final String TENANT_ID_CRYPTERIUM = "7B5237A5-996B-43BB-B9A5-747E32A3BCA5";
 }
