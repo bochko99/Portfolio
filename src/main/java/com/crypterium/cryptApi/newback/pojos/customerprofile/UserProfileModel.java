@@ -1,4 +1,3 @@
-
 package com.crypterium.cryptApi.newback.pojos.customerprofile;
 
 import com.google.gson.annotations.Expose;
@@ -19,6 +18,20 @@ public class UserProfileModel {
     private String email;
     @Expose
     private String firstName;
+    @Expose
+    private Boolean gender;
+    @Expose
+    private String identificationDocument;
+    @Expose
+    private String identificationDocumentFirstName;
+    @Expose
+    private Boolean identificationDocumentGender;
+    @Expose
+    private String identificationDocumentLastName;
+    @Expose
+    private String identificationDocumentNumber;
+    @Expose
+    private Boolean isAgreePrivacyCheck;
     @Expose
     private String lastName;
     @Expose
@@ -68,6 +81,69 @@ public class UserProfileModel {
 
     public UserProfileModel setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
+    }
+
+    public Boolean getGender() {
+        return gender;
+    }
+
+    public UserProfileModel setGender(Boolean gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public String getIdentificationDocument() {
+        return identificationDocument;
+    }
+
+    public UserProfileModel setIdentificationDocument(String identificationDocument) {
+        this.identificationDocument = identificationDocument;
+        return this;
+    }
+
+    public String getIdentificationDocumentFirstName() {
+        return identificationDocumentFirstName;
+    }
+
+    public UserProfileModel setIdentificationDocumentFirstName(String identificationDocumentFirstName) {
+        this.identificationDocumentFirstName = identificationDocumentFirstName;
+        return this;
+    }
+
+    public Boolean getIdentificationDocumentGender() {
+        return identificationDocumentGender;
+    }
+
+    public UserProfileModel setIdentificationDocumentGender(Boolean identificationDocumentGender) {
+        this.identificationDocumentGender = identificationDocumentGender;
+        return this;
+    }
+
+    public String getIdentificationDocumentLastName() {
+        return identificationDocumentLastName;
+    }
+
+    public UserProfileModel setIdentificationDocumentLastName(String identificationDocumentLastName) {
+        this.identificationDocumentLastName = identificationDocumentLastName;
+        return this;
+    }
+
+    public String getIdentificationDocumentNumber() {
+        return identificationDocumentNumber;
+    }
+
+    public UserProfileModel setIdentificationDocumentNumber(String identificationDocumentNumber) {
+        this.identificationDocumentNumber = identificationDocumentNumber;
+        return this;
+    }
+
+    public Boolean getIsAgreePrivacyCheck() {
+        return isAgreePrivacyCheck;
+    }
+
+    public UserProfileModel setIsAgreePrivacyCheck(Boolean agreePrivacyCheck) {
+        isAgreePrivacyCheck = agreePrivacyCheck;
         return this;
     }
 

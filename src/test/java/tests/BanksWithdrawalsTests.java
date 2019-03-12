@@ -5,6 +5,7 @@ import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
+import core.annotations.ScopeTarget;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -15,8 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.newback.pojos.banks.WithdrawalCurrency.BTC;
-import static com.crypterium.cryptApi.newback.pojos.banks.WithdrawalCurrency.EUR;
+import static com.crypterium.cryptApi.newback.pojos.banks.WithdrawalCurrency.*;
 
 public class BanksWithdrawalsTests extends ExwalTest {
 
@@ -30,7 +30,8 @@ public class BanksWithdrawalsTests extends ExwalTest {
     @Test
     @DisplayName(EndPoints.banks_eu + " GET")
     public void testbanksEu() {
-        SpecStorage.banks().get(EndPoints.banks_eu);
+        SpecStorage.banks().queryParam("iban", "GB64NAIA07009300123456")
+                .get(EndPoints.banks_eu).then().body("name", Matchers.equalTo("NATIONWIDE BUILDING SOCIETY"));
     }
 
     @Test
@@ -42,19 +43,21 @@ public class BanksWithdrawalsTests extends ExwalTest {
     @Test
     @DisplayName(EndPoints.limits_iban + " GET")
     public void testLimitsIban() {
-        SpecStorage.banks().get(EndPoints.limits_iban);
+        SpecStorage.banks().queryParam("tenantId", Constants.TENANT_ID_CRYPTERIUM).get(EndPoints.limits_iban);
     }
 
     @Test
     @DisplayName(EndPoints.limits_rubank + " GET")
     public void testLimitsRubank() {
-        SpecStorage.banks().get(EndPoints.limits_rubank);
+        SpecStorage.banks().queryParam("tenantId", Constants.TENANT_ID_CRYPTERIUM).get(EndPoints.limits_rubank);
     }
 
     @Test
     @DisplayName(EndPoints.rates_from_to_to + " GET")
     public void testRatesFromToTo() {
-        SpecStorage.banks().get(EndPoints.rates_from_to_to);
+        SpecStorage.banks().pathParam("from", EUR)
+                .pathParam("to", RUB).get(EndPoints.rates_from_to_to).then()
+                .body("value", Matchers.notNullValue());
     }
 
     @Test
@@ -98,7 +101,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
         BigDecimal depositAmount = response.getDeposit().getAmount();
 
         Assert.assertThat(response.getTotalWithdrawal().getAmount(), Matchers.equalTo(withdrawalAmount.add(feeAmount)));
-        Assert.assertThat(withdrawalAmount, Matchers.equalTo(depositAmount.divide(response.getRate(), 6, RoundingMode.CEILING)));
+        Assert.assertThat(withdrawalAmount, Matchers.equalTo(depositAmount.divide(response.getRate(), 6, RoundingMode.CEILING).stripTrailingZeros()));
 
     }
 
@@ -143,7 +146,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
         BigDecimal depositAmount = response.getDeposit().getAmount();
 
         Assert.assertThat(response.getTotalWithdrawal().getAmount(), Matchers.equalTo(withdrawalAmount.add(feeAmount)));
-        Assert.assertThat(depositAmount, Matchers.equalTo(withdrawalAmount.multiply(response.getRate()).setScale(2, RoundingMode.CEILING)));
+        Assert.assertThat(depositAmount, Matchers.equalTo(withdrawalAmount.multiply(response.getRate()).setScale(2, RoundingMode.CEILING).stripTrailingZeros()));
 
     }
 
@@ -179,7 +182,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
         BigDecimal depositAmount = response.getDeposit().getAmount();
 
         Assert.assertThat(response.getTotalWithdrawal().getAmount(), Matchers.equalTo(withdrawalAmount.add(feeAmount)));
-        Assert.assertThat(withdrawalAmount, Matchers.equalTo(depositAmount.divide(response.getRate(), 6, RoundingMode.CEILING)));
+        Assert.assertThat(withdrawalAmount, Matchers.equalTo(depositAmount.divide(response.getRate(), 6, RoundingMode.CEILING).stripTrailingZeros()));
 
     }
 
@@ -224,7 +227,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
         BigDecimal depositAmount = response.getDeposit().getAmount();
 
         Assert.assertThat(response.getTotalWithdrawal().getAmount(), Matchers.equalTo(withdrawalAmount.add(feeAmount)));
-        Assert.assertThat(depositAmount, Matchers.equalTo(withdrawalAmount.multiply(response.getRate()).setScale(2, RoundingMode.CEILING)));
+        Assert.assertThat(depositAmount, Matchers.equalTo(withdrawalAmount.multiply(response.getRate()).setScale(2, RoundingMode.CEILING).stripTrailingZeros()));
 
     }
 
@@ -276,6 +279,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
+    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_ru_individual + " POST: 5 EUR")
     public void testPostWithdrawalsRuIndividual() throws InterruptedException {
 
@@ -345,6 +349,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
+    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_individual + " POST: 5 EUR")
     public void testPostWithdrawalsEuIndividual() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();
@@ -400,6 +405,7 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
+    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_corporate + " POST: 5 EUR")
     public void testPostWithdrawalsEuCorporate() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();
