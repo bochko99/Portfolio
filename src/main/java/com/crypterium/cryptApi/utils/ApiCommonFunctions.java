@@ -2,10 +2,11 @@ package com.crypterium.cryptApi.utils;
 
 import com.crypterium.cryptApi.newback.pojos.catalogs.CountriesModel;
 import com.crypterium.cryptApi.newback.pojos.catalogs.Country;
+import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;
 import com.crypterium.cryptApi.newback.pojos.signupoperation.VerifyEmail;
 import com.crypterium.cryptApi.oldback.pojos.CountryItem;
-import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,16 +50,19 @@ public class ApiCommonFunctions {
     }
 
     public static String generateFreePhoneNumber() {
+        String phoneNumber;
+        int statusCode;
         for (int i = 0; i < 10; i++) {
             //700000 00001-700000 29999
 
-            String phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
-            Response r = given()
-                    .baseUri(Environment.MANAGEMENT_URL)
-                    .basePath(Constants.MANAGEMENT)
-                    .queryParam("mobile", phoneNumber)
-                    .get(EndPoints.testers_mobile);
-            if (r.prettyPrint().equals("null")) {
+            phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
+            SignUpReq signup = new SignUpReq()
+                    .setCountry("RU")
+                    .setPhone(phoneNumber)
+                    .setRegion("");
+            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
+                    .when().post(EndPoints.mobile_signup).statusCode();
+            if (statusCode == 200) {
                 return phoneNumber;
             }
         }
@@ -73,7 +77,8 @@ public class ApiCommonFunctions {
             );
             VerifyEmail verifyEmail = new VerifyEmail()
                     .setEmail(email);
-            int statusCode = service().auth().body(verifyEmail).post(EndPoints.mobile_email_verify).statusCode();
+            int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 400))
+                    .when().post(EndPoints.mobile_email_verify).statusCode();
             if (statusCode == 200) {
                 return email;
             }

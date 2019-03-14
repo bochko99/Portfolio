@@ -64,7 +64,12 @@ public class CredentialsRule extends TestWatcher {
         super.finished(description);
         Credentials credentials = description.getAnnotation(Credentials.class);
         if (credentials != null && credentials.creatingNewUser()) {
-            currentType = "hasNewUser";
+            service().flush();
+            CredentialEntry entry = Environment.CREDENTIALS.get("default");
+            service().basic(entry.getLogin(), entry.getPassword());
+            currentEntry = entry;
+            System.out.println(String.format("%s : '%s' -> default", description.getMethodName(), currentType));
+            currentType = "";
         }
     }
 }

@@ -17,13 +17,6 @@ import static org.hamcrest.Matchers.not;
 
 public class SpecStorage {
 
-    static {
-        RestAssured.requestSpecification = RestAssured.given()
-                .filter(new RequestLoggingFilter())
-                .filter(new ResponseLoggingFilter())
-                .filter(new AllureRestAssured());
-    }
-
     private static final RequestSpecification commonRequestSpec = new RequestSpecBuilder()
             .setConfig(RestAssured.config().headerConfig(HeaderConfig.headerConfig().overwriteHeadersWithName("User-Agent", "Content-Type")))
             .setAccept("application/json")
@@ -34,12 +27,10 @@ public class SpecStorage {
             .setBaseUri(Environment.BASE_URL)
             .setBasePath(Constants.MOBILE)
             .build();
-
     private static final ResponseSpecification commonResponseSpec = new ResponseSpecBuilder()
             .expectBody(not(containsString("BadRequest")))
             .expectStatusCode(Matchers.isOneOf(200, 201))
             .build();
-
     private static final RequestSpecification glRequest = new RequestSpecBuilder()
             .setAccept(ContentType.JSON)
             .setContentType(ContentType.JSON)
@@ -47,35 +38,37 @@ public class SpecStorage {
             .setBasePath(Constants.GL_EXTERNAL)
             .addHeader("Authorization", Environment.GL_TOKEN)
             .build();
-
     private static final RequestSpecification managementRequest = new RequestSpecBuilder()
             .setAccept("application/json")
             .setContentType("application/json")
             .setBaseUri(Environment.MANAGEMENT_URL)
             .setBasePath(Constants.MANAGEMENT)
             .build();
-
     private static final RequestSpecification exwalRequest = new RequestSpecBuilder()
             .setConfig(RestAssured.config().headerConfig(HeaderConfig.headerConfig()
-                    .overwriteHeadersWithName("Authorization", "Content-Type")))
+                    .overwriteHeadersWithName("Authorization", "Content-Type", "Accept")))
             .setAccept(ContentType.JSON)
             .setContentType(ContentType.JSON)
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
             .setBasePath(Constants.EXWAL_BASE)
             .build();
-
     private static final RequestSpecification oAuth = new RequestSpecBuilder()
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
             .setBasePath(Constants.EXWAL_OAUTH)
             .build();
-
     private static final RequestSpecification banks = new RequestSpecBuilder()
             .setBaseUri(Environment.BANKS_BASE_URL)
             .setBasePath(Constants.BANKS_BASE)
             .build();
 
+    static {
+        RestAssured.requestSpecification = RestAssured.given()
+                .filter(new RequestLoggingFilter())
+                .filter(new ResponseLoggingFilter())
+                .filter(new AllureRestAssured());
+    }
 
     public static RequestSpecification commonRequestSpec() {
         return commonRequestSpec;
@@ -93,9 +86,13 @@ public class SpecStorage {
         return RestAssured.given().spec(managementRequest);
     }
 
-    public static RequestSpecification exwal(){return RestAssured.given().spec(exwalRequest);}
+    public static RequestSpecification exwal() {
+        return RestAssured.given().spec(exwalRequest);
+    }
 
-    public static RequestSpecification exwalOauth(){return  RestAssured.given().spec(oAuth);}
+    public static RequestSpecification exwalOauth() {
+        return RestAssured.given().spec(oAuth);
+    }
 
     public static RequestSpecification banks() {
         return RestAssured.given().spec(banks);

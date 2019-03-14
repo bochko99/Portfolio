@@ -51,6 +51,7 @@ public class SignUpTests extends ExwalTest {
     }
 
     @Test
+    @Credentials(creatingNewUser = true)
     @DisplayName(EndPoints.mobile_email_resend + " POST")
     public void testResendEmailCode() {
         service().createUser();

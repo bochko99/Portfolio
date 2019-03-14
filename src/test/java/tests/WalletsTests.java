@@ -16,9 +16,7 @@ import tests.core.ExwalTest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.newback.pojos.wallets.Currency.*;
 
@@ -116,7 +114,7 @@ public class WalletsTests extends ExwalTest {
     //SEND CRYPTO
 
     @Test
-//    @Financial
+    @Financial
     @DisplayName("Sendcrypto LTC by phone")
     public void testLTCbyPhone() {
         testSendCrypto(commonBodyForPhone(LTC, "0.001"));
@@ -218,10 +216,10 @@ public class WalletsTests extends ExwalTest {
 
     private Optional<Wallet> getWalletByCurrency(CredentialEntry user, Currency currency) {
 
-        Wallet[] wallets = service().authSingle(user.getLogin(), user.getPassword())
-                .get(EndPoints.wallet_list).as(Wallet[].class);
+        List<Wallet> wallets = service().authSingle(user.getLogin(), user.getPassword())
+                .get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
 
-        return Stream.of(wallets).filter(e -> e.getCurrency().equals(currency)).findFirst();
+        return wallets.stream().filter(e -> e.getCurrency().equals(currency)).findFirst();
     }
 
     @FunctionalInterface
