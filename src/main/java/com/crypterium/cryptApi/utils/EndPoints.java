@@ -150,7 +150,7 @@ public class EndPoints {
     public static final String bitgo = "/bitgo";
 
     //KYC
-    public static final String identity = "kyc/identity";
+    public static final String identity = "/identity";
 
     //GL (BitGo)
     public static final String account_records = "/account-records";

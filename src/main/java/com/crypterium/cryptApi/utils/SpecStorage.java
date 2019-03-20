@@ -62,6 +62,9 @@ public class SpecStorage {
             .setBaseUri(Environment.BANKS_BASE_URL)
             .setBasePath(Constants.BANKS_BASE)
             .build();
+    private static final RequestSpecification kyc = new RequestSpecBuilder()
+            .setBaseUri(Environment.KYC_URL)
+            .build();
 
     static {
         RestAssured.requestSpecification = RestAssured.given()
@@ -96,5 +99,9 @@ public class SpecStorage {
 
     public static RequestSpecification banks() {
         return RestAssured.given().spec(banks);
+    }
+
+    public static RequestSpecification kyc() {
+        return RestAssured.given().spec(kyc);
     }
 }

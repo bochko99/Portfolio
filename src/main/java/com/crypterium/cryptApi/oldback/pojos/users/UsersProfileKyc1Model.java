@@ -15,9 +15,9 @@ public class UsersProfileKyc1Model {
     private Type type;
 
     @Expose
-    private String frontsideUrl;
-    private String backsideUrl;
-    private String selfieUrl;
+    private String frontside;
+    private String backside;
+    private String selfie;
 
     public Type getType() {
         return type;
@@ -28,30 +28,30 @@ public class UsersProfileKyc1Model {
         return this;
     }
 
-    public String getFrontsideUrl() {
-        return frontsideUrl;
+    public String getFrontside() {
+        return frontside;
     }
 
-    public UsersProfileKyc1Model setFrontsideUrl(String frontsideUrl) {
-        this.frontsideUrl = frontsideUrl;
+    public UsersProfileKyc1Model setFrontside(String frontside) {
+        this.frontside = frontside;
         return this;
     }
 
-    public String getBacksideUrl() {
-        return backsideUrl;
+    public String getBackside() {
+        return backside;
     }
 
-    public UsersProfileKyc1Model setBacksideUrl(String backsideUrl) {
-        this.backsideUrl = backsideUrl;
+    public UsersProfileKyc1Model setBackside(String backside) {
+        this.backside = backside;
         return this;
     }
 
-    public String getSelfieUrl() {
-        return selfieUrl;
+    public String getSelfie() {
+        return selfie;
     }
 
-    public UsersProfileKyc1Model setSelfieUrl(String selfieUrl) {
-        this.selfieUrl = selfieUrl;
+    public UsersProfileKyc1Model setSelfie(String selfie) {
+        this.selfie = selfie;
         return this;
     }
 

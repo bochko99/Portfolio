@@ -38,5 +38,7 @@ public class ExchangeSxTests extends ExwalTest {
     @DisplayName(EndPoints.mobile_sx_rates + " GET")
     public void testCountry() {
         service().auth().get(EndPoints.mobile_sx_rates);
+
+
     }
 }
