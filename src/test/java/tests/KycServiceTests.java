@@ -2,7 +2,6 @@ package tests;
 
 import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.EndPoints;
-import com.crypterium.cryptApi.utils.SpecStorage;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
@@ -57,8 +56,6 @@ public class KycServiceTests extends ExwalTest {
                 .multiPart("image", selfie)
                 .when().post(EndPoints.kyc_upload_document);
         service().auth().get(EndPoints.kyc_identity_ex).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
-        SpecStorage.kyc().header("X-UserId", id).get(EndPoints.identity)
-                .then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
 
     }
 }
