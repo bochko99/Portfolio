@@ -1,6 +1,6 @@
 package tests;
 
-import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
+import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
 import io.qameta.allure.junit4.DisplayName;
@@ -29,11 +29,15 @@ public class KycServiceTests extends ExwalTest {
     }
 
     @Test
-    @DisplayName(EndPoints.kyc_identity_ex + " GET")
+    @DisplayName(EndPoints.kyc_identity + " GET")
     public void testKycIdentity() {
+        service().auth().get(EndPoints.kyc_identity);
+    }
 
-        service().auth().get(EndPoints.kyc_identity_ex);
-
+    @Test
+    @DisplayName(EndPoints.kyc_identity_documents + " GET")
+    public void testGetKycIdentityDocuments() {
+        service().auth().get(EndPoints.kyc_identity_documents);
     }
 
     //Дописать загрузку документаnew File("/resources/photofor/kyc/document.jpg")
@@ -55,7 +59,7 @@ public class KycServiceTests extends ExwalTest {
                 .queryParam("docType", "SELFIE")
                 .multiPart("image", selfie)
                 .when().post(EndPoints.kyc_upload_document);
-        service().auth().get(EndPoints.kyc_identity_ex).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
+        service().auth().get(EndPoints.kyc_identity).then().body("status", Matchers.equalToIgnoringCase("sent_to_provider"));
 
     }
 }

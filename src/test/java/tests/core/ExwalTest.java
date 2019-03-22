@@ -1,11 +1,11 @@
 package tests.core;
 
 import com.crypterium.cryptApi.Auth;
-import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.AddName;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.ConfirmEmail;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.Password;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.SetupPin;
+import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
+import com.crypterium.cryptApi.pojos.signupoperation.AddName;
+import com.crypterium.cryptApi.pojos.signupoperation.ConfirmEmail;
+import com.crypterium.cryptApi.pojos.signupoperation.Password;
+import com.crypterium.cryptApi.pojos.signupoperation.SetupPin;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;

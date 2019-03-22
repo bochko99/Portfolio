@@ -1,7 +1,7 @@
 package tests;
 
-import com.crypterium.cryptApi.newback.pojos.catalogs.FaqItem;
-import com.crypterium.cryptApi.newback.pojos.catalogs.FaqItemCode;
+import com.crypterium.cryptApi.pojos.catalogs.FaqItem;
+import com.crypterium.cryptApi.pojos.catalogs.FaqItemCode;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -49,9 +49,9 @@ public class CatalogsTests extends ExwalTest {
     }
 
     @Test
-    @DisplayName(EndPoints.catalogs_operations_ex + " GET")
+    @DisplayName(EndPoints.catalogs_operations + " GET")
     public void testOperations() {
-        given().get(EndPoints.catalogs_operations_ex);
+        given().get(EndPoints.catalogs_operations);
     }
 
 

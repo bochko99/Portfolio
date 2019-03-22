@@ -1,7 +1,7 @@
 package tests.services;
 
-import com.crypterium.cryptApi.newback.pojos.banks.*;
-import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
+import com.crypterium.cryptApi.pojos.banks.*;
+import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.newback.pojos.banks.WithdrawalCurrency.*;
+import static com.crypterium.cryptApi.pojos.banks.WithdrawalCurrency.*;
 
 public class BanksWithdrawalsTests extends ExwalTest {
 

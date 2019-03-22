@@ -1,6 +1,6 @@
 package tests.services;
 
-import com.crypterium.cryptApi.oldback.pojos.users.UsersProfileKyc1Model;
+import com.crypterium.cryptApi.pojos.services.kyc.KycIdentityRequestModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
 import core.annotations.Credentials;
@@ -18,8 +18,8 @@ public class KycTests extends ExwalTest {
     @Credentials(creatingNewUser = true)
     public void testKYC1Completion() {
         Long id = registerNewUser().getCustomerId();
-        UsersProfileKyc1Model model = new UsersProfileKyc1Model()
-                .setType(UsersProfileKyc1Model.Type.PASSPORT)
+        KycIdentityRequestModel model = new KycIdentityRequestModel()
+                .setType(KycIdentityRequestModel.Type.PASSPORT)
                 .setFrontside("https://cdn.pbrd.co/images/HZ0L695.jpg")
                 .setSelfie("https://cdn.pbrd.co/images/HZ0LiNH.jpg");
 

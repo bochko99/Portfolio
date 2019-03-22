@@ -2,7 +2,7 @@ package tests;
 
 import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.exceptions.NoWalletsException;
-import com.crypterium.cryptApi.newback.pojos.wallets.*;
+import com.crypterium.cryptApi.pojos.wallets.*;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.newback.pojos.wallets.Currency.*;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
 public class WalletsTests extends ExwalTest {
 
@@ -46,10 +46,10 @@ public class WalletsTests extends ExwalTest {
     }
 
     @Test
-    @DisplayName(EndPoints.wallet_currencies_ex + " GET")
+    @DisplayName(EndPoints.wallet_currencies + " GET")
     public void testWalletCurrencies() {
 
-        service().auth().get(EndPoints.wallet_currencies_ex);
+        service().auth().get(EndPoints.wallet_currencies);
     }
 
     @Test
@@ -88,10 +88,10 @@ public class WalletsTests extends ExwalTest {
     }
 
     @Test
-    @DisplayName(EndPoints.wallet_transaction_ex + " GET")
+    @DisplayName(EndPoints.wallet_transaction + " GET")
     public void testWalletTransac() {
 
-        service().auth().get(EndPoints.wallet_transaction_ex);
+        service().auth().get(EndPoints.wallet_transaction);
     }
 
     @Test

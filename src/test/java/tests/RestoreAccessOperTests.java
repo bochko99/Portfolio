@@ -1,9 +1,9 @@
 package tests;
 
-import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.ChangeReq;
-import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.CheckCodeReq;
-import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.ResetReq;
-import com.crypterium.cryptApi.newback.pojos.restoreaccessoperation.SetNewPassReq;
+import com.crypterium.cryptApi.pojos.restoreaccessoperation.ChangeReq;
+import com.crypterium.cryptApi.pojos.restoreaccessoperation.CheckCodeReq;
+import com.crypterium.cryptApi.pojos.restoreaccessoperation.ResetReq;
+import com.crypterium.cryptApi.pojos.restoreaccessoperation.SetNewPassReq;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;

@@ -1,16 +1,13 @@
 package com.crypterium.cryptApi.utils;
 
-import com.crypterium.cryptApi.newback.pojos.catalogs.CountriesModel;
-import com.crypterium.cryptApi.newback.pojos.catalogs.Country;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.VerifyEmail;
-import com.crypterium.cryptApi.oldback.pojos.CountryItem;
+import com.crypterium.cryptApi.pojos.catalogs.CountriesModel;
+import com.crypterium.cryptApi.pojos.catalogs.Country;
+import com.crypterium.cryptApi.pojos.signupoperation.SignUpReq;
+import com.crypterium.cryptApi.pojos.signupoperation.VerifyEmail;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -25,14 +22,6 @@ public class ApiCommonFunctions {
                 .setPassword("1234567")
                 .setType("recipient");
         return Environment.CREDENTIALS.getOrDefault("recipient", entry);
-    }
-
-    public static CountryItem getCountryByCode(String code) {
-        CountryItem[] allCountries = given().get(EndPoints.countries).as(CountryItem[].class);
-        Optional<CountryItem> country = Arrays.stream(allCountries)
-                .filter(c -> c.getCode().equalsIgnoreCase(code))
-                .findFirst();
-        return country.orElse(new CountryItem().setCode("RU"));
     }
 
     public static Country getRandomCountryByCryptoRestrictions(boolean isRestricted) {
