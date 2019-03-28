@@ -59,7 +59,8 @@ public class ApiCommonFunctions {
             SignUpReq signup = new SignUpReq()
                     .setCountry("RU")
                     .setPhone(phoneNumber)
-                    .setRegion("");
+                    .setRegion("")
+                    .setReferralCode(Environment.REFERRAL_CODE);
             statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
                     .when().post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {

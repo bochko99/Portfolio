@@ -14,6 +14,17 @@ public class SignUpReq {
     private String phone;
     @Expose
     private String region;
+    @Expose
+    private String referralCode;
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public SignUpReq setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
+        return this;
+    }
 
     public String getCountry() {
         return country;

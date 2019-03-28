@@ -62,6 +62,8 @@ public class Environment {
     public static final String EXWAL_BASE_URL = props.getProperty("exwalUrl",Constants.EXWAL);
     public static final String BANKS_BASE_URL = props.getProperty("banksUrl",Constants.BANKS);
 
+    public static final String REFERRAL_CODE = props.getProperty("referralCode","");
+
     public static final String GL_URL = props.getProperty("gl.url", "");
     public static final String GL_TOKEN = props.getProperty("gl.token", "");
     public static final String GL_EXPECTED_ACCOUNT_COUNT = props.getProperty("gl.account_count", "40");

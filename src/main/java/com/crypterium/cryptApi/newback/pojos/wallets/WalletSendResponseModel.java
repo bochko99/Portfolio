@@ -10,6 +10,8 @@ import javax.annotation.Generated;
 public class WalletSendResponseModel {
 
     @Expose
+    private String txId;
+    @Expose
     private Long fee;
     @Expose
     private Boolean internal;
@@ -41,5 +43,13 @@ public class WalletSendResponseModel {
     public WalletSendResponseModel setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
         return this;
+    }
+
+    public String getTxId() {
+        return txId;
+    }
+
+    public void setTxId(String txId) {
+        this.txId = txId;
     }
 }
