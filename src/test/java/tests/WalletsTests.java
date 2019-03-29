@@ -176,19 +176,6 @@ public class WalletsTests extends ExwalTest {
         testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
     }
 
-    @Test
-    @Financial
-    @DisplayName("Send BTC to external wallet")
-    public void testBtcExternalAddress() {
-        service().auth()
-                .body(new WalletSendReq()
-                        .setAddress("1A8d5vvsbfvh8Vx3FhDi7aX5C3aBhhoSHG")
-                        .setCurrency(BTC)
-                        .setAmount(new BigDecimal("0.001"))
-                        .setFee(new BigDecimal("0.00005")))
-                .post(EndPoints.wallet_send);
-    }
-
     private void testSendCrypto(BodyCreator bodyCreator, HistoryProcessor historyProcessor) {
         testInvoice(bodyCreator, EndPoints.wallet_send, historyProcessor);
     }
