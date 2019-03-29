@@ -12,9 +12,9 @@ public class History {
     @Expose
     private String operationDate;
     @Expose
-    private String operationStatus;
+    private OperationStatus operationStatus;
     @Expose
-    private String operationType;
+    private OperationType operationType;
     @Expose
     private WalletHistoryRecordExchange walletHistoryRecordExchange;
     @Expose
@@ -59,20 +59,20 @@ public class History {
         return this;
     }
 
-    public String getOperationStatus() {
+    public OperationStatus getOperationStatus() {
         return operationStatus;
     }
 
-    public History setOperationStatus(String operationStatus) {
+    public History setOperationStatus(OperationStatus operationStatus) {
         this.operationStatus = operationStatus;
         return this;
     }
 
-    public String getOperationType() {
+    public OperationType getOperationType() {
         return operationType;
     }
 
-    public History setOperationType(String operationType) {
+    public History setOperationType(OperationType operationType) {
         this.operationType = operationType;
         return this;
     }
@@ -229,4 +229,74 @@ public class History {
         this.walletHistoryRecordVoucher = walletHistoryRecordVoucher;
         return this;
     }
+
+    public enum OperationType {
+        RECEIVE_WALLET_INTERNAL("RECEIVE_WALLET_INTERNAL"),
+        RECEIVE_WALLET_EXTERNAL("RECEIVE_WALLET_EXTERNAL"),
+        RECEIVE_CARD("RECEIVE_CARD"),
+        TRANSFER_WALLET("TRANSFER_WALLET"),
+        TRANSFER_PHONE("TRANSFER_PHONE"),
+        PAYOUT_WALLET("PAYOUT_WALLET"),
+        PAYOUT_BANK("PAYOUT_BANK"),
+        PAYOUT_RUBANK("PAYOUT_RUBANK"),
+        PAYOUT_BPAY("PAYOUT_BPAY"),
+        PAYOUT_BSB("PAYOUT_BSB"),
+        PAYOUT_CARD("PAYOUT_CARD"),
+        EXCHANGE("EXCHANGE"),
+        PAYQR("PAYQR"),
+        VOUCHER("VOUCHER"),
+        TOPUP("TOPUP"),
+        TOPUP_MOBILE("TOPUP_MOBILE"),
+        FEE_COLLECTION("FEE_COLLECTION"),
+        UNKNOWN("UNKNOWN");
+
+        private String value;
+
+        OperationType(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Returns the name of this enum constant, as contained in the
+         * declaration.  This method may be overridden, though it typically
+         * isn't necessary or desirable.  An enum type should override this
+         * method when a more "programmer-friendly" string form exists.
+         *
+         * @return the name of this enum constant
+         */
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+    }
+
+    public enum OperationStatus {
+
+        PENDING("PENDING"),
+        COMPLETED("COMPLETED"),
+        FAILED("FAILED"),
+        CANCELLED("CANCELLED"),
+        BAD("BAD");
+
+        private String value;
+
+        OperationStatus(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Returns the name of this enum constant, as contained in the
+         * declaration.  This method may be overridden, though it typically
+         * isn't necessary or desirable.  An enum type should override this
+         * method when a more "programmer-friendly" string form exists.
+         *
+         * @return the name of this enum constant
+         */
+        @Override
+        public String toString() {
+            return this.value;
+        }
+    }
+
 }

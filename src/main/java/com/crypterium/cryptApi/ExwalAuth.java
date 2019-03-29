@@ -1,10 +1,11 @@
 package com.crypterium.cryptApi;
 
 import com.crypterium.cryptApi.pojos.signupoperation.ConfirmPhone;
-import com.crypterium.cryptApi.utils.ApiCommonFunctions;
-import com.crypterium.cryptApi.utils.EndPoints;
-import com.crypterium.cryptApi.utils.SpecStorage;
+import com.crypterium.cryptApi.utils.*;
 import io.restassured.specification.RequestSpecification;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.crypterium.cryptApi.Auth.exauth;
 import static io.restassured.RestAssured.given;
@@ -12,6 +13,38 @@ import static io.restassured.RestAssured.given;
 public class ExwalAuth extends AuthProvider {
     private String accesstoken = "";
     private String adminToken = "";
+
+    private Map<String, String> accesTokenCache = new HashMap<>();
+
+    @Override
+    public RequestSpecification authAs(String login, String password, String role) {
+        String accessTokenSingle = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
+                .queryParam("number", login)
+                .queryParam("password", password)
+                .post(EndPoints.token)
+                .then().extract().body().jsonPath().getString("access_token");
+        accesTokenCache.put(role, accessTokenSingle);
+        return SpecStorage.exwal().header("Authorization", "Bearer " + accessTokenSingle);
+    }
+
+    @Override
+    public RequestSpecification auth(String role) {
+        if (accesTokenCache.containsKey(role)) {
+            return SpecStorage.exwal().header("Authorization", "Bearer " + accesTokenCache.get(role));
+        } else {
+            CredentialEntry entry = Environment.CREDENTIALS.getOrDefault(role, null);
+            if (entry == null) {
+                entry = Environment.CREDENTIALS.get("default");
+            }
+            String newAccesToken = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
+                    .queryParam("number", entry.getLogin())
+                    .queryParam("password", entry.getPassword())
+                    .post(EndPoints.token)
+                    .then().extract().body().jsonPath().getString("access_token");
+            accesTokenCache.put(role, newAccesToken);
+            return SpecStorage.exwal().header("Authorization", "Bearer " + newAccesToken);
+        }
+    }
 
     @Override
     public RequestSpecification auth(String login, String password) {

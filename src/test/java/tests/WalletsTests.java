@@ -3,17 +3,23 @@ package tests;
 import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.exceptions.NoWalletsException;
 import com.crypterium.cryptApi.pojos.wallets.*;
+import com.crypterium.cryptApi.pojos.wallets.history.History;
+import com.crypterium.cryptApi.pojos.wallets.history.WalletHistoryResponseModel;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
+import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +28,7 @@ import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
 public class WalletsTests extends ExwalTest {
 
+    private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
     private CredentialEntry recipient = ApiCommonFunctions.getRecipient();
 
     @Test
@@ -117,82 +124,138 @@ public class WalletsTests extends ExwalTest {
     @Financial
     @DisplayName("Sendcrypto LTC by phone")
     public void testLTCbyPhone() {
-        testSendCrypto(commonBodyForPhone(LTC, "0.001"));
+        testSendCrypto(commonBodyForPhone(LTC, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto BTC by phone")
     public void testBTCbyPhone() {
-        testSendCrypto(commonBodyForPhone(BTC, "0.00001"));
+        testSendCrypto(commonBodyForPhone(BTC, "0.00001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto ETH by phone")
     public void testETHbyPhone() {
-        testSendCrypto(commonBodyForPhone(ETH, "0.0001"));
+        testSendCrypto(commonBodyForPhone(ETH, "0.0001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto CRPT by phone")
     public void testCRPTbyPhone() {
-        testSendCrypto(commonBodyForPhone(CRPT, "0.001"));
+        testSendCrypto(commonBodyForPhone(CRPT, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto LTC by address")
     public void testLTCbyAddress() {
-        testSendCrypto(commonBodyForAddress(LTC, "0.001"));
+        testSendCrypto(commonBodyForAddress(LTC, "0.001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto BTC by address")
     public void testBTCbyAddres() {
-        testSendCrypto(commonBodyForAddress(BTC, "0.001"));
+        testSendCrypto(commonBodyForAddress(BTC, "0.001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto ETH by address")
     public void testETHbyAddress() {
-        testSendCrypto(commonBodyForAddress(ETH, "0.0001"));
+        testSendCrypto(commonBodyForAddress(ETH, "0.0001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
     @Financial
     @DisplayName("Sendcrypto CRPT by address")
     public void testCRPTbyAddress() {
-        testSendCrypto(commonBodyForAddress(CRPT, "0.001"));
+        testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
     }
 
-    private void testSendCrypto(BodyCreator bodyCreator) {
-        testInvoice(bodyCreator, EndPoints.wallet_send);
+    @Test
+    @Financial
+    @DisplayName("Send BTC to external wallet")
+    public void testBtcExternalAddress() {
+        service().auth()
+                .body(new WalletSendReq()
+                        .setAddress("1A8d5vvsbfvh8Vx3FhDi7aX5C3aBhhoSHG")
+                        .setCurrency(BTC)
+                        .setAmount(new BigDecimal("0.001"))
+                        .setFee(new BigDecimal("0.00005")))
+                .post(EndPoints.wallet_send);
     }
 
-    private void testInvoice(BodyCreator bodyCreator, String endpoint) {
-        WalletSendResponseModel responseModel = service().auth().body(bodyCreator.create()).post(endpoint).as(WalletSendResponseModel.class);
+    private void testSendCrypto(BodyCreator bodyCreator, HistoryProcessor historyProcessor) {
+        testInvoice(bodyCreator, EndPoints.wallet_send, historyProcessor);
+    }
+
+    private void testInvoice(BodyCreator bodyCreator, String endpoint, HistoryProcessor historyProcessor) {
+        WalletSendReq body = bodyCreator.create();
+
+        BigDecimal recipientAmountBefore = getWalletByCurrency(recipient, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), recipient.getLogin()))
+                .getBalance();
+        BigDecimal senderAmountBefore = getWalletByCurrency(sender, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
+                .getBalance();
+
+        service().auth().body(body).post(endpoint).as(WalletSendResponseModel.class);
+
+        int limit = 12;
+        History transaction = null;
+        for (int i = 0; i <= limit; i++) {
+            WalletHistoryResponseModel transactions = service().auth().queryParam("size", 10).get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class);
+            historyProcessor.setTransactions(transactions.getHistory());
+            transaction = historyProcessor.findTransactoinByAmount(body.getAmount(), body.getCurrency());
+            if (transaction.getOperationStatus() == History.OperationStatus.COMPLETED) {
+                break;
+            }
+            try {
+                Thread.currentThread().sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!transaction.getOperationStatus().equals(History.OperationStatus.COMPLETED)) {
+            throw new RuntimeException("Operation didn't complete in 60 seconds");
+        }
+        BigDecimal expectedSenderBalance = senderAmountBefore.subtract(
+                historyProcessor.getAmount(transaction).add(historyProcessor.getFee(transaction)));
+        BigDecimal expectedRecipientBalance = recipientAmountBefore.add(historyProcessor.getAmount(transaction));
+
+        BigDecimal recipientBalanceAfter = getWalletByCurrency(recipient, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), recipient.getLogin()))
+                .getBalance();
+        BigDecimal senderBalanceAfter = getWalletByCurrency(sender, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
+                .getBalance();
+
+        Assert.assertThat(senderBalanceAfter, Matchers.equalTo(expectedSenderBalance));
+        Assert.assertThat(recipientBalanceAfter, Matchers.equalTo(expectedRecipientBalance));
     }
 
     private BodyCreator commonBodyForAddress(Currency currency, String amount) {
         return () -> {
+
             String errorMessage = String.format("No wallet found for currency %s for user %s", currency, recipient.getLogin());
             Wallet wallet = getWalletByCurrency(recipient, currency).orElseThrow(() ->
                     new NoSuchWalletException(errorMessage));
             String address = wallet.getAddress();
 
+            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("yyMMddHHmmSS").format(new Date());
             FeeResponse feeResponse = service().auth().queryParam("address", address)
                     .pathParams("currency", currency)
-                    .queryParam("amount", amount).get(EndPoints.wallet_send_fee_currency)
+                    .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
                     .as(FeeResponse.class);
             BigDecimal fee = feeResponse.getFee();
 
             return new WalletSendReq()
                     .setAddress(address)
-                    .setAmount(new BigDecimal(amount))
+                    .setAmount(new BigDecimal(amountWithTimeStamp))
                     .setCurrency(currency)
                     .setFee(fee);
         };
@@ -200,15 +263,16 @@ public class WalletsTests extends ExwalTest {
 
     private BodyCreator commonBodyForPhone(Currency currency, String amount) {
         return () -> {
+            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("yyMMddHHmmSS").format(new Date());
             FeeResponse feeResponse = service().auth().queryParam("phone", recipient.getLogin())
                     .pathParams("currency", currency)
-                    .queryParam("amount", amount).get(EndPoints.wallet_send_fee_currency)
+                    .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
                     .as(FeeResponse.class);
             BigDecimal fee = feeResponse.getFee();
 
             return new WalletSendReq()
                     .setPhone(recipient.getLogin())
-                    .setAmount(new BigDecimal(amount))
+                    .setAmount(new BigDecimal(amountWithTimeStamp))
                     .setCurrency(currency)
                     .setFee(fee);
         };
@@ -225,5 +289,65 @@ public class WalletsTests extends ExwalTest {
     @FunctionalInterface
     private interface BodyCreator {
         WalletSendReq create();
+    }
+
+    private static abstract class HistoryProcessor {
+
+        List<History> transactions;
+
+        public HistoryProcessor setTransactions(List<History> transactions) {
+            this.transactions = transactions;
+            return this;
+        }
+
+        abstract History findTransactoinByAmount(BigDecimal amount, Currency currency);
+
+        abstract BigDecimal getAmount(History history);
+
+        abstract BigDecimal getFee(History history);
+    }
+
+    private static class TransferPhoneHistoryProcessor extends HistoryProcessor {
+
+        @Override
+        History findTransactoinByAmount(BigDecimal amount, Currency currency) {
+            return this.transactions.stream().filter(t -> t.getOperationType() == History.OperationType.TRANSFER_PHONE)
+                    .filter(t ->
+                            t.getWalletHistoryRecordTransferPhone().getCreditAmount().getValue().compareTo(amount) == 0
+                                    && t.getWalletHistoryRecordTransferPhone().getCreditAmount().getCurrency() == currency
+                    ).findFirst().orElse(null);
+        }
+
+        @Override
+        BigDecimal getAmount(History history) {
+            return history.getWalletHistoryRecordTransferPhone().getCreditAmount().getValue();
+        }
+
+        @Override
+        BigDecimal getFee(History history) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private static class TransferWalletHistoryProcessor extends HistoryProcessor {
+
+        @Override
+        History findTransactoinByAmount(BigDecimal amount, Currency currency) {
+            return this.transactions.stream().filter(t -> t.getOperationType() == History.OperationType.TRANSFER_WALLET)
+                    .filter(t ->
+                            t.getWalletHistoryRecordTransferWallet().getCreditAmount().getValue().compareTo(amount) == 0
+                                    && t.getWalletHistoryRecordTransferWallet().getCreditAmount().getCurrency() == currency
+                    ).findFirst().orElse(null);
+        }
+
+        @Override
+        BigDecimal getAmount(History history) {
+            return history.getWalletHistoryRecordTransferWallet().getCreditAmount().getValue();
+        }
+
+        @Override
+        BigDecimal getFee(History history) {
+            return BigDecimal.ZERO;
+        }
     }
 }

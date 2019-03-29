@@ -4,11 +4,14 @@ package com.crypterium.cryptApi.pojos.wallets.history;
 import com.crypterium.cryptApi.pojos.wallets.CreditAmount;
 import com.crypterium.cryptApi.pojos.wallets.DebitAmount;
 import com.crypterium.cryptApi.pojos.wallets.MainAmount;
+import com.crypterium.cryptApi.pojos.wallets.TotalFeeAmount;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 public class WalletHistoryRecordTransferWallet {
 
@@ -24,6 +27,8 @@ public class WalletHistoryRecordTransferWallet {
     private MainAmount mainAmount;
     @Expose
     private String toAddress;
+    @Expose
+    private TotalFeeAmount totalFeeAmount;
 
     public CreditAmount getCreditAmount() {
         return creditAmount;
@@ -73,4 +78,12 @@ public class WalletHistoryRecordTransferWallet {
         this.toAddress = toAddress;
     }
 
+    public TotalFeeAmount getTotalFeeAmount() {
+        return totalFeeAmount;
+    }
+
+    public WalletHistoryRecordTransferWallet setTotalFeeAmount(TotalFeeAmount totalFeeAmount) {
+        this.totalFeeAmount = totalFeeAmount;
+        return this;
+    }
 }

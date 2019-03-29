@@ -4,11 +4,13 @@ package com.crypterium.cryptApi.pojos.wallets.history;
 import com.crypterium.cryptApi.pojos.wallets.CreditAmount;
 import com.crypterium.cryptApi.pojos.wallets.DebitAmount;
 import com.crypterium.cryptApi.pojos.wallets.MainAmount;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 public class WalletHistoryRecordTransferPhone {
 
