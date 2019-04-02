@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.BTC;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.CRPT;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
 public class Exchange extends ExwalTest {
 
@@ -52,19 +51,26 @@ public class Exchange extends ExwalTest {
     @Test
     @DisplayName("Exchange BTC to ETH")
     public void testExchangeBTCtoETH() {
+        Currency currencyFrom = BTC;
+        Currency currencyTo = ETH;
+
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        Pair pair = getPairByCurrencies(pairs, CRPT, BTC);
-        BigDecimal amount = pair.getMinAmountFrom();
+        Pair pair = getPairByCurrencies(pairs, currencyFrom, currencyTo);
+        BigDecimal amount = pair.getMinAmountFrom().add(new BigDecimal("0.0001"));
+
+//        amount = new BigDecimal("0.9001");
         ExchangeOfferReqModel body = new ExchangeOfferReqModel()
-                .setCurrencyFrom(CRPT)
-                .setCurrencyTo(BTC)
-                .setAmountFrom(new BigDecimal("3000"));
+                .setCurrencyFrom(currencyFrom)
+                .setCurrencyTo(currencyTo)
+                .setAmountFrom(amount);
 
         ExchangeOfferResponseModel offer = service().auth().body(body)
                 .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
 
         service().auth().pathParam("offerId", offer.getOfferId())
                 .put(EndPoints.mobile_exchange_offer_offerId);
+
+        service().auth().get(EndPoints.wallet_list);
 
     }
 

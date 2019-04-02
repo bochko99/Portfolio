@@ -43,7 +43,7 @@ public class ExwalTest extends BaseTest {
         service().auth().body(confirmEmail).post(EndPoints.mobile_email_confirm);
 
         Password password = new Password()
-                .setPassword("123456");
+                .setPassword("12345a");
         service().auth().body(password).post(EndPoints.mobile_pwd_setup);
 
         SetupPin setupPin = new SetupPin()
