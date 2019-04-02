@@ -44,10 +44,9 @@ public class EndPoints {
     public static final String customer_profile_loyality = "/customer/profile/loyalty";
 
     //Exchange sx
-    public static final String mobile_sx_exchange = "/mobile/sx/mobile_sx_exchange";
-    public static final String mobile_sx_exchange_rate = "/mobile/sx/mobile_sx_exchange/rate";
-    public static final String mobile_sx_exchange_rate_transactionid = "/mobile/sx/mobile_sx_exchange/rate/{transactionId}";
-    public static final String mobile_sx_rates = "/mobile/sx/mobile_sx_rates";
+    public static final String mobile_exchange_currencies = "/mobile/exchange/currencies";
+    public static final String mobile_exchange_offer = "/mobile/exchange/offer";
+    public static final String mobile_exchange_offer_offerId = "/mobile/exchange/offer/{offerId}";
 
     //Restore access operations
     public static final String mobile_password_change = "/mobile/password/change";

@@ -18,7 +18,6 @@ import static io.restassured.RestAssured.given;
 
 public class RestoreAccessOperTests extends ExwalTest {
 
-
     @Test
     @DisplayName("Mobile password reset")
     public void testResetPass() {
