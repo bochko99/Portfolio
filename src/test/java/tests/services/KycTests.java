@@ -4,6 +4,7 @@ import com.crypterium.cryptApi.pojos.services.kyc.KycIdentityRequestModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
 import core.annotations.Credentials;
+import core.annotations.ScopeTarget;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import tests.core.ExwalTest;
 
 import static com.crypterium.cryptApi.Auth.service;
 
+@ScopeTarget(ScopeTarget.Stand.BETA)
 public class KycTests extends ExwalTest {
 
     @Test

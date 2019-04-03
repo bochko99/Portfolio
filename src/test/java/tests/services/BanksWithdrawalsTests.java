@@ -18,6 +18,7 @@ import java.math.RoundingMode;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.banks.WithdrawalCurrency.*;
 
+@ScopeTarget(ScopeTarget.Stand.BETA)
 public class BanksWithdrawalsTests extends ExwalTest {
 
     @Test

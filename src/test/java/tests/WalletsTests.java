@@ -176,6 +176,8 @@ public class WalletsTests extends ExwalTest {
         testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
     }
 
+
+
     private void testSendCrypto(BodyCreator bodyCreator, HistoryProcessor historyProcessor) {
         testInvoice(bodyCreator, EndPoints.wallet_send, historyProcessor);
     }
@@ -267,10 +269,10 @@ public class WalletsTests extends ExwalTest {
 
     private Optional<Wallet> getWalletByCurrency(CredentialEntry user, Currency currency) {
 
-        List<Wallet> wallets = service().authSingle(user.getLogin(), user.getPassword())
+        List<Wallet> wallets = service().authAs(user.getLogin(), user.getPassword(), user.getLogin())
                 .get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
 
-        return wallets.stream().filter(e -> e.getCurrency().equals(currency)).findFirst();
+        return wallets.stream().filter(e -> e.getCurrency().equals(currency)).filter(w -> w.getId() != -1).findFirst();
     }
 
     @FunctionalInterface

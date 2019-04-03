@@ -29,6 +29,9 @@ public class BaseTest {
 
     @Before
     public void checkTarget() {
+        String classErrMsg = String.format("Current stand '%s' not in {%s}", Environment.TARGET, String.join(", ", target.getClassStands()));
+        Assume.assumeTrue(classErrMsg, target.getClassTarget() == null
+            || target.getClassStands().contains(Environment.TARGET));
         String errMsg = String.format("Current stand '%s' not in {%s}", Environment.TARGET, String.join(", ", target.getStands()));
         Assume.assumeTrue(errMsg, target.getTarget() == null
                 || target.getStands().contains(Environment.TARGET));

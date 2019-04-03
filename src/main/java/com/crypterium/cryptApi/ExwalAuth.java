@@ -18,13 +18,17 @@ public class ExwalAuth extends AuthProvider {
 
     @Override
     public RequestSpecification authAs(String login, String password, String role) {
-        String accessTokenSingle = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
-                .queryParam("number", login)
-                .queryParam("password", password)
-                .post(EndPoints.token)
-                .then().extract().body().jsonPath().getString("access_token");
-        accesTokenCache.put(role, accessTokenSingle);
-        return SpecStorage.exwal().header("Authorization", "Bearer " + accessTokenSingle);
+        if (accesTokenCache.containsKey(role)) {
+            return SpecStorage.exwal().header("Authorization", "Bearer " + accesTokenCache.get(role));
+        } else {
+            String accessTokenSingle = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")
+                    .queryParam("number", login)
+                    .queryParam("password", password)
+                    .post(EndPoints.token)
+                    .then().extract().body().jsonPath().getString("access_token");
+            accesTokenCache.put(role, accessTokenSingle);
+            return SpecStorage.exwal().header("Authorization", "Bearer " + accessTokenSingle);
+        }
     }
 
     @Override
