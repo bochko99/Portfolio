@@ -2,7 +2,7 @@ package manual_tests;
 
 import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.exceptions.NoWalletsException;
-import com.crypterium.cryptApi.newback.pojos.wallets.*;
+import com.crypterium.cryptApi.pojos.wallets.*;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.newback.pojos.wallets.Currency.*;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
 public class WalletsManual extends ExwalTest {
 

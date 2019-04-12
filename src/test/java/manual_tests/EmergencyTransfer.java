@@ -1,8 +1,8 @@
 package manual_tests;
 
-import com.crypterium.cryptApi.newback.pojos.wallets.Wallet;
-import com.crypterium.cryptApi.newback.pojos.wallets.WalletListResp;
-import com.crypterium.cryptApi.newback.pojos.wallets.WalletSendReq;
+import com.crypterium.cryptApi.pojos.wallets.Wallet;
+import com.crypterium.cryptApi.pojos.wallets.WalletListResp;
+import com.crypterium.cryptApi.pojos.wallets.WalletSendReq;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
