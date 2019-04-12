@@ -1,5 +1,7 @@
 package com.crypterium.cryptApi.exceptions;
 
+import com.crypterium.cryptApi.pojos.wallets.Currency;
+
 public class NoSuchWalletException extends RuntimeException {
 
     /**
@@ -12,5 +14,13 @@ public class NoSuchWalletException extends RuntimeException {
      */
     public NoSuchWalletException(String message) {
         super(message);
+    }
+
+    public NoSuchWalletException(Currency currency) {
+        super(String.format("No wallet found for currency %s", currency));
+    }
+
+    public NoSuchWalletException(Currency currency, String user) {
+        super(String.format("No wallet found for currency %s for user %s", currency, user));
     }
 }

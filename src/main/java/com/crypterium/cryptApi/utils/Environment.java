@@ -52,6 +52,7 @@ public class Environment {
     }
 
     public static final Map<String, CredentialEntry> CREDENTIALS = Collections.unmodifiableMap(CREDENTIALS_INIT);
+    public static final CredentialEntry CREDENTIAL_DEFAULT = CREDENTIALS.get("default");
     public static final String TARGET = props.getProperty("target", "BETA");
     public static final String FINANCE_OPERATIONS_ALLOWED = props.getProperty("allowFinanceOperations", "false");
     public static final String BASE_PATH = props.getProperty("basePath", Constants.MOBILE);

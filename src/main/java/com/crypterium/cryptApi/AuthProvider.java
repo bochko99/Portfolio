@@ -23,9 +23,13 @@ public abstract class AuthProvider {
 
     }
 
+    public abstract RequestSpecification auth(String role);
+
     public abstract RequestSpecification auth(String login, String password);
 
     public abstract RequestSpecification auth();
+
+    public abstract RequestSpecification authAs(String login, String password, String role);
 
     public abstract RequestSpecification createUser();
 

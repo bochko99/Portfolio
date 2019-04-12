@@ -1,7 +1,7 @@
 package tests;
 
-import com.crypterium.cryptApi.newback.pojos.catalogs.FaqItem;
-import com.crypterium.cryptApi.newback.pojos.catalogs.FaqItemCode;
+import com.crypterium.cryptApi.pojos.catalogs.FaqItem;
+import com.crypterium.cryptApi.pojos.catalogs.FaqItemCode;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -22,21 +22,21 @@ public class CatalogsTests extends ExwalTest {
     @Test
     @DisplayName(EndPoints.catalog_comissions + " GET")
     public void testComissions() {
-        given().get(EndPoints.catalog_comissions);
+        given().get(EndPoints.catalog_comissions).then().body("size()", Matchers.greaterThan(0));
     }
 
 
     @Test
     @DisplayName(EndPoints.catalog_countries + " GET")
     public void testCountry() {
-        given().get(EndPoints.catalog_countries);
+        given().get(EndPoints.catalog_countries).then().body("size()", Matchers.greaterThan(0));
     }
 
 
     @Test
     @DisplayName(EndPoints.catalog_currencies + " GET")
     public void testCurrencies() {
-        given().get(EndPoints.catalog_currencies);
+        given().get(EndPoints.catalog_currencies).then().body("size()", Matchers.greaterThan(0));
     }
 
     @Test
@@ -49,9 +49,9 @@ public class CatalogsTests extends ExwalTest {
     }
 
     @Test
-    @DisplayName(EndPoints.catalogs_operations_ex + " GET")
+    @DisplayName(EndPoints.catalogs_operations + " GET")
     public void testOperations() {
-        given().get(EndPoints.catalogs_operations_ex);
+        given().get(EndPoints.catalogs_operations).then().body("size()", Matchers.greaterThan(0));
     }
 
 
