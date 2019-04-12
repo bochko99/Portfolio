@@ -8,6 +8,7 @@ import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import io.qameta.allure.junit4.DisplayName;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import tests.core.ExwalTest;
@@ -21,9 +22,12 @@ public class RestoreAccessOperTests extends ExwalTest {
     @Test
     @DisplayName("Mobile password reset")
     public void testResetPass() {
-        CredentialEntry user = Environment.CREDENTIALS.get("default");
+        CredentialEntry user = Environment.CREDENTIAL_DEFAULT;
+        String password = user.getPassword();
+        String newPassword = RandomStringUtils.randomAlphabetic(10);
         ResetReq resetReq = new ResetReq()
                 .setPhone(user.getLogin());
+
         given().body(resetReq).post(EndPoints.mobile_password_reset);
         String code = exauth().admin().queryParam("phone", user.getLogin())
                 .queryParam("event", "PASSWORD_RESTORE")
@@ -34,12 +38,18 @@ public class RestoreAccessOperTests extends ExwalTest {
                 .setPhone(user.getLogin());
         given().body(checkCodeReq).post(EndPoints.mobile_password_reset_confirm_code);
 
+
         SetNewPassReq setNewPassReq = new SetNewPassReq()
                 .setCode(code)
-                .setPassword(user.getPassword())
+                .setPassword(newPassword)
                 .setPhone(user.getLogin());
-
         given().body(setNewPassReq).post(EndPoints.mobile_password_reset_confirm).then().body("access_token", Matchers.notNullValue());
+
+        ChangeReq changeReq = new ChangeReq()
+                .setCurrentPassword(newPassword)
+                .setNewPassword(password);
+
+        service().authSingle(user.getLogin(), newPassword).body(changeReq).put(EndPoints.mobile_password_change);
 
     }
 

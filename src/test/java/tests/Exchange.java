@@ -1,12 +1,17 @@
 package tests;
 
 import com.crypterium.cryptApi.exceptions.NoSuchPairException;
+import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.pojos.exchange.ExchangeOfferReqModel;
 import com.crypterium.cryptApi.pojos.exchange.ExchangeOfferResponseModel;
 import com.crypterium.cryptApi.pojos.exchange.ExchangePairsResponseModel;
 import com.crypterium.cryptApi.pojos.exchange.Pair;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
+import com.crypterium.cryptApi.pojos.wallets.Wallet;
+import com.crypterium.cryptApi.pojos.wallets.WalletListResp;
+import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
+import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
 import core.annotations.ScopeTarget;
 import io.qameta.allure.junit4.DisplayName;
@@ -21,11 +26,12 @@ import java.util.List;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
-@ScopeTarget(value = {ScopeTarget.Stand.BETA})
+@ScopeTarget(value = {ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE})
 public class Exchange extends ExwalTest {
 
+    private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
+
     @Test
-    @Financial
     @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
     public void testGetMobileExchangeCurrencies() {
         service().auth().get(EndPoints.mobile_exchange_currencies);
@@ -52,6 +58,20 @@ public class Exchange extends ExwalTest {
         Assert.assertThat(response.getSourceCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
         Assert.assertThat(response.getTargetCurrencyAmount().getCurrencyCode(), Matchers.equalTo(currencyTo));
         Assert.assertThat(response.getTargetCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Exchange ETH to CRPT")
+    public void testExchangeETHtoCRPT() {
+        testExchangeByMinimalValue(ETH, CRPT);
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Exchange CRPT to ETH")
+    public void testExchangeCRPTtoETH() {
+        testExchangeByMinimalValue(CRPT, ETH);
     }
 
     @Test
@@ -115,23 +135,46 @@ public class Exchange extends ExwalTest {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
         Pair pair = getPairByCurrencies(pairs, currencyFrom, currencyTo);
         BigDecimal amount = pair.getMinAmountFrom();
+        List<Wallet> wallets = getWallets(sender);
+        BigDecimal sourceAmountBefore = getWalletByCurrency(wallets, currencyFrom)
+                .getBalance().stripTrailingZeros();
+        BigDecimal targetAmountBefore = getWalletByCurrency(wallets, currencyTo)
+                .getBalance().stripTrailingZeros();
 
         ExchangeOfferReqModel body = new ExchangeOfferReqModel()
                 .setCurrencyFrom(currencyFrom)
                 .setCurrencyTo(currencyTo)
                 .setAmountFrom(amount);
-
         ExchangeOfferResponseModel offer = service().auth().body(body)
                 .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
-
         service().auth().pathParam("offerId", offer.getOfferId())
                 .put(EndPoints.mobile_exchange_offer_offerId);
+
+        BigDecimal expectedSourceAmount = sourceAmountBefore.subtract(offer.getSourceCurrencyAmount().getAmount()).stripTrailingZeros();
+        BigDecimal expectedTargetAmount = targetAmountBefore.add(offer.getTargetCurrencyAmount().getAmount()).stripTrailingZeros();
+
+        wallets = getWallets(sender);
+        BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance().stripTrailingZeros();
+        BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance().stripTrailingZeros();
+
+        Assert.assertThat(expectedSourceAmount, Matchers.equalTo(sourceAmountAfter));
+        Assert.assertThat(expectedTargetAmount, Matchers.equalTo(targetAmountAfter));
 
     }
 
     public Pair getPairByCurrencies(List<Pair> pairs, Currency currencyFrom, Currency currencyTo) {
         return pairs.stream().filter(p -> p.getCurrencyFrom().equals(currencyFrom) && p.getCurrencyTo().equals(currencyTo))
                 .findFirst().orElseThrow(() -> new NoSuchPairException(currencyFrom, currencyTo));
+    }
+
+    private List<Wallet> getWallets(CredentialEntry user) {
+        return service().authAs(user.getLogin(), user.getPassword(), user.getLogin())
+                .get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
+    }
+
+    private Wallet getWalletByCurrency(List<Wallet> wallets, Currency currency) {
+        return wallets.stream().filter(e -> e.getCurrency().equals(currency)).filter(w -> w.getId() != -1).findFirst()
+                .orElseThrow(() -> new NoSuchWalletException(currency));
     }
 
 }

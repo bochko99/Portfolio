@@ -280,7 +280,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_ru_individual + " POST: 5 EUR")
     public void testPostWithdrawalsRuIndividual() throws InterruptedException {
 
@@ -350,7 +349,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_individual + " POST: 5 EUR")
     public void testPostWithdrawalsEuIndividual() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();
@@ -406,7 +404,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_corporate + " POST: 5 EUR")
     public void testPostWithdrawalsEuCorporate() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();

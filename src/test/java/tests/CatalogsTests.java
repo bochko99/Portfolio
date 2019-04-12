@@ -22,21 +22,21 @@ public class CatalogsTests extends ExwalTest {
     @Test
     @DisplayName(EndPoints.catalog_comissions + " GET")
     public void testComissions() {
-        given().get(EndPoints.catalog_comissions);
+        given().get(EndPoints.catalog_comissions).then().body("size()", Matchers.greaterThan(0));
     }
 
 
     @Test
     @DisplayName(EndPoints.catalog_countries + " GET")
     public void testCountry() {
-        given().get(EndPoints.catalog_countries);
+        given().get(EndPoints.catalog_countries).then().body("size()", Matchers.greaterThan(0));
     }
 
 
     @Test
     @DisplayName(EndPoints.catalog_currencies + " GET")
     public void testCurrencies() {
-        given().get(EndPoints.catalog_currencies);
+        given().get(EndPoints.catalog_currencies).then().body("size()", Matchers.greaterThan(0));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CatalogsTests extends ExwalTest {
     @Test
     @DisplayName(EndPoints.catalogs_operations + " GET")
     public void testOperations() {
-        given().get(EndPoints.catalogs_operations);
+        given().get(EndPoints.catalogs_operations).then().body("size()", Matchers.greaterThan(0));
     }
 
 
