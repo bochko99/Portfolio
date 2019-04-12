@@ -34,6 +34,12 @@ public class WalletsManual extends ExwalTest {
         testSendCrypto(commonBodyForPhone(LTC, "0.001"));
     }
 
+    @Test
+    @DisplayName(EndPoints.wallet_list + " GET")
+    public void testWalletList() {
+        service().auth().get(EndPoints.wallet_list);
+    }
+
     private void testSendCrypto(BodyCreator bodyCreator) {
         testInvoice(bodyCreator, EndPoints.wallet_send);
     }
