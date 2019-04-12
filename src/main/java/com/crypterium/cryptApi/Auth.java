@@ -1,8 +1,5 @@
 package com.crypterium.cryptApi;
 
-import com.crypterium.cryptApi.newback.ExwalAuth;
-import com.crypterium.cryptApi.oldback.CAuth;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -11,25 +8,12 @@ public class Auth {
 
     private static final String DEFAULT_FINGERPRINT = UUID.randomUUID().toString();
 
-    private static Map<String, CAuth> cauthCache = new HashMap<>();
     private static Map<String, ExwalAuth> exauthCache = new HashMap<>();
 
     private static AuthType defaultType = AuthType.EXWAL;
 
     public Auth() {
 
-    }
-
-    public static CAuth cauth() {
-        return cauth(DEFAULT_FINGERPRINT);
-    }
-
-    public static CAuth cauth(String fingerprint) {
-        CAuth instance = cauthCache.getOrDefault(fingerprint, new CAuth());
-        if (!cauthCache.containsKey(fingerprint)) {
-            cauthCache.put(fingerprint, instance);
-        }
-        return instance;
     }
 
     public static ExwalAuth exauth() {
@@ -57,8 +41,6 @@ public class Auth {
         switch (defaultType) {
             case EXWAL:
                 return (T) exauth(fingerprint);
-            case CSHARP:
-                return (T) cauth(fingerprint);
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package tests;
 
-import com.crypterium.cryptApi.newback.pojos.cardorderoperation.OrderReq;
-import com.crypterium.cryptApi.newback.pojos.signupoperation.SignUpReq;
+import com.crypterium.cryptApi.pojos.cardorderoperation.OrderReq;
+import com.crypterium.cryptApi.pojos.signupoperation.SignUpReq;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;

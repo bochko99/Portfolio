@@ -1,7 +1,7 @@
 package tests.services;
 
-import com.crypterium.cryptApi.newback.pojos.banks.*;
-import com.crypterium.cryptApi.newback.pojos.customerprofile.UserProfileModel;
+import com.crypterium.cryptApi.pojos.banks.*;
+import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
@@ -16,8 +16,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.newback.pojos.banks.WithdrawalCurrency.*;
+import static com.crypterium.cryptApi.pojos.banks.WithdrawalCurrency.*;
 
+@ScopeTarget(ScopeTarget.Stand.BETA)
 public class BanksWithdrawalsTests extends ExwalTest {
 
     @Test
@@ -279,7 +280,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_ru_individual + " POST: 5 EUR")
     public void testPostWithdrawalsRuIndividual() throws InterruptedException {
 
@@ -349,7 +349,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_individual + " POST: 5 EUR")
     public void testPostWithdrawalsEuIndividual() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();
@@ -405,7 +404,6 @@ public class BanksWithdrawalsTests extends ExwalTest {
     }
 
     @Test
-    @ScopeTarget(stands = {ScopeTarget.Stand.BETA})
     @DisplayName(EndPoints.withdrawals_eu_corporate + " POST: 5 EUR")
     public void testPostWithdrawalsEuCorporate() throws InterruptedException {
         Long customerId = service().auth().get(EndPoints.customer_profile).as(UserProfileModel.class).getCustomerId();
