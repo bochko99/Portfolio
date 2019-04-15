@@ -13,7 +13,7 @@ public class DexpaExchangePairsModel {
     private String exchangeClassId;
     private String id;
     private String mapping;
-    private long minQuantityBase;
+    private double minQuantityBase;
     private double minQuantityCounter;
     private long processingModifier;
     private long quantityIncrementBase;
@@ -85,11 +85,11 @@ public class DexpaExchangePairsModel {
         this.mapping = mapping;
     }
 
-    public long getMinQuantityBase() {
+    public double getMinQuantityBase() {
         return minQuantityBase;
     }
 
-    public void setMinQuantityBase(long minQuantityBase) {
+    public void setMinQuantityBase(double minQuantityBase) {
         this.minQuantityBase = minQuantityBase;
     }
 

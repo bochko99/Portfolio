@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 public class ExchangeDexpaLimits {
 
-    private String currencyFrom = "BTC"; //base
-    private String currencyTo = "ETH"; //counter
+    private String currencyFrom = "ETH"; //base
+    private String currencyTo = "BTC"; //counter
 
     @Test
     public void getDexpaLimits(){
@@ -37,9 +37,13 @@ public class ExchangeDexpaLimits {
                 .get().as(DexpaExchangePairsModel[].class));
 
         Assert.assertFalse(pairsStraight.isEmpty() && pairsReverse.isEmpty());
-        System.out.println("BUY:");
-        if(!pairsStraight.isEmpty()) pairsStraight.forEach(System.out::println);
-        System.out.println("SELL:");
-        if(!pairsReverse.isEmpty()) pairsReverse.forEach(System.out::println);
+        System.out.println("Straight (BUY):");
+        if(!pairsStraight.isEmpty()) {
+            pairsStraight.forEach(System.out::println);
+        }
+        System.out.println("Reverse (SELL):");
+        if(!pairsReverse.isEmpty()) {
+            pairsReverse.forEach(System.out::println);
+        }
     }
 }
