@@ -16,14 +16,15 @@ import java.util.stream.Collectors;
 public class ExchangeDexpaLimits {
 
     private String currencyFrom = "ETH"; //base
-    private String currencyTo = "BTC"; //counter
+    private String currencyTo = "EUR"; //counter
+    private String exchange = "kraken";
 
     @Test
     public void getDexpaLimits(){
         List<DexpaExchangePairsModel> pairsStraight = Arrays.asList(RestAssured.given()
                 .baseUri("https://exchanges.dexpa.io")
                 .basePath("api/internal/exchange-pairs")
-                .queryParam("exchange","kucoin")
+                .queryParam("exchange",exchange)
                 .queryParam("base", currencyFrom)
                 .queryParam("counter", currencyTo)
                 .get().as(DexpaExchangePairsModel[].class));

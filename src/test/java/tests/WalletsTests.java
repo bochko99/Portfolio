@@ -146,7 +146,8 @@ public class WalletsTests extends ExwalTest {
                 .queryParam("size", 9999)
                 .get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class).getHistory();
 
-        checkTransactionList("TRANSFER", transferTypes, transactions);
+        checkTransactionList("TRANSFER_WALLET", transferTypes, transactions);
+        checkTransactionList("TRANSFER_PHONE", transferTypes, transactions);
         checkTransactionList("RECEIVE", receiveTypes, transactions);
         checkTransactionList("PAYOUT", payoutTypes, transactions);
         checkTransactionList("PAYMENTS", paymentsTypes, transactions);
@@ -190,56 +191,48 @@ public class WalletsTests extends ExwalTest {
     //SEND CRYPTO
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto LTC by phone")
     public void testLTCbyPhone() {
         testSendCrypto(commonBodyForPhone(LTC, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto BTC by phone")
     public void testBTCbyPhone() {
         testSendCrypto(commonBodyForPhone(BTC, "0.00001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto ETH by phone")
     public void testETHbyPhone() {
         testSendCrypto(commonBodyForPhone(ETH, "0.0001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto CRPT by phone")
     public void testCRPTbyPhone() {
         testSendCrypto(commonBodyForPhone(CRPT, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto LTC by address")
     public void testLTCbyAddress() {
         testSendCrypto(commonBodyForAddress(LTC, "0.001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto BTC by address")
     public void testBTCbyAddres() {
         testSendCrypto(commonBodyForAddress(BTC, "0.001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto ETH by address")
     public void testETHbyAddress() {
         testSendCrypto(commonBodyForAddress(ETH, "0.0001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto CRPT by address")
     public void testCRPTbyAddress() {
         testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
