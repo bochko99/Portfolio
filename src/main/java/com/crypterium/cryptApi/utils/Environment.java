@@ -66,7 +66,5 @@ public class Environment {
     public static final String GL_URL = props.getProperty("gl.url", "");
     public static final String GL_TOKEN = props.getProperty("gl.token", "");
     public static final String GL_EXPECTED_ACCOUNT_COUNT = props.getProperty("gl.account_count", "40");
-    public static void main(String[] args) {
-        System.out.println("123");
-    }
+
 }

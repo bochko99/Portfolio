@@ -1,12 +1,14 @@
 
 package com.crypterium.cryptApi.pojos.customerprofile;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 
 import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileReq {
 
     @Expose
@@ -47,6 +49,16 @@ public class ProfileReq {
     private String primaryCurrency;
     @Expose
     private String registrationAddress;
+    @Expose
+    private String residenceCountry;
+    @Expose
+    private String residenceState;
+    @Expose
+    private String residenceCity;
+    @Expose
+    private String residenceStreet;
+    @Expose
+    private String residenceZipCode;
 
     public String getCitizenshipCountry() {
         return citizenshipCountry;
@@ -216,6 +228,51 @@ public class ProfileReq {
 
     public ProfileReq setRegistrationAddress(String registrationAddress) {
         this.registrationAddress = registrationAddress;
+        return this;
+    }
+
+    public String getResidenceCountry() {
+        return residenceCountry;
+    }
+
+    public ProfileReq setResidenceCountry(String residenceCountry) {
+        this.residenceCountry = residenceCountry;
+        return this;
+    }
+
+    public String getResidenceState() {
+        return residenceState;
+    }
+
+    public ProfileReq setResidenceState(String residenceState) {
+        this.residenceState = residenceState;
+        return this;
+    }
+
+    public String getResidenceCity() {
+        return residenceCity;
+    }
+
+    public ProfileReq setResidenceCity(String residenceCity) {
+        this.residenceCity = residenceCity;
+        return this;
+    }
+
+    public String getResidenceStreet() {
+        return residenceStreet;
+    }
+
+    public ProfileReq setResidenceStreet(String residenceStreet) {
+        this.residenceStreet = residenceStreet;
+        return this;
+    }
+
+    public String getResidenceZipCode() {
+        return residenceZipCode;
+    }
+
+    public ProfileReq setResidenceZipCode(String residenceZipCode) {
+        this.residenceZipCode = residenceZipCode;
         return this;
     }
 }

@@ -34,14 +34,16 @@ public class CardOrderOperationsTests extends ExwalTest {
             if (statusCode == 200) {
                 break;
             }
-            String email = ApiCommonFunctions.generateFreeEmail();
-            OrderReq orderReq = new OrderReq()
-                    .setCountry("RU")
-                    .setEmail(email)
-                    .setPhone(phoneNumber)
-                    .setName("Vasya");
-            given().body(orderReq).post(EndPoints.card_order);
+
         }
+        String email = ApiCommonFunctions.generateFreeEmail();
+        OrderReq orderReq = new OrderReq()
+                .setCountry("RU")
+                .setEmail(email)
+                .setPhone(phoneNumber)
+                .setName("Vasya");
+        given().body(orderReq).post(EndPoints.card_order);
+
     }
 
     @Test

@@ -20,6 +20,8 @@ public class Wallet {
     @Expose
     private BigDecimal balance;
     @Expose
+    private String balanceString;
+    @Expose
     private String color;
     @Expose
     private String createdAt;
@@ -141,6 +143,15 @@ public class Wallet {
 
     public Wallet setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public String getBalanceString() {
+        return balanceString;
+    }
+
+    public Wallet setBalanceString(String balanceString) {
+        this.balanceString = balanceString;
         return this;
     }
 }

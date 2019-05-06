@@ -24,6 +24,8 @@ public class WalletHistoryRecordPayoutCard {
     @Expose
     private String toCardPAN;
     @Expose
+    private String toCardCompany;
+    @Expose
     private TotalFeeAmount totalFeeAmount;
 
     public CreditAmount getCreditAmount() {
@@ -74,4 +76,12 @@ public class WalletHistoryRecordPayoutCard {
         this.totalFeeAmount = totalFeeAmount;
     }
 
+    public String getToCardCompany() {
+        return toCardCompany;
+    }
+
+    public WalletHistoryRecordPayoutCard setToCardCompany(String toCardCompany) {
+        this.toCardCompany = toCardCompany;
+        return this;
+    }
 }

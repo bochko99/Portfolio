@@ -21,10 +21,12 @@ import org.junit.Test;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
@@ -38,27 +40,41 @@ public class WalletsTests extends ExwalTest {
     @Test
     @Ignore
     public void multithreadingTest() throws ExecutionException, InterruptedException {
-        service().auth().get(EndPoints.wallet_list);
 
-        WalletSendReq req = new WalletSendReq()
-                .setPhone(recipient.getLogin())
-                .setAmount(new BigDecimal("0.0001"))
-                .setCurrency(ETH)
-                .setFee(new BigDecimal(0));
+        Set<String> users = new HashSet<>(Arrays.asList("79997714662", "70000000090", "70000027545"));
+        Map<String, String> map = new HashMap<>();
+        map.put("79997714662", "123456");
 
-        Callable<Integer> task = () -> service().auth().body(req).post(EndPoints.wallet_send).statusCode();
-        ExecutorService service = Executors.newFixedThreadPool(40);
-        List<Future> qwe = new ArrayList<>();
-        for (int i = 0; i < 40; i++) {
-            qwe.add(service.submit(task));
+        ConcurrentLinkedQueue<String> concurrentUsersQueue = new ConcurrentLinkedQueue<>(users);
+
+        users.forEach(login -> service().authAs(login, map.getOrDefault(login, "12345a"), login));
+        FeeResponse feeResponse = service().auth().queryParam("address", "MEYnzZkpqTE5G6ShyRj7hwnLcGK9zXxhED")
+                .pathParams("currency", LTC)
+                .queryParam("amount", "0.001").get(EndPoints.wallet_send_fee_currency)
+                .as(FeeResponse.class);
+
+        BigDecimal fee = feeResponse.getFee();
+
+        Callable<Integer> task = () -> {
+            String login = concurrentUsersQueue.peek();
+            WalletSendReq req = new WalletSendReq()
+                    .setAddress("MEYnzZkpqTE5G6ShyRj7hwnLcGK9zXxhED")
+                    .setAmount(new BigDecimal("0.001"))
+                    .setCurrency(LTC)
+                    .setFee(fee);
+            service().auth().body(req).post(EndPoints.wallet_send).statusCode();
+            concurrentUsersQueue.add(login);
+            return 0;
+        };
+
+        ExecutorService service = Executors.newFixedThreadPool(concurrentUsersQueue.size());
+        List<Future<Integer>> l = new ArrayList<>();
+        for (int i = 0; i < concurrentUsersQueue.size(); i++) {
+            l.add(service.submit(task));
         }
-        qwe.forEach(t -> {
-            try {
-                t.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
+        for (Future<Integer> integerFuture : l) {
+            integerFuture.get();
+        }
         service.shutdown();
     }
 
@@ -136,7 +152,8 @@ public class WalletsTests extends ExwalTest {
     @DisplayName(EndPoints.wallet_transaction + " GET")
     public void testWalletTransactions() {
 
-        List<OperationType> transferTypes = Arrays.asList(TRANSFER_PHONE, TRANSFER_WALLET);
+        List<OperationType> transferWalletTypes = Collections.singletonList(TRANSFER_WALLET);
+        List<OperationType> transferPhoneTypes = Collections.singletonList(TRANSFER_PHONE);
         List<OperationType> receiveTypes = Arrays.asList(RECEIVE_WALLET_EXTERNAL, RECEIVE_CARD, RECEIVE_WALLET_INTERNAL);
         List<OperationType> payoutTypes = Arrays.asList(PAYOUT_CARD_PAYNETEASY, PAYOUT_WALLET, PAYOUT_BANK, PAYOUT_BPAY, PAYOUT_BSB, PAYOUT_CARD, PAYOUT_RUBANK);
         List<OperationType> paymentsTypes = Arrays.asList(TOPUP_MOBILE, TOPUP, VOUCHER, PAYQR);
@@ -146,26 +163,50 @@ public class WalletsTests extends ExwalTest {
                 .queryParam("size", 9999)
                 .get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class).getHistory();
 
-        checkTransactionList("TRANSFER", transferTypes, transactions);
-        checkTransactionList("RECEIVE", receiveTypes, transactions);
-        checkTransactionList("PAYOUT", payoutTypes, transactions);
-        checkTransactionList("PAYMENTS", paymentsTypes, transactions);
-        checkTransactionList("EXCHANGE", exchangeTypes, transactions);
-
+        checkTransactionList(transferWalletTypes, transactions, "TRANSFER_WALLET");
+        checkTransactionList(transferPhoneTypes, transactions, "TRANSFER_PHONE");
+        checkTransactionList(receiveTypes, transactions, "RECEIVE");
+        checkTransactionList(payoutTypes, transactions, "PAYOUT");
+        checkTransactionList(paymentsTypes, transactions, "PAYMENTS");
+        checkTransactionList(exchangeTypes, transactions, "EXCHANGE");
+        checkTransactionList(join(transferWalletTypes, transferPhoneTypes), transactions,
+                "TRANSFER_WALLET", "TRANSFER_PHONE");
+        checkTransactionList(join(transferWalletTypes, transferPhoneTypes, receiveTypes), transactions,
+                "TRANSFER_WALLET", "TRANSFER_PHONE", "RECEIVE");
+        checkTransactionList(join(transferWalletTypes, transferPhoneTypes, receiveTypes, payoutTypes), transactions,
+                "TRANSFER_WALLET", "TRANSFER_PHONE", "RECEIVE", "PAYOUT");
+        checkTransactionList(join(transferWalletTypes, transferPhoneTypes, receiveTypes, payoutTypes, exchangeTypes), transactions,
+                "TRANSFER_WALLET", "TRANSFER_PHONE", "RECEIVE", "PAYOUT", "EXCHANGE");
+        checkTransactionList(join(transferWalletTypes, transferPhoneTypes, receiveTypes, payoutTypes, exchangeTypes, paymentsTypes), transactions,
+                "TRANSFER_WALLET", "TRANSFER_PHONE", "RECEIVE", "PAYOUT", "PAYMENTS", "EXCHANGE");
     }
 
-    private void checkTransactionList(String filter, List<OperationType> types, List<History> transactions) {
+    private <S> List<S> join(List<S>... arrays) {
+        if (arrays.length == 0) {
+            return Collections.emptyList();
+        }
+        if (arrays.length == 1) {
+            return arrays[0];
+        }
+        Stream<S> stream = arrays[0].stream();
+        for (int i = 1; i < arrays.length; i++) {
+            stream = Stream.concat(stream, arrays[i].stream());
+        }
+        return stream.collect(Collectors.toList());
+    }
+
+    private void checkTransactionList(List<OperationType> types, List<History> transactions, String... filters) {
 
         List<History> filteredTransactions = service().auth()
                 .queryParam("offset", 0)
                 .queryParam("size", 9999)
-                .queryParam("typeFilter", filter)
+                .queryParam("typeFilter", Arrays.asList(filters))
                 .get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class).getHistory();
         Set<OperationType> transferActualTypes = filteredTransactions.stream()
                 .map(History::getOperationType).collect(Collectors.toSet());
-        String errMessage = String.format("Error in filter %s", filter);
+        String errMessage = String.format("Error in filter %s", String.join(",", filters));
 
-        transferActualTypes.forEach(type -> Assert.assertTrue(String.format("Wrong type %s found for filter %s", type, filter), types.contains(type)));
+        transferActualTypes.forEach(type -> Assert.assertTrue(String.format("Wrong type %s found for filter %s", type, String.join(",", filters)), types.contains(type)));
         Assert.assertEquals(errMessage, filteredTransactions.size(), transactions.stream()
                 .filter(t -> types.contains(t.getOperationType())).count());
     }
@@ -190,59 +231,79 @@ public class WalletsTests extends ExwalTest {
     //SEND CRYPTO
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto LTC by phone")
     public void testLTCbyPhone() {
         testSendCrypto(commonBodyForPhone(LTC, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto BTC by phone")
     public void testBTCbyPhone() {
         testSendCrypto(commonBodyForPhone(BTC, "0.00001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto ETH by phone")
     public void testETHbyPhone() {
-        testSendCrypto(commonBodyForPhone(ETH, "0.0001"), new TransferPhoneHistoryProcessor());
+        testSendCrypto(commonBodyForPhone(ETH, "1.0"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto CRPT by phone")
     public void testCRPTbyPhone() {
         testSendCrypto(commonBodyForPhone(CRPT, "0.001"), new TransferPhoneHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto LTC by address")
     public void testLTCbyAddress() {
         testSendCrypto(commonBodyForAddress(LTC, "0.001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto BTC by address")
     public void testBTCbyAddres() {
-        testSendCrypto(commonBodyForAddress(BTC, "0.001"), new TransferWalletHistoryProcessor());
+        testSendCrypto(commonBodyForAddress(BTC, "0.0001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto ETH by address")
     public void testETHbyAddress() {
         testSendCrypto(commonBodyForAddress(ETH, "0.0001"), new TransferWalletHistoryProcessor());
     }
 
     @Test
-    @Financial
     @DisplayName("Sendcrypto CRPT by address")
     public void testCRPTbyAddress() {
         testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Send crypto external CRPT")
+    public void testExternalCrpt() {
+        testExternalInvoice(commonBodyForExternalAddress(CRPT, "0.01", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Send crypto external ETH")
+    public void testExternalEth() {
+        testExternalInvoice(commonBodyForExternalAddress(ETH, "0.0001", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Send crypto external BTC")
+    public void testExternalBtc() {
+        testExternalInvoice(commonBodyForExternalAddress(BTC, "0.001", "1Zj3f8X3APaq8NiD4x1jjRYSJH5eLesfr"));
+    }
+
+    @Test
+    @Financial
+    @DisplayName("Send crypto external LTC")
+    public void testExternalLtc() {
+        testExternalInvoice(commonBodyForExternalAddress(LTC, "0.01", "MFWKvvwPxkhSwiEjEssRkDSFqoKtw8gjhf"));
     }
 
 
@@ -267,17 +328,17 @@ public class WalletsTests extends ExwalTest {
         for (int i = 0; i <= limit; i++) {
             WalletHistoryResponseModel transactions = service().auth().queryParam("size", 10).get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class);
             historyProcessor.setTransactions(transactions.getHistory());
-            transaction = historyProcessor.findTransactoinByAmount(body.getAmount(), body.getCurrency());
-            if (transaction.getOperationStatus() == History.OperationStatus.COMPLETED) {
+            transaction = historyProcessor.findTransactoinByAmount(body.getAmount().setScale(8, RoundingMode.FLOOR), body.getCurrency());
+            if (transaction != null && transaction.getOperationStatus() == History.OperationStatus.COMPLETED) {
                 break;
             }
             try {
-                Thread.currentThread().sleep(5000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        if (!transaction.getOperationStatus().equals(History.OperationStatus.COMPLETED)) {
+        if (transaction == null || !transaction.getOperationStatus().equals(History.OperationStatus.COMPLETED)) {
             throw new RuntimeException("Operation didn't complete in 60 seconds");
         }
         BigDecimal expectedSenderBalance = senderAmountBefore.subtract(
@@ -291,8 +352,28 @@ public class WalletsTests extends ExwalTest {
                 .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
                 .getBalance();
 
-        Assert.assertThat(senderBalanceAfter, Matchers.equalTo(expectedSenderBalance));
-        Assert.assertThat(recipientBalanceAfter, Matchers.equalTo(expectedRecipientBalance));
+        Assert.assertThat(senderBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedSenderBalance.stripTrailingZeros().setScale(6, RoundingMode.HALF_UP)));
+        Assert.assertThat(recipientBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedRecipientBalance.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros()));
+    }
+
+    //TODO: Написать добавить класс AfterChecks или что то подобное
+    private void testExternalInvoice(BodyCreator bodyCreator) {
+        WalletSendReq body = bodyCreator.create();
+
+        BigDecimal senderAmountBefore = getWalletByCurrency(sender, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
+                .getBalance();
+
+        service().auth().body(body).post(EndPoints.wallet_send).as(WalletSendResponseModel.class);
+
+        BigDecimal expectedSenderBalance = senderAmountBefore.subtract(
+                body.getAmount().add(body.getFee()));
+
+        BigDecimal senderBalanceAfter = getWalletByCurrency(sender, body.getCurrency())
+                .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
+                .getBalance();
+
+        Assert.assertThat(senderBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedSenderBalance.stripTrailingZeros().setScale(6, RoundingMode.HALF_UP)));
     }
 
     private BodyCreator commonBodyForAddress(Currency currency, String amount) {
@@ -303,7 +384,24 @@ public class WalletsTests extends ExwalTest {
                     new NoSuchWalletException(errorMessage));
             String address = wallet.getAddress();
 
-            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("yyMMddHHmmSS").format(new Date());
+            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("ddSSmmHH").format(new Date());
+            FeeResponse feeResponse = service().auth().queryParam("address", address)
+                    .pathParams("currency", currency)
+                    .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
+                    .as(FeeResponse.class);
+            BigDecimal fee = feeResponse.getFee();
+
+            return new WalletSendReq()
+                    .setAddress(address)
+                    .setAmount(new BigDecimal(amountWithTimeStamp))
+                    .setCurrency(currency)
+                    .setFee(fee);
+        };
+    }
+
+    private BodyCreator commonBodyForExternalAddress(Currency currency, String amount, String address) {
+        return () -> {
+            String amountWithTimeStamp = amount;
             FeeResponse feeResponse = service().auth().queryParam("address", address)
                     .pathParams("currency", currency)
                     .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
@@ -320,7 +418,7 @@ public class WalletsTests extends ExwalTest {
 
     private BodyCreator commonBodyForPhone(Currency currency, String amount) {
         return () -> {
-            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("yyMMddHHmmSS").format(new Date());
+            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("ddSSmmHH").format(new Date());
             FeeResponse feeResponse = service().auth().queryParam("phone", recipient.getLogin())
                     .pathParams("currency", currency)
                     .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
@@ -368,6 +466,7 @@ public class WalletsTests extends ExwalTest {
 
         @Override
         History findTransactoinByAmount(BigDecimal amount, Currency currency) {
+            System.out.println(String.format("Looking for %s", amount.toString()));
             return this.transactions.stream().filter(t -> t.getOperationType() == TRANSFER_PHONE)
                     .filter(t ->
                             t.getWalletHistoryRecordTransferPhone().getCreditAmount().getValue().compareTo(amount) == 0
@@ -390,6 +489,7 @@ public class WalletsTests extends ExwalTest {
 
         @Override
         History findTransactoinByAmount(BigDecimal amount, Currency currency) {
+            System.out.println(String.format("Looking for %s", amount.toString()));
             return this.transactions.stream().filter(t -> t.getOperationType() == TRANSFER_WALLET)
                     .filter(t ->
                             t.getWalletHistoryRecordTransferWallet().getCreditAmount().getValue().compareTo(amount) == 0
