@@ -9,6 +9,7 @@ import com.crypterium.cryptApi.pojos.exchange.Pair;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.pojos.wallets.Wallet;
 import com.crypterium.cryptApi.pojos.wallets.WalletListResp;
+import com.crypterium.cryptApi.utils.BalanceAssertManager;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
@@ -87,20 +88,6 @@ public class ExchangeTests extends ExwalTest {
         Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
     }
 
-//    @Test
-//    @Financial
-//    @DisplayName("Exchange ETH to CRPT")
-//    public void testExchangeETHtoCRPT() {
-//        testExchangeByMinimalValue(ETH, CRPT);
-//    }
-//
-//    @Test
-//    @Financial
-//    @DisplayName("Exchange CRPT to ETH")
-//    public void testExchangeCRPTtoETH() {
-//        testExchangeByMinimalValue(CRPT, ETH);
-//    }
-
     @Test
     @Financial
     @DisplayName("Exchange BTC to ETH")
@@ -164,9 +151,9 @@ public class ExchangeTests extends ExwalTest {
         BigDecimal amount = pair.getMinAmountFrom();
         List<Wallet> wallets = getWallets(sender);
         BigDecimal sourceAmountBefore = getWalletByCurrency(wallets, currencyFrom)
-                .getBalance().stripTrailingZeros();
+                .getBalance();
         BigDecimal targetAmountBefore = getWalletByCurrency(wallets, currencyTo)
-                .getBalance().stripTrailingZeros();
+                .getBalance();
 
         ExchangeOfferReqModel body = new ExchangeOfferReqModel()
                 .setCurrencyFrom(currencyFrom)
@@ -178,18 +165,19 @@ public class ExchangeTests extends ExwalTest {
         service().auth().pathParam("offerId", offer.getOfferId())
                 .put(EndPoints.mobile_exchange_offer_offerId);
 
-        //HARDCODE
-        BigDecimal expectedSourceAmount = sourceAmountBefore.subtract(offer.getSourceCurrencyAmount().getAmount()).stripTrailingZeros().setScale(6, RoundingMode.HALF_UP);
-        BigDecimal expectedTargetAmount = targetAmountBefore.add(offer.getTargetCurrencyAmount().getAmount()).stripTrailingZeros().setScale(6, RoundingMode.HALF_UP);
+        BigDecimal expectedSourceAmount = sourceAmountBefore.subtract(offer.getSourceCurrencyAmount().getAmount());
+        BigDecimal expectedTargetAmount = targetAmountBefore.add(offer.getTargetCurrencyAmount().getAmount());
 
-        //HARDCODE
         wallets = getWallets(sender);
-        BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance().stripTrailingZeros().setScale(6, RoundingMode.HALF_UP);
-        BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance().stripTrailingZeros().setScale(6, RoundingMode.HALF_UP);
+        BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance();
+        BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance();
 
-        //HARDCODE
-        Assert.assertThat(expectedSourceAmount, Matchers.closeTo(sourceAmountAfter, BigDecimal.valueOf(1E-6)));
-        Assert.assertThat(expectedTargetAmount, Matchers.closeTo(targetAmountAfter, BigDecimal.valueOf(1E-6)));
+        String msgTemplate = "Expected %1$s balance: %2$s; Current %1$s balance: %3$s";
+
+        Assert.assertTrue(String.format(msgTemplate, "source", expectedSourceAmount, sourceAmountAfter),
+                BalanceAssertManager.equal(expectedSourceAmount, sourceAmountAfter));
+        Assert.assertTrue(String.format(msgTemplate, "target", expectedTargetAmount, targetAmountAfter),
+                BalanceAssertManager.equal(expectedTargetAmount, targetAmountAfter));
     }
 
     public Pair getPairByCurrencies(List<Pair> pairs, Currency currencyFrom, Currency currencyTo) {
