@@ -6,6 +6,7 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.crypterium.cryptApi.Auth.exauth;
 import static io.restassured.RestAssured.given;
@@ -78,12 +79,21 @@ public class ExwalAuth extends AuthProvider {
     @Override
     public RequestSpecification createUser() {
         String phoneNumber = ApiCommonFunctions.generateFreePhoneNumber();
-        String smsCode = exauth().admin().queryParam("phone", phoneNumber)
-                .queryParam("event", "MOBILE_SIGN_UP")
-                .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
+
+        String smsCode;
+        switch (Environment.TARGET) {
+            case "BETA":
+                smsCode = "12345";
+                break;
+            default:
+                smsCode = exauth().admin().queryParam("phone", phoneNumber)
+                    .queryParam("event", "MOBILE_SIGN_UP")
+                    .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
+        }
+
         ConfirmPhone confirmPhone = new ConfirmPhone()
                 .setPhone(phoneNumber)
-                .setFingerprint("ade713aa-bfa9-412d-a3d2-c39bfcea6e94")
+                .setFingerprint(UUID.randomUUID().toString())
                 .setSmsCode(smsCode);
         accesstoken = given().body(confirmPhone).post(EndPoints.mobile_phone_confirm).then().extract().body().jsonPath().getString("access_token");
         System.out.println("Access token: " + accesstoken);

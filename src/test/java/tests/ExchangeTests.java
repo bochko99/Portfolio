@@ -89,20 +89,6 @@ public class ExchangeTests extends ExwalTest {
 
     @Test
     @Financial
-    @DisplayName("Exchange ETH to CRPT")
-    public void testExchangeETHtoCRPT() {
-        testExchangeByMinimalValue(ETH, CRPT);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange CRPT to ETH")
-    public void testExchangeCRPTtoETH() {
-        testExchangeByMinimalValue(CRPT, ETH);
-    }
-
-    @Test
-    @Financial
     @DisplayName("Exchange BTC to ETH")
     public void testExchangeBTCtoETH() {
         testExchangeByMinimalValue(BTC, ETH);
