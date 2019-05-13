@@ -8,10 +8,7 @@ import com.crypterium.cryptApi.pojos.wallets.*;
 import com.crypterium.cryptApi.pojos.wallets.history.History;
 import com.crypterium.cryptApi.pojos.wallets.history.History.OperationType;
 import com.crypterium.cryptApi.pojos.wallets.history.WalletHistoryResponseModel;
-import com.crypterium.cryptApi.utils.ApiCommonFunctions;
-import com.crypterium.cryptApi.utils.CredentialEntry;
-import com.crypterium.cryptApi.utils.EndPoints;
-import com.crypterium.cryptApi.utils.Environment;
+import com.crypterium.cryptApi.utils.*;
 import core.annotations.Financial;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
@@ -21,7 +18,6 @@ import org.junit.Test;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -181,16 +177,11 @@ public class WalletsTests extends ExwalTest {
                 "TRANSFER_WALLET", "TRANSFER_PHONE", "RECEIVE", "PAYOUT", "PAYMENTS", "EXCHANGE");
     }
 
-    private <S> List<S> join(List<S>... arrays) {
-        if (arrays.length == 0) {
-            return Collections.emptyList();
-        }
-        if (arrays.length == 1) {
-            return arrays[0];
-        }
-        Stream<S> stream = arrays[0].stream();
-        for (int i = 1; i < arrays.length; i++) {
-            stream = Stream.concat(stream, arrays[i].stream());
+    @SafeVarargs
+    private final <S> List<S> join(List<S> first, List<S> second, List<S>... others) {
+        Stream<S> stream = Stream.concat(first.stream(), second.stream());
+        for (List<S> array : others) {
+            stream = Stream.concat(stream, array.stream());
         }
         return stream.collect(Collectors.toList());
     }
@@ -328,7 +319,7 @@ public class WalletsTests extends ExwalTest {
         for (int i = 0; i <= limit; i++) {
             WalletHistoryResponseModel transactions = service().auth().queryParam("size", 10).get(EndPoints.wallet_transaction).as(WalletHistoryResponseModel.class);
             historyProcessor.setTransactions(transactions.getHistory());
-            transaction = historyProcessor.findTransactoinByAmount(body.getAmount().setScale(8, RoundingMode.FLOOR), body.getCurrency());
+            transaction = historyProcessor.findTransactoinByAmount(body.getAmount(), body.getCurrency());
             if (transaction != null && transaction.getOperationStatus() == History.OperationStatus.COMPLETED) {
                 break;
             }
@@ -352,8 +343,8 @@ public class WalletsTests extends ExwalTest {
                 .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
                 .getBalance();
 
-        Assert.assertThat(senderBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedSenderBalance.stripTrailingZeros().setScale(6, RoundingMode.HALF_UP)));
-        Assert.assertThat(recipientBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedRecipientBalance.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros()));
+        Assert.assertTrue(BalanceAssertManager.equal(senderBalanceAfter, expectedSenderBalance));
+        Assert.assertTrue(BalanceAssertManager.equal(recipientBalanceAfter, expectedRecipientBalance));
     }
 
     //TODO: Написать добавить класс AfterChecks или что то подобное
@@ -373,7 +364,7 @@ public class WalletsTests extends ExwalTest {
                 .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
                 .getBalance();
 
-        Assert.assertThat(senderBalanceAfter.setScale(6, RoundingMode.HALF_UP).stripTrailingZeros(), Matchers.equalTo(expectedSenderBalance.stripTrailingZeros().setScale(6, RoundingMode.HALF_UP)));
+        Assert.assertTrue(BalanceAssertManager.equal(senderBalanceAfter, expectedSenderBalance));
     }
 
     private BodyCreator commonBodyForAddress(Currency currency, String amount) {
@@ -384,7 +375,8 @@ public class WalletsTests extends ExwalTest {
                     new NoSuchWalletException(errorMessage));
             String address = wallet.getAddress();
 
-            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("ddSSmmHH").format(new Date());
+            String separator = amount.contains(".") ? "0" : ".0";
+            String amountWithTimeStamp = amount + separator + new SimpleDateFormat("ddSSmmHH").format(new Date());
             FeeResponse feeResponse = service().auth().queryParam("address", address)
                     .pathParams("currency", currency)
                     .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
@@ -418,7 +410,8 @@ public class WalletsTests extends ExwalTest {
 
     private BodyCreator commonBodyForPhone(Currency currency, String amount) {
         return () -> {
-            String amountWithTimeStamp = amount + "0" + new SimpleDateFormat("ddSSmmHH").format(new Date());
+            String separator = amount.contains(".") ? "0" : ".0";
+            String amountWithTimeStamp = amount + separator + new SimpleDateFormat("ddSSmmHH").format(new Date());
             FeeResponse feeResponse = service().auth().queryParam("phone", recipient.getLogin())
                     .pathParams("currency", currency)
                     .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
@@ -469,7 +462,7 @@ public class WalletsTests extends ExwalTest {
             System.out.println(String.format("Looking for %s", amount.toString()));
             return this.transactions.stream().filter(t -> t.getOperationType() == TRANSFER_PHONE)
                     .filter(t ->
-                            t.getWalletHistoryRecordTransferPhone().getCreditAmount().getValue().compareTo(amount) == 0
+                            BalanceAssertManager.equal(t.getWalletHistoryRecordTransferPhone().getCreditAmount().getValue(), amount)
                                     && t.getWalletHistoryRecordTransferPhone().getCreditAmount().getCurrency() == currency
                     ).findFirst().orElse(null);
         }
@@ -492,7 +485,7 @@ public class WalletsTests extends ExwalTest {
             System.out.println(String.format("Looking for %s", amount.toString()));
             return this.transactions.stream().filter(t -> t.getOperationType() == TRANSFER_WALLET)
                     .filter(t ->
-                            t.getWalletHistoryRecordTransferWallet().getCreditAmount().getValue().compareTo(amount) == 0
+                            BalanceAssertManager.equal(t.getWalletHistoryRecordTransferWallet().getCreditAmount().getValue(), amount)
                                     && t.getWalletHistoryRecordTransferWallet().getCreditAmount().getCurrency() == currency
                     ).findFirst().orElse(null);
         }

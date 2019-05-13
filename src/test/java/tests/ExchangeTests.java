@@ -13,7 +13,6 @@ import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
-import core.annotations.ScopeTarget;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -27,7 +26,6 @@ import java.util.List;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
-@ScopeTarget(value = {ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE})
 public class ExchangeTests extends ExwalTest {
 
     private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
@@ -86,7 +84,7 @@ public class ExchangeTests extends ExwalTest {
         System.out.println(offer.getExchangeRate());
         System.out.println(differentiationPercent.toString());
 
-        Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(BigDecimal.ONE));
+        Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
     }
 
     @Test
