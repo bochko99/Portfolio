@@ -151,9 +151,9 @@ public class ExchangeTests extends ExwalTest {
         BigDecimal amount = pair.getMinAmountFrom();
         List<Wallet> wallets = getWallets(sender);
         BigDecimal sourceAmountBefore = getWalletByCurrency(wallets, currencyFrom)
-                .getBalance().stripTrailingZeros();
+                .getBalance();
         BigDecimal targetAmountBefore = getWalletByCurrency(wallets, currencyTo)
-                .getBalance().stripTrailingZeros();
+                .getBalance();
 
         ExchangeOfferReqModel body = new ExchangeOfferReqModel()
                 .setCurrencyFrom(currencyFrom)
@@ -165,20 +165,19 @@ public class ExchangeTests extends ExwalTest {
         service().auth().pathParam("offerId", offer.getOfferId())
                 .put(EndPoints.mobile_exchange_offer_offerId);
 
-        BigDecimal expectedSourceAmount = sourceAmountBefore.subtract(offer.getSourceCurrencyAmount().getAmount()).stripTrailingZeros();
-        BigDecimal expectedTargetAmount = targetAmountBefore.add(offer.getTargetCurrencyAmount().getAmount()).stripTrailingZeros();
+        BigDecimal expectedSourceAmount = sourceAmountBefore.subtract(offer.getSourceCurrencyAmount().getAmount());
+        BigDecimal expectedTargetAmount = targetAmountBefore.add(offer.getTargetCurrencyAmount().getAmount());
 
         wallets = getWallets(sender);
-        BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance().stripTrailingZeros();
-        BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance().stripTrailingZeros();
+        BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance();
+        BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance();
 
-        String msgTemplate = "Expected %1$s balance: %2$s; Current %1$s balance: %1$s";
+        String msgTemplate = "Expected %1$s balance: %2$s; Current %1$s balance: %3$s";
 
         Assert.assertTrue(String.format(msgTemplate, "source", expectedSourceAmount, sourceAmountAfter),
                 BalanceAssertManager.equal(expectedSourceAmount, sourceAmountAfter));
         Assert.assertTrue(String.format(msgTemplate, "target", expectedTargetAmount, targetAmountAfter),
                 BalanceAssertManager.equal(expectedTargetAmount, targetAmountAfter));
-
     }
 
     public Pair getPairByCurrencies(List<Pair> pairs, Currency currencyFrom, Currency currencyTo) {

@@ -20,8 +20,8 @@ public class BalanceAssertManager {
 
     public static boolean equal(BigDecimal first, BigDecimal second) {
         int scale = Integer.min(first.scale(), second.scale());
-        return first.setScale(scale, RoundingMode.UP).compareTo(second.setScale(scale, RoundingMode.UP)) == 0
-                || first.setScale(scale, RoundingMode.DOWN).compareTo(second.setScale(scale, RoundingMode.DOWN)) == 0;
+        return first.stripTrailingZeros().setScale(scale, RoundingMode.UP).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.UP)) == 0
+                || first.stripTrailingZeros().setScale(scale, RoundingMode.DOWN).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.DOWN)) == 0;
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second, int scale) {
