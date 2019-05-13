@@ -25,7 +25,6 @@ public class CatalogsTests extends ExwalTest {
         given().get(EndPoints.catalog_comissions).then().body("size()", Matchers.greaterThan(0));
     }
 
-
     @Test
     @DisplayName(EndPoints.catalog_countries + " GET")
     public void testCountry() {

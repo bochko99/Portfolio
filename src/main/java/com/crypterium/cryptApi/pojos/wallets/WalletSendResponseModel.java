@@ -18,6 +18,16 @@ public class WalletSendResponseModel {
     @Expose
     private String sequenceId;
 
+    public WalletSendResponseModel() {
+    }
+
+    public WalletSendResponseModel(String txId, Long fee, Boolean internal, String sequenceId) {
+        this.txId = txId;
+        this.fee = fee;
+        this.internal = internal;
+        this.sequenceId = sequenceId;
+    }
+
     public Long getFee() {
         return fee;
     }
@@ -49,7 +59,8 @@ public class WalletSendResponseModel {
         return txId;
     }
 
-    public void setTxId(String txId) {
+    public WalletSendResponseModel setTxId(String txId) {
         this.txId = txId;
+        return this;
     }
 }

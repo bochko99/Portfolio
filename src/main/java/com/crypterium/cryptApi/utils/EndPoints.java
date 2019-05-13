@@ -25,6 +25,7 @@ public class EndPoints {
     //API fro KYC service
     public static final String kyc_customer_profile = "/kyc/customer/{customerId}/profile";
     public static final String kyc_identity = "/kyc/identity";
+    public static final String kyc_residence = "/kyc/residence";
     public static final String kyc_identity_documents = "/kyc/identity/documents";
     public static final String kyc_upload_document = "/kyc/upload/document";
 
@@ -47,6 +48,11 @@ public class EndPoints {
     public static final String mobile_exchange_currencies = "/mobile/exchange/currencies";
     public static final String mobile_exchange_offer = "/mobile/exchange/offer";
     public static final String mobile_exchange_offer_offerId = "/mobile/exchange/offer/{offerId}";
+
+    //Payout
+    public static final String payout_payneteasy_data = "/payout/payneteasy/data";
+    public static final String payout_payneteasy_offer = "/payout/payneteasy/offer";
+    public static final String payout_payneteasy_pay = "/payout/payneteasy/pay";
 
     //Restore access operations
     public static final String mobile_password_change = "/mobile/password/change";

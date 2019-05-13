@@ -13,7 +13,6 @@ import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
-import core.annotations.ScopeTarget;
 import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -27,8 +26,7 @@ import java.util.List;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 
-@ScopeTarget(value = {ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE})
-public class Exchange extends ExwalTest {
+public class ExchangeTests extends ExwalTest {
 
     private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
 
@@ -39,7 +37,6 @@ public class Exchange extends ExwalTest {
     }
 
     @Test
-    @Financial
     @DisplayName(EndPoints.mobile_exchange_offer + " POST")
     public void testMobileExchangeOffer() {
 
@@ -61,7 +58,35 @@ public class Exchange extends ExwalTest {
         Assert.assertThat(response.getTargetCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
     }
 
-//    __disabled. By design, CRPT should be exchanged for BTC only__
+    @Test
+    @DisplayName(EndPoints.mobile_exchange_offer + ": Rate differentiation")
+    public void testPostMobileExchangeOfferRateDifferentiation() {
+        Currency currencyFrom = BTC;
+        Currency currencyTo = CRPT;
+
+        List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+        Pair pair = getPairByCurrencies(pairs, currencyFrom, currencyTo);
+
+        ExchangeOfferReqModel body = new ExchangeOfferReqModel()
+                .setCurrencyFrom(currencyFrom)
+                .setCurrencyTo(currencyTo)
+                .setAmountTo(BigDecimal.ZERO)
+                .setAmountFrom(BigDecimal.ZERO);
+
+        ExchangeOfferResponseModel offer = service().auth().body(body)
+                .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
+
+        BigDecimal differentiationPercent = (pair.getRate().subtract(offer.getExchangeRate()))
+                .divide(pair.getRate(), 6, RoundingMode.HALF_UP)
+                .multiply(new BigDecimal("100"));
+
+        System.out.println(pair.getRate());
+        System.out.println(offer.getExchangeRate());
+        System.out.println(differentiationPercent.toString());
+
+        Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
+    }
+
 //    @Test
 //    @Financial
 //    @DisplayName("Exchange ETH to CRPT")
@@ -149,6 +174,7 @@ public class Exchange extends ExwalTest {
                 .setAmountFrom(amount);
         ExchangeOfferResponseModel offer = service().auth().body(body)
                 .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
+
         service().auth().pathParam("offerId", offer.getOfferId())
                 .put(EndPoints.mobile_exchange_offer_offerId);
 
