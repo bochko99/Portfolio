@@ -9,6 +9,7 @@ import com.crypterium.cryptApi.pojos.exchange.Pair;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.pojos.wallets.Wallet;
 import com.crypterium.cryptApi.pojos.wallets.WalletListResp;
+import com.crypterium.cryptApi.utils.BalanceAssertManager;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
@@ -171,8 +172,12 @@ public class ExchangeTests extends ExwalTest {
         BigDecimal sourceAmountAfter = getWalletByCurrency(wallets, currencyFrom).getBalance().stripTrailingZeros();
         BigDecimal targetAmountAfter = getWalletByCurrency(wallets, currencyTo).getBalance().stripTrailingZeros();
 
-        Assert.assertThat(expectedSourceAmount, Matchers.equalTo(sourceAmountAfter));
-        Assert.assertThat(expectedTargetAmount, Matchers.equalTo(targetAmountAfter));
+        String msgTemplate = "Expected %1$s balance: %2$s; Current %1$s balance: %1$s";
+
+        Assert.assertTrue(String.format(msgTemplate, "source", expectedSourceAmount, sourceAmountAfter),
+                BalanceAssertManager.equal(expectedSourceAmount, sourceAmountAfter));
+        Assert.assertTrue(String.format(msgTemplate, "target", expectedTargetAmount, targetAmountAfter),
+                BalanceAssertManager.equal(expectedTargetAmount, targetAmountAfter));
 
     }
 
