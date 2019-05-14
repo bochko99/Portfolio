@@ -8,20 +8,19 @@ import javax.annotation.Generated;
 @Generated("net.hexar.json2pojo")
 @SuppressWarnings("unused")
 public class SignUpReq {
-
-    @Expose
-    private String country;
     @Expose
     private String phone;
     @Expose
-    private String region;
+    private String referralCode;
+    @Expose
+    private String password;
 
-    public String getCountry() {
-        return country;
+    public String getPassword() {
+        return password;
     }
 
-    public SignUpReq setCountry(String country) {
-        this.country = country;
+    public SignUpReq setPassword(String password) {
+        this.password = password;
         return this;
     }
 
@@ -34,12 +33,12 @@ public class SignUpReq {
         return this;
     }
 
-    public String getRegion() {
-        return region;
+    public String getReferralCode() {
+        return referralCode;
     }
 
-    public SignUpReq setRegion(String region) {
-        this.region = region;
+    public SignUpReq setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
         return this;
     }
 }

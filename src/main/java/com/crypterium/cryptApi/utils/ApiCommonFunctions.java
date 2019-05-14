@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
@@ -46,9 +47,8 @@ public class ApiCommonFunctions {
 
             phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
             SignUpReq signup = new SignUpReq()
-                    .setCountry("RU")
-                    .setPhone(phoneNumber)
-                    .setRegion("");
+                    .setPassword("12345a")
+                    .setPhone(phoneNumber);
             statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
                     .when().post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
@@ -67,12 +67,26 @@ public class ApiCommonFunctions {
             VerifyEmail verifyEmail = new VerifyEmail()
                     .setEmail(email);
             int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 400))
-                    .when().post(EndPoints.mobile_email_verify).statusCode();
+                    .when().put(EndPoints.mobile_email_add).statusCode();
             if (statusCode == 200) {
                 return email;
             }
         }
         return "";
+    }
+
+    public static String getSmsCode(String phoneNumber, String event) {
+        String smsCode;
+        switch (Environment.TARGET) {
+            case "BETA":
+                smsCode = "1234";
+                break;
+            default:
+                smsCode = exauth().admin().queryParam("phone", phoneNumber)
+                        .queryParam("event", event)
+                        .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
+        }
+        return smsCode;
     }
 
 }

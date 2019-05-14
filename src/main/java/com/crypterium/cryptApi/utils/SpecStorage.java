@@ -51,8 +51,8 @@ public class SpecStorage {
             .setContentType(ContentType.JSON)
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)
-            .setBasePath(Constants.EXWAL_BASE)
             .build();
+
     private static final RequestSpecification oAuth = new RequestSpecBuilder()
             .addHeader("Authorization", "Basic ZG9jOnNlY3JldA==")
             .setBaseUri(Environment.EXWAL_BASE_URL)

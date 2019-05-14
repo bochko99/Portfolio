@@ -17,6 +17,8 @@ public class Limits {
     private Currency currency;
     @Expose
     private BigDecimal limit;
+    @Expose
+    private BigDecimal min;
 
     public Limits() {
     }
@@ -51,6 +53,15 @@ public class Limits {
 
     public Limits setLimit(BigDecimal limit) {
         this.limit = limit;
+        return this;
+    }
+
+    public BigDecimal getMin() {
+        return min;
+    }
+
+    public Limits setMin(BigDecimal min) {
+        this.min = min;
         return this;
     }
 }

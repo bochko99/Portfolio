@@ -27,9 +27,7 @@ public class CardOrderOperationsTests extends ExwalTest {
 
             phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
             SignUpReq signup = new SignUpReq()
-                    .setCountry("RU")
-                    .setPhone(phoneNumber)
-                    .setRegion("");
+                    .setPhone(phoneNumber);
             statusCode = given().body(signup).post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
                 break;

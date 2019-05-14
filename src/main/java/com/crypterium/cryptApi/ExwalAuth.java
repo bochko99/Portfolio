@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.crypterium.cryptApi.Auth.exauth;
 import static io.restassured.RestAssured.given;
 
 public class ExwalAuth extends AuthProvider {
@@ -80,16 +79,7 @@ public class ExwalAuth extends AuthProvider {
     public RequestSpecification createUser() {
         String phoneNumber = ApiCommonFunctions.generateFreePhoneNumber();
 
-        String smsCode;
-        switch (Environment.TARGET) {
-            case "BETA":
-                smsCode = "12345";
-                break;
-            default:
-                smsCode = exauth().admin().queryParam("phone", phoneNumber)
-                    .queryParam("event", "MOBILE_SIGN_UP")
-                    .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
-        }
+        String smsCode = ApiCommonFunctions.getSmsCode(phoneNumber, "MOBILE_SIGN_UP");
 
         ConfirmPhone confirmPhone = new ConfirmPhone()
                 .setPhone(phoneNumber)
