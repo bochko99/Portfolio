@@ -8,6 +8,7 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
 import io.restassured.RestAssured;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import static com.crypterium.cryptApi.Auth.service;
 public class ExwalTest extends BaseTest {
 
 
+    @BeforeAll
     @BeforeClass
     public static void init() {
         RestAssured.requestSpecification = SpecStorage.exwal();

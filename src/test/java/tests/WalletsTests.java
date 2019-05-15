@@ -178,9 +178,9 @@ public class WalletsTests extends ExwalTest {
     }
 
     @SafeVarargs
-    private final <S> List<S> join(List<S> first, List<S> second, List<S>... others) {
+    private final <S> List<S> join(Collection<S> first, Collection<S> second, Collection<S>... others) {
         Stream<S> stream = Stream.concat(first.stream(), second.stream());
-        for (List<S> array : others) {
+        for (Collection<S> array : others) {
             stream = Stream.concat(stream, array.stream());
         }
         return stream.collect(Collectors.toList());

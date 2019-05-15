@@ -52,6 +52,8 @@ public class KycServiceTests extends ExwalTest {
         File selfie =
                 new File(this.getClass().getClassLoader().getResource("photoforkyc/selfie.jpg").getFile());
         registerNewUser();
+
+        service().auth().body("{\"citizenshipCountry\":\"RU\"}").put(EndPoints.customer_profile);
         service().auth().header("Content-Type", "multipart/jpg")
                 .queryParam("docType", "PASSPORT_FRONT")
                 .multiPart("image", document)

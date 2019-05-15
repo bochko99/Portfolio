@@ -18,23 +18,39 @@ import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.BTC;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.CRPT;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class ExchangeTests extends ExwalTest {
 
     private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
 
-    @Test
+    @TestFactory
     @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
-    public void testGetMobileExchangeCurrencies() {
-        service().auth().get(EndPoints.mobile_exchange_currencies);
+    public Collection<DynamicTest> testGetMobileExchangeCurrencies() {
+        List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+        return pairs.stream().map(pair -> dynamicTest(String.format("%s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
+            BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
+            BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
+
+            String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
+            String msgMax = String.format("Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
+
+            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo(), pair.getAmountScaleTo().intValue()));
+            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo(), pair.getAmountScaleTo().intValue()));
+        })).collect(Collectors.toList());
     }
 
     @Test
@@ -88,60 +104,13 @@ public class ExchangeTests extends ExwalTest {
         Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
     }
 
-    @Test
+    @TestFactory
     @Financial
-    @DisplayName("Exchange BTC to ETH")
-    public void testExchangeBTCtoETH() {
-        testExchangeByMinimalValue(BTC, ETH);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange ETH to BTC")
-    public void testExchangeETHtoBTC() {
-        testExchangeByMinimalValue(ETH, BTC);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange BTC to LTC")
-    public void testExchangeBTCtoLTC() {
-        testExchangeByMinimalValue(BTC, LTC);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange LTC to BTC")
-    public void testExchangeLTCtoBTC() {
-        testExchangeByMinimalValue(LTC, BTC);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange BTC to CRPT")
-    public void testExchangeBTCtoCRPT() {
-        testExchangeByMinimalValue(BTC, CRPT);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange CRPT to BTC")
-    public void testExchangeCRPTtoBTC() {
-        testExchangeByMinimalValue(CRPT, BTC);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange ETH to LTC")
-    public void testExchangeETHtoLTC() {
-        testExchangeByMinimalValue(ETH, LTC);
-    }
-
-    @Test
-    @Financial
-    @DisplayName("Exchange LTC to ETH")
-    public void testExchangeLTCtoETH() {
-        testExchangeByMinimalValue(LTC, ETH);
+    @DisplayName("Exchange")
+    public Collection<DynamicTest> testExchange() {
+        List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+        return pairs.stream().map(pair -> dynamicTest(String.format("%s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
+                testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 
 
