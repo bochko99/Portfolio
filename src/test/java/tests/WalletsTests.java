@@ -3,6 +3,7 @@ package tests;
 import com.crypterium.cryptApi.cryptowallets.BtcWallet;
 import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.exceptions.NoWalletsException;
+import com.crypterium.cryptApi.pojos.catalogs.CatalogCurrency;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.pojos.wallets.*;
 import com.crypterium.cryptApi.pojos.wallets.history.History;
@@ -15,6 +16,8 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -27,6 +30,9 @@ import java.util.stream.Stream;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 import static com.crypterium.cryptApi.pojos.wallets.history.History.OperationType.*;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class WalletsTests extends ExwalTest {
 
@@ -115,6 +121,25 @@ public class WalletsTests extends ExwalTest {
     @DisplayName(EndPoints.wallet_list + " GET")
     public void testWalletList() {
         service().auth().get(EndPoints.wallet_list);
+    }
+
+    @TestFactory
+    @DisplayName("Wallet list: fiat")
+    public Collection<DynamicContainer> testWalletListFiat() {
+        CatalogCurrency[] currencies = given().get(EndPoints.catalog_currencies).as(CatalogCurrency[].class);
+
+        return Stream.of(currencies).map(it -> dynamicContainer(it.getCode(), Stream.of(
+                dynamicTest("qwe", () -> {}))
+        )).collect(Collectors.toList());
+
+//                () -> {
+//                    ProfileReq body = new ProfileReq()
+//                            .setPrimaryCurrency(it.getCode());
+//                    service().auth().body(body).put(EndPoints.customer_profile);
+//                    List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
+//                    return wallets.stream().map(w -> dynamicTest(w.getCurrency().getValue(), () -> { }))
+//                }
+//        ));
     }
 
     @Test
