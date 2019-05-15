@@ -13,13 +13,13 @@ public class Fiat {
     @Expose
     private BigDecimal amount;
     @Expose
-    private Long change;
+    private BigDecimal change;
     @Expose
-    private Long changePercent;
+    private BigDecimal changePercent;
     @Expose
     private String customerCurrency;
     @Expose
-    private Long rate;
+    private BigDecimal rate;
 
     public BigDecimal getAmount() {
         return amount;
@@ -30,20 +30,20 @@ public class Fiat {
         return this;
     }
 
-    public Long getChange() {
+    public BigDecimal getChange() {
         return change;
     }
 
-    public Fiat setChange(Long change) {
+    public Fiat setChange(BigDecimal change) {
         this.change = change;
         return this;
     }
 
-    public Long getChangePercent() {
+    public BigDecimal getChangePercent() {
         return changePercent;
     }
 
-    public Fiat setChangePercent(Long changePercent) {
+    public Fiat setChangePercent(BigDecimal changePercent) {
         this.changePercent = changePercent;
         return this;
     }
@@ -57,11 +57,11 @@ public class Fiat {
         return this;
     }
 
-    public Long getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
-    public Fiat setRate(Long rate) {
+    public Fiat setRate(BigDecimal rate) {
         this.rate = rate;
         return this;
     }

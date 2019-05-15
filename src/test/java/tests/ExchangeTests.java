@@ -48,8 +48,8 @@ public class ExchangeTests extends ExwalTest {
             String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
             String msgMax = String.format("Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
 
-            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo(), pair.getAmountScaleTo().intValue()));
-            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo(), pair.getAmountScaleTo().intValue()));
+            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo()));
+            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo()));
         })).collect(Collectors.toList());
     }
 
@@ -113,11 +113,12 @@ public class ExchangeTests extends ExwalTest {
                 testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 
-
     public void testExchangeByMinimalValue(Currency currencyFrom, Currency currencyTo) {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
         Pair pair = getPairByCurrencies(pairs, currencyFrom, currencyTo);
-        BigDecimal amount = pair.getMinAmountFrom();
+        //Волшебное число 0.95 - это 95% от минимального объема, который первоначально был увеличен на 20%.
+        //Таким образом получается число, равное 1.14 от минимального но меньше чем возвращенное из currencies.
+        BigDecimal amount = pair.getMinAmountFrom().multiply(new BigDecimal("0.95"));
         List<Wallet> wallets = getWallets(sender);
         BigDecimal sourceAmountBefore = getWalletByCurrency(wallets, currencyFrom)
                 .getBalance();
