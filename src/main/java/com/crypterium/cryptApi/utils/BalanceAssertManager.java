@@ -21,8 +21,8 @@ public class BalanceAssertManager {
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second) {
-        int scale = Integer.min(first.scale(), second.scale());
-        scale = scale <= 4 ? 4 : scale - 1;
+        int scale = Integer.min(first.stripTrailingZeros().scale(), second.stripTrailingZeros().scale());
+        scale = scale <= 1 ? 1 : scale - 1;
         return equal(first, second, scale);
     }
 
@@ -35,9 +35,9 @@ public class BalanceAssertManager {
         return first.stripTrailingZeros().setScale(scale, mode).compareTo(second.stripTrailingZeros().setScale(scale, mode)) == 0;
     }
 
-    public static void assertEquals(BigDecimal first, BigDecimal second) {
-        String msg = String.format("Expected: %s, Actual: %s", first, second);
-        Assert.assertTrue(msg, equal(first, second));
+    public static void assertEquals(String msg, BigDecimal actual, BigDecimal expected) {
+        String msgTemp = String.format("%s. Actual: %s, Expected: %s", msg, actual, expected);
+        Assert.assertTrue(msgTemp, equal(actual, expected));
     }
 
 }
