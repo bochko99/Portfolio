@@ -9,11 +9,24 @@ public class Auth {
     private static final String DEFAULT_FINGERPRINT = UUID.randomUUID().toString();
 
     private static Map<String, ExwalAuth> exauthCache = new HashMap<>();
+    private static Map<String, ExwalAuthV1> exauthV1Cache = new HashMap<>();
 
     private static AuthType defaultType = AuthType.EXWAL;
 
     public Auth() {
 
+    }
+
+    public static ExwalAuth exauthV1() {
+        return exauthV1(DEFAULT_FINGERPRINT);
+    }
+
+    public static ExwalAuth exauthV1(String fingerprint) {
+        ExwalAuthV1 instance = exauthV1Cache.getOrDefault(fingerprint, new ExwalAuthV1());
+        if (!exauthV1Cache.containsKey(fingerprint)) {
+            exauthV1Cache.put(fingerprint, instance);
+        }
+        return instance;
     }
 
     public static ExwalAuth exauth() {
@@ -41,12 +54,14 @@ public class Auth {
         switch (defaultType) {
             case EXWAL:
                 return (T) exauth(fingerprint);
+            case EXWAL_V1:
+                return (T) exauthV1(fingerprint);
         }
         return null;
     }
 
     public enum AuthType {
-        EXWAL, CSHARP
+        EXWAL, CSHARP, EXWAL_V1
     }
 
 

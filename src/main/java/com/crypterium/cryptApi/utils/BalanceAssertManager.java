@@ -1,5 +1,7 @@
 package com.crypterium.cryptApi.utils;
 
+import org.junit.Assert;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -19,9 +21,9 @@ public class BalanceAssertManager {
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second) {
-        int scale = Integer.min(first.scale(), second.scale());
-        return first.stripTrailingZeros().setScale(scale, RoundingMode.UP).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.UP)) == 0
-                || first.stripTrailingZeros().setScale(scale, RoundingMode.DOWN).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.DOWN)) == 0;
+        int scale = Integer.min(first.stripTrailingZeros().scale(), second.stripTrailingZeros().scale());
+        scale = scale <= 1 ? 1 : scale - 1;
+        return equal(first, second, scale);
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second, int scale) {
@@ -31,6 +33,11 @@ public class BalanceAssertManager {
 
     public static boolean equal(BigDecimal first, BigDecimal second, int scale, RoundingMode mode) {
         return first.stripTrailingZeros().setScale(scale, mode).compareTo(second.stripTrailingZeros().setScale(scale, mode)) == 0;
+    }
+
+    public static void assertEquals(String msg, BigDecimal actual, BigDecimal expected) {
+        String msgTemp = String.format("%s. Actual: %s, Expected: %s", msg, actual, expected);
+        Assert.assertTrue(msgTemp, equal(actual, expected));
     }
 
 }

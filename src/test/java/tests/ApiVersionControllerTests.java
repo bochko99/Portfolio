@@ -1,8 +1,8 @@
 package tests;
 
 import com.crypterium.cryptApi.utils.EndPoints;
-import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import static io.restassured.RestAssured.given;

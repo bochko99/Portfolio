@@ -3,6 +3,7 @@ package tests;
 import com.crypterium.cryptApi.cryptowallets.BtcWallet;
 import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
 import com.crypterium.cryptApi.exceptions.NoWalletsException;
+import com.crypterium.cryptApi.pojos.catalogs.CatalogCurrency;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.pojos.wallets.*;
 import com.crypterium.cryptApi.pojos.wallets.history.History;
@@ -10,11 +11,14 @@ import com.crypterium.cryptApi.pojos.wallets.history.History.OperationType;
 import com.crypterium.cryptApi.pojos.wallets.history.WalletHistoryResponseModel;
 import com.crypterium.cryptApi.utils.*;
 import core.annotations.Financial;
-import io.qameta.allure.junit4.DisplayName;
+import core.annotations.ScopeTarget;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -27,6 +31,9 @@ import java.util.stream.Stream;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 import static com.crypterium.cryptApi.pojos.wallets.history.History.OperationType.*;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class WalletsTests extends ExwalTest {
 
@@ -117,6 +124,25 @@ public class WalletsTests extends ExwalTest {
         service().auth().get(EndPoints.wallet_list);
     }
 
+    @TestFactory
+    @DisplayName("Wallet list: fiat")
+    public Collection<DynamicContainer> testWalletListFiat() {
+        CatalogCurrency[] currencies = given().get(EndPoints.catalog_currencies).as(CatalogCurrency[].class);
+
+        return Stream.of(currencies).map(it -> dynamicContainer(it.getCode(), Stream.of(
+                dynamicTest("qwe", () -> {}))
+        )).collect(Collectors.toList());
+
+//                () -> {
+//                    ProfileReq body = new ProfileReq()
+//                            .setPrimaryCurrency(it.getCode());
+//                    service().auth().body(body).put(EndPoints.customer_profile);
+//                    List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
+//                    return wallets.stream().map(w -> dynamicTest(w.getCurrency().getValue(), () -> { }))
+//                }
+//        ));
+    }
+
     @Test
     @DisplayName(EndPoints.wallet_mobile_sx_rates + " GET")
     public void testWalletRates() {
@@ -178,9 +204,9 @@ public class WalletsTests extends ExwalTest {
     }
 
     @SafeVarargs
-    private final <S> List<S> join(List<S> first, List<S> second, List<S>... others) {
+    private final <S> List<S> join(Collection<S> first, Collection<S> second, Collection<S>... others) {
         Stream<S> stream = Stream.concat(first.stream(), second.stream());
-        for (List<S> array : others) {
+        for (Collection<S> array : others) {
             stream = Stream.concat(stream, array.stream());
         }
         return stream.collect(Collectors.toList());
@@ -271,6 +297,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external CRPT")
     public void testExternalCrpt() {
         testExternalInvoice(commonBodyForExternalAddress(CRPT, "0.01", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
@@ -278,6 +305,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external ETH")
     public void testExternalEth() {
         testExternalInvoice(commonBodyForExternalAddress(ETH, "0.0001", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
@@ -285,6 +313,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external BTC")
     public void testExternalBtc() {
         testExternalInvoice(commonBodyForExternalAddress(BTC, "0.001", "1Zj3f8X3APaq8NiD4x1jjRYSJH5eLesfr"));
@@ -292,6 +321,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external LTC")
     public void testExternalLtc() {
         testExternalInvoice(commonBodyForExternalAddress(LTC, "0.01", "MFWKvvwPxkhSwiEjEssRkDSFqoKtw8gjhf"));

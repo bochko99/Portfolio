@@ -6,10 +6,11 @@ import com.crypterium.cryptApi.utils.Constants;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
 import core.annotations.ScopeTarget;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.math.RoundingMode;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.banks.WithdrawalCurrency.*;
 
+@Ignore
 @ScopeTarget(ScopeTarget.Stand.BETA)
 public class BanksWithdrawalsTests extends ExwalTest {
 

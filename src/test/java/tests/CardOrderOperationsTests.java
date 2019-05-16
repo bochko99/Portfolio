@@ -5,9 +5,9 @@ import com.crypterium.cryptApi.pojos.signupoperation.SignUpReq;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
-import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.util.Random;
@@ -27,9 +27,8 @@ public class CardOrderOperationsTests extends ExwalTest {
 
             phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
             SignUpReq signup = new SignUpReq()
-                    .setCountry("RU")
                     .setPhone(phoneNumber)
-                    .setRegion("");
+                    .setPassword("12345a");
             statusCode = given().body(signup).post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
                 break;
