@@ -1,27 +1,21 @@
 package manual_tests;
 
-import com.crypterium.cryptApi.exceptions.NoSuchWalletException;
-import com.crypterium.cryptApi.exceptions.NoWalletsException;
-import com.crypterium.cryptApi.pojos.wallets.*;
+import com.crypterium.cryptApi.pojos.wallets.Currency;
+import com.crypterium.cryptApi.pojos.wallets.FeeResponse;
+import com.crypterium.cryptApi.pojos.wallets.WalletSendReq;
+import com.crypterium.cryptApi.pojos.wallets.WalletSendResponseModel;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
-import io.qameta.allure.junit4.DisplayName;
-import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
-import tests.WalletsTests;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
+import static com.crypterium.cryptApi.pojos.wallets.Currency.LTC;
 
 public class WalletsManual extends ExwalTest {
 

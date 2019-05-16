@@ -7,7 +7,6 @@ public enum Currency {
     ETH("ETH", true),
     LTC("LTC", true),
     CRPT("CRPT", true),
-    USDC("USDC", true),
     EUR("EUR", false);
 
     private String value;
