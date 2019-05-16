@@ -11,11 +11,12 @@ import com.crypterium.cryptApi.pojos.wallets.history.History.OperationType;
 import com.crypterium.cryptApi.pojos.wallets.history.WalletHistoryResponseModel;
 import com.crypterium.cryptApi.utils.*;
 import core.annotations.Financial;
-import io.qameta.allure.junit4.DisplayName;
+import core.annotations.ScopeTarget;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
@@ -296,6 +297,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external CRPT")
     public void testExternalCrpt() {
         testExternalInvoice(commonBodyForExternalAddress(CRPT, "0.01", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
@@ -303,6 +305,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external ETH")
     public void testExternalEth() {
         testExternalInvoice(commonBodyForExternalAddress(ETH, "0.0001", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
@@ -310,6 +313,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external BTC")
     public void testExternalBtc() {
         testExternalInvoice(commonBodyForExternalAddress(BTC, "0.001", "1Zj3f8X3APaq8NiD4x1jjRYSJH5eLesfr"));
@@ -317,6 +321,7 @@ public class WalletsTests extends ExwalTest {
 
     @Test
     @Financial
+    @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
     @DisplayName("Send crypto external LTC")
     public void testExternalLtc() {
         testExternalInvoice(commonBodyForExternalAddress(LTC, "0.01", "MFWKvvwPxkhSwiEjEssRkDSFqoKtw8gjhf"));

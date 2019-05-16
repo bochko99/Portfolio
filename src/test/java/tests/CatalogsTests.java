@@ -4,9 +4,9 @@ import com.crypterium.cryptApi.pojos.catalogs.FaqItem;
 import com.crypterium.cryptApi.pojos.catalogs.FaqItemCode;
 import com.crypterium.cryptApi.utils.EndPoints;
 import io.qameta.allure.Description;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.util.Arrays;

@@ -60,6 +60,17 @@ public class EndPoints {
     public static final String mobile_password_reset_confirm = "/v2/mobile/password/reset/confirm";
     public static final String mobile_password_reset_confirm_code = "/v2/mobile/password/reset/confirm/code";
 
+    //SignUp v2
+    public static final String v1_mobile_email_confirm = "/v1/mobile/email/confirm";
+    public static final String v1_mobile_email_verify = "/v1/mobile/email/verify";
+    public static final String v1_mobile_email_resend = "/v1/mobile/email/verify/resend";
+    public static final String v1_mobile_name_add = "/v1/mobile/name/add";
+    public static final String v1_mobile_phone_confirm = "/v1/mobile/phone/confirm";
+    public static final String v1_mobile_phone_resend = "/v1/mobile/phone/verify/resend";
+    public static final String v1_mobile_pin_setup = "/v1/mobile/pin/setup";
+    public static final String v1_mobile_pwd_setup = "/v1/mobile/pwd/setup";
+    public static final String v1_mobile_signup = "/v1/mobile/signup";
+
     //SignUp
     public static final String mobile_email_confirm = "/v2/mobile/email/confirm";
     public static final String mobile_email_add = "/v2/mobile/email/add";

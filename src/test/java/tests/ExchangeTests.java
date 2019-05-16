@@ -14,10 +14,10 @@ import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
@@ -41,7 +41,7 @@ public class ExchangeTests extends ExwalTest {
     @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
     public Collection<DynamicTest> testGetMobileExchangeCurrencies() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        return pairs.stream().map(pair -> dynamicTest(String.format("%s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
+        return pairs.stream().map(pair -> dynamicTest(String.format("Pair min/max amount check. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
             BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
             BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
 
@@ -109,7 +109,7 @@ public class ExchangeTests extends ExwalTest {
     @DisplayName("Exchange")
     public Collection<DynamicTest> testExchange() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        return pairs.stream().map(pair -> dynamicTest(String.format("%s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
+        return pairs.stream().map(pair -> dynamicTest(String.format("Exchange test. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
                 testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 

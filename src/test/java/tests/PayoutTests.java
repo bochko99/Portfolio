@@ -6,10 +6,10 @@ import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
 import core.annotations.ScopeTarget;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -26,7 +26,9 @@ import static org.hamcrest.Matchers.greaterThan;
 public class PayoutTests extends ExwalTest {
 
 //    public static final String CARD_NUMBER = "5555555555555557";
-    public static final String CARD_NUMBER = "5593450818370545";
+    public static final String CARD_NUMBER = "5582266007550595";
+//    public static final String CARD_NUMBER = "5105105105105100";
+//    public static final String CARD_NUMBER = "5593450818370545";
 
     @Test
     @DisplayName(EndPoints.payout_data + " POST")

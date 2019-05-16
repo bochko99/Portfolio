@@ -3,10 +3,10 @@ package tests;
 import com.crypterium.cryptApi.pojos.customerprofile.ProfileReq;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
-import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import static com.crypterium.cryptApi.Auth.service;

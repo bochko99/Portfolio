@@ -5,13 +5,15 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.SpecStorage;
 import core.annotations.Credentials;
 import core.annotations.ScopeTarget;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import static com.crypterium.cryptApi.Auth.service;
 
+@Ignore
 @ScopeTarget(ScopeTarget.Stand.BETA)
 public class KycTests extends ExwalTest {
 

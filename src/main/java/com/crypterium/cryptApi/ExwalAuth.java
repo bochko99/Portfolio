@@ -11,10 +11,10 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 
 public class ExwalAuth extends AuthProvider {
-    private String accesstoken = "";
-    private String adminToken = "";
+    String accesstoken = "";
+    String adminToken = "";
 
-    private Map<String, String> accesTokenCache = new HashMap<>();
+    Map<String, String> accesTokenCache = new HashMap<>();
 
     @Override
     public RequestSpecification authAs(String login, String password, String role) {

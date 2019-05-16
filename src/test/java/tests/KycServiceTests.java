@@ -4,11 +4,11 @@ import com.crypterium.cryptApi.pojos.customerprofile.ProfileReq;
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Credentials;
-import io.qameta.allure.junit4.DisplayName;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.io.File;
