@@ -2,6 +2,7 @@ package com.crypterium.cryptApi.pojos.wallets;
 
 public enum Currency {
 
+    USDC("USDC", true),
     BTC("BTC", true),
     ETH("ETH", true),
     LTC("LTC", true),

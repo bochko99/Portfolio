@@ -46,7 +46,9 @@ class FiatWalletChecks {
         val fiatValues = mutableListOf<BigDecimal>()
         val changeValues = mutableListOf<BigDecimal>()
 
-        wallets.forEach {
+        wallets.filter {
+            it.fiat.rate > BigDecimal.ZERO
+        }.forEach {
             println("WALLET: ${it.currency}")
             println()
             val fiatAmount = it.fiat.amount
@@ -55,23 +57,26 @@ class FiatWalletChecks {
             val changePercent = it.fiat.changePercent
             val change = it.fiat.change
 
-            val expected = it.balance.multiply(it.fiat.rate)
-            println(" Check 1. wallet.fiat.amount = wallet.balance * wallet.fiat.rate.")
-            println("  $fiatAmount = $balance * $rate")
-            if (BalanceAssertManager.equal(it.fiat.amount, expected, scale)) {
+            val calculated = fiatAmount.divide(balance.multiply(rate), 20, RoundingMode.HALF_UP)
+            val delta = BigDecimal("0.01").divide(rate, 20, RoundingMode.HALF_UP)
+            println(" Check 1. wallet.fiat.amount / (wallet.balance * wallet.fiat.rate) ~= 1 +- delta")
+            println("  ${fiatAmount.toPlainString()} / ${balance.toPlainString()} * ${rate.toPlainString()} ~= 1 +- ${delta.toPlainString()}")
+            val low = BigDecimal.ONE.minus(delta)
+            var up = BigDecimal.ONE.plus(delta)
+            if (calculated >= low && calculated <= up) {
                 println("   - OK.")
             } else {
-                println("   - FAILED. $fiatAmount <> $expected (scale = $scale)")
+                println("   - FAILED. ${calculated.toPlainString()} not in range [${low.toPlainString()}, ${up.toPlainString()}]")
                 isFailed = true
             }
             println()
             println(" Check 2. wallet.fiat[amount * changePercent / change] ~= 100%.")
-            println("  $fiatAmount * $changePercent / $change ~= 100%")
+            println("  ${fiatAmount.toPlainString()} * ${changePercent.toPlainString()} / ${change.toPlainString()} ~= 100%")
             val expectedPercent = fiatAmount.multiply(changePercent).divide(change, 2, RoundingMode.HALF_UP)
             if (expectedPercent.toDouble() in 99..101) {
                 println("   - OK.")
             } else {
-                println("   - FAILED. $expectedPercent not in range [99..101]")
+                println("   - FAILED. ${expectedPercent.toPlainString()} not in range [99..101]")
                 isFailed = true
             }
             println()
@@ -85,7 +90,7 @@ class FiatWalletChecks {
         val percent = resp.fiat.changePercent
 
         println(" Check 1. fiat.amount = sum(wallet.fiat.amount)")
-        println("  $fiatAmount = ${fiatValues.joinToString(separator = " + ")}")
+        println("  ${fiatAmount.toPlainString()} = ${fiatValues.joinToString(separator = " + ")}")
         val expected = fiatValues.reduce(BigDecimal::add)
         if (BalanceAssertManager.equal(fiatAmount, expected, 6)) {
             println("  - OK.")
@@ -96,7 +101,7 @@ class FiatWalletChecks {
 
         println()
         println(" Check 2. fiat.change = sum(wallet.fiat.change)")
-        println("  $fiatChange = ${changeValues.joinToString(separator = " + ")}")
+        println("  ${fiatChange.toPlainString()} = ${changeValues.joinToString(separator = " + ")}")
         val expectedChange = changeValues.reduce(BigDecimal::add)
         if (BalanceAssertManager.equal(fiatChange, expectedChange, 6)) {
             println("  - OK.")
@@ -107,7 +112,7 @@ class FiatWalletChecks {
 
         println()
         println(" Check 3. wallet.fiat[amount * changePercent / change] ~= 100%.")
-        println("  $fiatAmount * $percent / $fiatChange ~= 100%")
+        println("  ${fiatAmount.toPlainString()} * ${percent.toPlainString()} / ${fiatChange.toPlainString()} ~= 100%")
         val expectedPercent = fiatAmount.multiply(percent).divide(fiatChange, 2, RoundingMode.HALF_UP)
         if (expectedPercent.toDouble() in 99..101) {
             println("  - OK.")
