@@ -25,27 +25,31 @@ inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
 
 class FiatWalletChecks {
 
-    val scale = 6
+    private val scale = 6
 
     @TestFactory
-    fun lastChance(): Collection<DynamicNode> {
+    fun fiatTests(): Collection<DynamicNode> {
         val currencies = SpecStorage.exwal().get(EndPoints.catalog_currencies).to<Array<CatalogCurrency>>()
         val responses = currencies.map {
             service<AuthProvider>().auth().body(ProfileReq().setPrimaryCurrency(it.code)).put(EndPoints.customer_profile)
             it to service<AuthProvider>().auth().get(EndPoints.wallet_list).to<WalletListResp>()
         }
         return responses.map {
-            DynamicContainer.dynamicContainer(it.first.code, listOf(
-                    DynamicContainer.dynamicContainer("Wallet checks", it.second.wallets.map {
-                        createWalletTests(it)
-                    }),
-                    DynamicContainer.dynamicContainer("Overall checks", createFinishTests(it.second))
-            ))
+            createScope(it)
         }
 
     }
 
-    fun createWalletTests(wallet: Wallet): DynamicContainer {
+    private fun createScope(it: Pair<CatalogCurrency, WalletListResp>): DynamicNode {
+        return DynamicContainer.dynamicContainer(it.first.code, listOf(
+                DynamicContainer.dynamicContainer("Wallet checks", it.second.wallets.map {
+                    createWalletTests(it)
+                }),
+                DynamicContainer.dynamicContainer("Overall checks", createFinishTests(it.second))
+        ))
+    }
+
+    private fun createWalletTests(wallet: Wallet): DynamicContainer {
         val fiatAmount = wallet.fiat.amount
         val balance = wallet.balance
         val rate = wallet.fiat.rate
@@ -73,7 +77,7 @@ class FiatWalletChecks {
         ))
     }
 
-    fun createFinishTests(resp: WalletListResp): Collection<DynamicTest> {
+    private fun createFinishTests(resp: WalletListResp): Collection<DynamicTest> {
         val fiatAmount = resp.fiat.amount
         val fiatChange = resp.fiat.change
         val percent = resp.fiat.changePercent
