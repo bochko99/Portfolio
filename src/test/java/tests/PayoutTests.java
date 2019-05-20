@@ -5,9 +5,9 @@ import com.crypterium.cryptApi.pojos.payout.*;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.utils.EndPoints;
 import core.annotations.Financial;
-import core.annotations.ScopeTarget;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
@@ -22,7 +22,6 @@ import static com.crypterium.cryptApi.pojos.wallets.Currency.LTC;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 
-@ScopeTarget(ScopeTarget.Stand.BETA)
 public class PayoutTests extends ExwalTest {
 
 //    public static final String CARD_NUMBER = "5555555555555557";
@@ -61,6 +60,7 @@ public class PayoutTests extends ExwalTest {
 
     }
 
+    @Ignore
     @Test
     @Financial
     @DisplayName(EndPoints.payout_pay + " POST")

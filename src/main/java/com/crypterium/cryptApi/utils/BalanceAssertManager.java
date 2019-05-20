@@ -27,8 +27,10 @@ public class BalanceAssertManager {
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second, int scale) {
-        return first.stripTrailingZeros().setScale(scale, RoundingMode.UP).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.UP)) == 0
-                || first.stripTrailingZeros().setScale(scale, RoundingMode.DOWN).compareTo(second.stripTrailingZeros().setScale(scale, RoundingMode.DOWN)) == 0;
+        BigDecimal delta = BigDecimal.ONE.divide(new BigDecimal(Math.pow(10, scale)), scale, RoundingMode.HALF_UP);
+        BigDecimal diff = first.subtract(second).abs();
+        return diff.compareTo(BigDecimal.ZERO) >= 0
+                && diff.compareTo(delta) <= 0;
     }
 
     public static boolean equal(BigDecimal first, BigDecimal second, int scale, RoundingMode mode) {
