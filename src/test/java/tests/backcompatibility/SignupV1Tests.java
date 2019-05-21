@@ -1,6 +1,7 @@
 package tests.backcompatibility;
 
 import com.crypterium.cryptApi.pojos.signupoperation.*;
+import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Credentials;
@@ -10,12 +11,16 @@ import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalV1Test;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
+import static io.restassured.RestAssured.given;
 
-public class SignupV1 extends ExwalV1Test {
+public class SignupV1Tests extends ExwalV1Test {
+
+
 
     @Test
     @Credentials(creatingNewUser = true)
@@ -67,5 +72,39 @@ public class SignupV1 extends ExwalV1Test {
         service().auth().body(setupPin).post(EndPoints.v1_mobile_pin_setup);
     }
 
+    @Test
+    @DisplayName(EndPoints.mobile_phone_resend + " POST")
+    public void testResendPhone() {
+        String phoneNumber = "";
+        int statusCode;
+        for (int i = 0; i < 10; i++) {
+            //700000 00001-700000 29999
+
+            phoneNumber = "700000" + new Random().nextInt(3) + RandomStringUtils.random(4, false, true);
+            SignUpReqV1 signup = new SignUpReqV1()
+                    .setPhone(phoneNumber)
+                    .setCountry("RU")
+                    .setRegion("");
+            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
+                    .when().post(EndPoints.v1_mobile_signup).statusCode();
+            if (statusCode == 200) {
+                break;
+            }
+        }
+        ResendPhone resend = new ResendPhone()
+                .setPhone(phoneNumber);
+        given().body(resend).post(EndPoints.v1_mobile_phone_resend);
+    }
+
+    @Test
+    @Credentials(creatingNewUser = true)
+    @DisplayName(EndPoints.mobile_email_resend + " POST")
+    public void testResendEmailCode() {
+        service().createUser();
+        String email = ApiCommonFunctions.generateFreeEmail();
+        ResendEmail resendEmail = new ResendEmail()
+                .setEmail(email);
+        service().auth().body(resendEmail).post(EndPoints.v1_mobile_email_resend);
+    }
 
 }

@@ -54,7 +54,13 @@ public class EndPoints {
     public static final String payout_offer = "/v1/payout/offer";
     public static final String payout_pay = "/v1/payout/pay";
 
-    //Restore access operations
+    //Restore access operations v1
+    public static final String v1_mobile_password_change = "/v1/mobile/password/change";
+    public static final String v1_mobile_password_reset = "/v1/mobile/password/reset";
+    public static final String v1_mobile_password_reset_confirm = "/v1/mobile/password/reset/confirm";
+    public static final String v1_mobile_password_reset_confirm_code = "/v1/mobile/password/reset/confirm/code";
+
+    //Restore access operations v2
     public static final String mobile_password_change = "/v2/mobile/password/change";
     public static final String mobile_password_reset = "/v2/mobile/password/reset";
     public static final String mobile_password_reset_confirm = "/v2/mobile/password/reset/confirm";
