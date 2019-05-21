@@ -13,9 +13,12 @@ import core.annotations.Financial;
 import core.annotations.ScopeTarget;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -28,6 +31,8 @@ import java.util.stream.Stream;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 import static com.crypterium.cryptApi.pojos.wallets.history.History.OperationType.*;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class WalletsTests extends ExwalTest {
 
@@ -222,54 +227,25 @@ public class WalletsTests extends ExwalTest {
 
     //SEND CRYPTO
 
-    @Test
-    @DisplayName("Sendcrypto LTC by phone")
-    public void testLTCbyPhone() {
-        testSendCrypto(commonBodyForPhone(LTC, "0.001"), new TransferPhoneHistoryProcessor());
+    @TestFactory
+    @DisplayName("Sendcrypto")
+    public Collection<DynamicNode> testSendCrypto() {
+        List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
+        return wallets.stream().map(w -> dynamicContainer(w.getCurrency().getValue(), Stream.of(
+                dynamicTest("by address", () -> {
+                    BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
+                    Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
+                    testSendCrypto(commonBodyForAddress(w.getCurrency(), amount.toPlainString()), new TransferWalletHistoryProcessor());
+                }),
+                dynamicTest("by phone", () -> {
+                    BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
+                    Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
+                    testSendCrypto(commonBodyForPhone(w.getCurrency(), amount.toPlainString()), new TransferPhoneHistoryProcessor());
+                })
+        ))).collect(Collectors.toList());
     }
 
-    @Test
-    @DisplayName("Sendcrypto BTC by phone")
-    public void testBTCbyPhone() {
-        testSendCrypto(commonBodyForPhone(BTC, "0.00001"), new TransferPhoneHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto ETH by phone")
-    public void testETHbyPhone() {
-        testSendCrypto(commonBodyForPhone(ETH, "0.0001"), new TransferPhoneHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto CRPT by phone")
-    public void testCRPTbyPhone() {
-        testSendCrypto(commonBodyForPhone(CRPT, "0.001"), new TransferPhoneHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto LTC by address")
-    public void testLTCbyAddress() {
-        testSendCrypto(commonBodyForAddress(LTC, "0.001"), new TransferWalletHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto BTC by address")
-    public void testBTCbyAddres() {
-        testSendCrypto(commonBodyForAddress(BTC, "0.0001"), new TransferWalletHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto ETH by address")
-    public void testETHbyAddress() {
-        testSendCrypto(commonBodyForAddress(ETH, "0.0001"), new TransferWalletHistoryProcessor());
-    }
-
-    @Test
-    @DisplayName("Sendcrypto CRPT by address")
-    public void testCRPTbyAddress() {
-        testSendCrypto(commonBodyForAddress(CRPT, "0.001"), new TransferWalletHistoryProcessor());
-    }
-
+    @Ignore
     @Test
     @Financial
     @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
@@ -278,6 +254,7 @@ public class WalletsTests extends ExwalTest {
         testExternalInvoice(commonBodyForExternalAddress(CRPT, "0.01", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
     }
 
+    @Ignore
     @Test
     @Financial
     @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
@@ -286,6 +263,7 @@ public class WalletsTests extends ExwalTest {
         testExternalInvoice(commonBodyForExternalAddress(ETH, "0.0001", "0x862120895A71D43A30FB5993685D6a6AC1B5bCee"));
     }
 
+    @Ignore
     @Test
     @Financial
     @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})
@@ -294,6 +272,7 @@ public class WalletsTests extends ExwalTest {
         testExternalInvoice(commonBodyForExternalAddress(BTC, "0.001", "1Zj3f8X3APaq8NiD4x1jjRYSJH5eLesfr"));
     }
 
+    @Ignore
     @Test
     @Financial
     @ScopeTarget({ScopeTarget.Stand.STAGE, ScopeTarget.Stand.PROD})

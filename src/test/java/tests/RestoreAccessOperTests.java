@@ -10,6 +10,7 @@ import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
@@ -20,6 +21,7 @@ import static io.restassured.RestAssured.given;
 public class RestoreAccessOperTests extends ExwalTest {
 
     @Test
+    @Ignore
     @DisplayName("Mobile password reset")
     public void testResetPass() {
         CredentialEntry user = Environment.CREDENTIAL_DEFAULT;
@@ -36,18 +38,20 @@ public class RestoreAccessOperTests extends ExwalTest {
                 .setPhone(user.getLogin());
         given().body(checkCodeReq).post(EndPoints.mobile_password_reset_confirm_code);
 
+        try {
+            SetNewPassReq setNewPassReq = new SetNewPassReq()
+                    .setPhone(user.getLogin())
+                    .setCode(code)
+                    .setPassword(newPassword);
+            given().body(setNewPassReq).post(EndPoints.mobile_password_reset_confirm).then().body("access_token", Matchers.notNullValue());
+        } finally {
+            ChangeReq changeReq = new ChangeReq()
+                    .setCurrentPassword(newPassword)
+                    .setNewPassword(password);
 
-        SetNewPassReq setNewPassReq = new SetNewPassReq()
-                .setPhone(user.getLogin())
-                .setCode(code)
-                .setPassword(newPassword);
-        given().body(setNewPassReq).post(EndPoints.mobile_password_reset_confirm).then().body("access_token", Matchers.notNullValue());
+            service().authSingle(user.getLogin(), newPassword).body(changeReq).put(EndPoints.mobile_password_change);
+        }
 
-        ChangeReq changeReq = new ChangeReq()
-                .setCurrentPassword(newPassword)
-                .setNewPassword(password);
-
-        service().authSingle(user.getLogin(), newPassword).body(changeReq).put(EndPoints.mobile_password_change);
 
     }
 

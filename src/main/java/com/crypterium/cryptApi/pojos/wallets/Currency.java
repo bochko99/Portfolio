@@ -1,20 +1,24 @@
 package com.crypterium.cryptApi.pojos.wallets;
 
+import java.math.BigDecimal;
+
 public enum Currency {
 
-    BTC("BTC", true),
-    ETH("ETH", true),
-    LTC("LTC", true),
-    CRPT("CRPT", true),
-    USDC("USDC", true),
-    EUR("EUR", false);
+    BTC("BTC", true, "0.0001"),
+    ETH("ETH", true, "0.0001"),
+    LTC("LTC", true, "0.001"),
+    CRPT("CRPT", true, "0.01"),
+    USDC("USDC", true, "0.01"),
+    EUR("EUR", false, "0");
 
     private String value;
     private Boolean isCrypto;
+    private BigDecimal minValueToSendPhone;
 
-    Currency(String value, Boolean isCrypto) {
+    Currency(String value, Boolean isCrypto, String minValueToSendPhone) {
         this.value = value;
         this.isCrypto = isCrypto;
+        this.minValueToSendPhone = new BigDecimal(minValueToSendPhone);
     }
 
     public String getValue() {
@@ -23,5 +27,9 @@ public enum Currency {
 
     public Boolean getCrypto() {
         return isCrypto;
+    }
+
+    public BigDecimal getMinValueToSendPhone() {
+        return minValueToSendPhone;
     }
 }

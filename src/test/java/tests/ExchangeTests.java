@@ -44,6 +44,7 @@ public class ExchangeTests extends ExwalTest {
     @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
     public Collection<DynamicNode> testGetMobileExchangeCurrencies() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+        Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
         return pairs.stream().map(pair -> dynamicContainer(String.format("Exchange min/max. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()),
                 Stream.of(
                         dynamicTest("counter min ~= rate * base min.", () -> {
@@ -116,9 +117,10 @@ public class ExchangeTests extends ExwalTest {
     @DisplayName("Exchange")
     public Collection<DynamicTest> testExchange() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+        Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
         return pairs.stream()
                 .map(pair -> dynamicTest(String.format("Exchange. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
-                testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
+                        testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 
     public void testExchangeByMinimalValue(Currency currencyFrom, Currency currencyTo) {
