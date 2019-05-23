@@ -14,7 +14,6 @@ import tests.core.ExwalV1Test;
 import java.util.Random;
 import java.util.UUID;
 
-import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
@@ -53,7 +52,7 @@ public class SignupV1Tests extends ExwalV1Test {
                 emailCode = "12321";
                 break;
             default:
-                emailCode = exauth().admin().queryParam("email", email)
+                emailCode = service().admin().queryParam("email", email)
                         .queryParam("event", "CRYPTERIUM_EMAIL_CONFIRM")
                         .get(EndPoints.admin_email_code).then().extract().body().jsonPath().getString("code");
         }

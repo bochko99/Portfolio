@@ -137,12 +137,11 @@ public class WalletsTests extends ExwalTest {
         service().auth().pathParam("currency", EUR).get(EndPoints.wallet_mobile_sx_rates_currency);
     }
 
-
     @Test
     @DisplayName(EndPoints.wallet_send_fee_currency + " GET")
     public void testWalletFee() {
         List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
-        Wallet wallet = wallets.stream().filter(e -> e.getBalance().compareTo(new BigDecimal("0.001")) >= 0)
+        Wallet wallet = wallets.stream().filter(e -> e.getBalance().compareTo(e.getCurrency().getMinValueToSendPhone()) >= 0)
                 .findFirst().orElseThrow(() -> new NoSuchWalletException("No wallet with balance >= 0.001 presented"));
         service().auth().queryParam("address", wallet.getAddress())
                 .pathParams("currency", wallet.getCurrency())
@@ -232,12 +231,12 @@ public class WalletsTests extends ExwalTest {
     public Collection<DynamicNode> testSendCrypto() {
         List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
         return wallets.stream().map(w -> dynamicContainer(w.getCurrency().getValue(), Stream.of(
-                dynamicTest("by address", () -> {
+                dynamicTest("Sendcrypto. " + w.getCurrency() + " by address", () -> {
                     BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
                     Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
                     testSendCrypto(commonBodyForAddress(w.getCurrency(), amount.toPlainString()), new TransferWalletHistoryProcessor());
                 }),
-                dynamicTest("by phone", () -> {
+                dynamicTest("Sendcrypto. " + w.getCurrency() + " by phone", () -> {
                     BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
                     Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
                     testSendCrypto(commonBodyForPhone(w.getCurrency(), amount.toPlainString()), new TransferPhoneHistoryProcessor());

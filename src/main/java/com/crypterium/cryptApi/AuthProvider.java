@@ -23,6 +23,8 @@ public abstract class AuthProvider {
 
     }
 
+    public abstract RequestSpecification admin();
+
     public abstract RequestSpecification auth(String role);
 
     public abstract RequestSpecification auth(String login, String password);

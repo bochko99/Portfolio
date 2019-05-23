@@ -1,5 +1,6 @@
 package com.crypterium.cryptApi.utils;
 
+import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.pojos.catalogs.CountriesModel;
 import com.crypterium.cryptApi.pojos.catalogs.Country;
 import com.crypterium.cryptApi.pojos.signupoperation.SignUpReq;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static com.crypterium.cryptApi.Auth.exauth;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
@@ -82,7 +82,7 @@ public class ApiCommonFunctions {
                 smsCode = "1234";
                 break;
             default:
-                smsCode = exauth().admin().queryParam("phone", phoneNumber)
+                smsCode = Auth.service().admin().queryParam("phone", phoneNumber)
                         .queryParam("event", event)
                         .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
         }

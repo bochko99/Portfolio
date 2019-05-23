@@ -41,7 +41,7 @@ public class ExwalAuthV1 extends ExwalAuth {
                 smsCode = "12345";
                 break;
             default:
-                smsCode = Auth.exauth().admin().queryParam("phone", phoneNumber)
+                smsCode = admin().queryParam("phone", phoneNumber)
                         .queryParam("event", "MOBILE_SIGN_UP")
                         .get(EndPoints.admin_sms_code).then().extract().body().jsonPath().getString("code");
         }
