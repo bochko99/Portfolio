@@ -4,11 +4,12 @@ import com.crypterium.cryptApi.pojos.signupoperation.*;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
+import core.TestScope;
 import core.annotations.Credentials;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalV1Test;
 
 import java.util.Random;
@@ -17,13 +18,17 @@ import java.util.UUID;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
+@Epic(TestScope.REGRESS)
+@Feature("Back compatibility")
 public class SignupV1Tests extends ExwalV1Test {
 
 
 
+    @Story("User registration")
+    @Description("User registers from older app")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName("Register new user: Back compatibility")
     public void testRegisterV1() {
         AddName name = new AddName()
                 .setFirstName("Test")
@@ -71,8 +76,10 @@ public class SignupV1Tests extends ExwalV1Test {
         service().auth().body(setupPin).post(EndPoints.v1_mobile_pin_setup);
     }
 
+    @Story("Phone code confirmation resend")
+    @Description("User tries to resend phone confirmation code")
+    @Severity(SeverityLevel.NORMAL)
     @Test
-    @DisplayName(EndPoints.mobile_phone_resend + " POST")
     public void testResendPhone() {
         String phoneNumber = "";
         int statusCode;
@@ -95,9 +102,10 @@ public class SignupV1Tests extends ExwalV1Test {
         given().body(resend).post(EndPoints.v1_mobile_phone_resend);
     }
 
+    @Story("Email code confirmation resend")
+    @Description("User tries to resend phone confirmation code")
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName(EndPoints.mobile_email_resend + " POST")
     public void testResendEmailCode() {
         service().createUser();
         String email = ApiCommonFunctions.generateFreeEmail();

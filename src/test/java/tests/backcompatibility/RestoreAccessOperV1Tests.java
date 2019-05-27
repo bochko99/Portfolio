@@ -8,21 +8,24 @@ import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
+import core.TestScope;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
+@Epic(TestScope.REGRESS)
+@Feature("Back compatibility")
 public class RestoreAccessOperV1Tests extends ExwalTest {
 
+    @Story("Password recovery")
+    @Description("User resets his password by phone number and confirmation code")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
-    @Ignore
-    @DisplayName("Mobile password reset")
     public void testResetPass() {
         CredentialEntry user = Environment.CREDENTIAL_DEFAULT;
         String password = user.getPassword();
@@ -55,8 +58,10 @@ public class RestoreAccessOperV1Tests extends ExwalTest {
 
     }
 
+    @Story("Password change")
+    @Description("User changes his password by in-app method (authorized)")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
-    @DisplayName(EndPoints.mobile_password_change + " PUT")
     public void testChangePass() {
         CredentialEntry user = Environment.CREDENTIALS.get("default");
         ChangeReq changeReq = new ChangeReq()
