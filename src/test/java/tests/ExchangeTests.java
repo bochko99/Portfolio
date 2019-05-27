@@ -16,7 +16,6 @@ import com.crypterium.cryptApi.utils.Environment;
 import core.annotations.Financial;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
@@ -31,8 +30,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.crypterium.cryptApi.Auth.service;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.BTC;
-import static com.crypterium.cryptApi.pojos.wallets.Currency.CRPT;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -61,55 +58,56 @@ public class ExchangeTests extends ExwalTest {
     }
 
 
-    @Test
+    @TestFactory
     @DisplayName(EndPoints.mobile_exchange_offer + " POST")
-    public void testMobileExchangeOffer() {
-
-        Currency currencyFrom = BTC;
-        Currency currencyTo = CRPT;
-        ExchangeOfferReqModel body = new ExchangeOfferReqModel()
-                .setCurrencyFrom(currencyFrom)
-                .setCurrencyTo(currencyTo)
-                .setAmountTo(BigDecimal.ZERO)
-                .setAmountFrom(BigDecimal.ZERO);
-
-        ExchangeOfferResponseModel response = service().auth().body(body).post(EndPoints.mobile_exchange_offer)
-                .as(ExchangeOfferResponseModel.class);
-
-        Assert.assertThat(response.getExchangeRate(), Matchers.greaterThan(BigDecimal.ZERO));
-        Assert.assertThat(response.getSourceCurrencyAmount().getCurrencyCode(), Matchers.equalTo(currencyFrom));
-        Assert.assertThat(response.getSourceCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
-        Assert.assertThat(response.getTargetCurrencyAmount().getCurrencyCode(), Matchers.equalTo(currencyTo));
-        Assert.assertThat(response.getTargetCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
-    }
-
-    @Test
-    @DisplayName(EndPoints.mobile_exchange_offer + ": Rate differentiation")
-    public void testPostMobileExchangeOfferRateDifferentiation() {
-        Currency currencyFrom = BTC;
-        Currency currencyTo = CRPT;
+    public Collection<DynamicNode> testMobileExchangeOffer() {
 
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        Pair pair = getPairByCurrencies(pairs, currencyFrom, currencyTo);
 
-        ExchangeOfferReqModel body = new ExchangeOfferReqModel()
-                .setCurrencyFrom(currencyFrom)
-                .setCurrencyTo(currencyTo)
-                .setAmountTo(BigDecimal.ZERO)
-                .setAmountFrom(BigDecimal.ZERO);
+        return pairs.stream().map(pair -> dynamicTest("Zero offer: " + pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
 
-        ExchangeOfferResponseModel offer = service().auth().body(body)
-                .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
+            ExchangeOfferReqModel body = new ExchangeOfferReqModel()
+                    .setCurrencyFrom(pair.getCurrencyFrom())
+                    .setCurrencyTo(pair.getCurrencyTo())
+                    .setAmountTo(BigDecimal.ZERO)
+                    .setAmountFrom(BigDecimal.ZERO);
 
-        BigDecimal differentiationPercent = (pair.getRate().subtract(offer.getExchangeRate()))
-                .divide(pair.getRate(), 6, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal("100"));
+            ExchangeOfferResponseModel response = service().auth().body(body).post(EndPoints.mobile_exchange_offer)
+                    .as(ExchangeOfferResponseModel.class);
 
-        System.out.println(pair.getRate());
-        System.out.println(offer.getExchangeRate());
-        System.out.println(differentiationPercent.toString());
+            Assert.assertThat(response.getExchangeRate(), Matchers.greaterThan(BigDecimal.ZERO));
+            Assert.assertThat(response.getSourceCurrencyAmount().getCurrencyCode(), Matchers.equalTo(pair.getCurrencyFrom()));
+            Assert.assertThat(response.getSourceCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
+            Assert.assertThat(response.getTargetCurrencyAmount().getCurrencyCode(), Matchers.equalTo(pair.getCurrencyTo()));
+            Assert.assertThat(response.getTargetCurrencyAmount().getAmount(), Matchers.equalTo(BigDecimal.ZERO));
+        })).collect(Collectors.toList());
+    }
 
-        Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
+    @TestFactory
+    @DisplayName(EndPoints.mobile_exchange_offer + ": Rate differentiation")
+    public Collection<DynamicNode> testPostMobileExchangeOfferRateDifferentiation() {
+        List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
+
+        return pairs.stream().map(pair -> dynamicTest("Rate diff: " + pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
+            ExchangeOfferReqModel body = new ExchangeOfferReqModel()
+                    .setCurrencyFrom(pair.getCurrencyFrom())
+                    .setCurrencyTo(pair.getCurrencyTo())
+                    .setAmountTo(BigDecimal.ZERO)
+                    .setAmountFrom(BigDecimal.ZERO);
+
+            ExchangeOfferResponseModel offer = service().auth().body(body)
+                    .post(EndPoints.mobile_exchange_offer).as(ExchangeOfferResponseModel.class);
+
+            BigDecimal differentiationPercent = (pair.getRate().subtract(offer.getExchangeRate()))
+                    .divide(pair.getRate(), 6, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"));
+
+            System.out.println(pair.getRate());
+            System.out.println(offer.getExchangeRate());
+            System.out.println(differentiationPercent.toString());
+
+            Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
+        })).collect(Collectors.toList());
     }
 
     @TestFactory

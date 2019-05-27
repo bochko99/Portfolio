@@ -230,7 +230,7 @@ public class WalletsTests extends ExwalTest {
     @DisplayName("Sendcrypto")
     public Collection<DynamicNode> testSendCrypto() {
         List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
-        return wallets.stream().map(w -> dynamicContainer(w.getCurrency().getValue(), Stream.of(
+        return wallets.stream().map(w -> dynamicContainer(w.getCurrency().getCurrency(), Stream.of(
                 dynamicTest("Sendcrypto. " + w.getCurrency() + " by address", () -> {
                     BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
                     Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
