@@ -107,6 +107,7 @@ public class ExwalAuth extends AuthProvider {
         accesstoken = "";
     }
 
+    @Override
     public RequestSpecification admin() {
         if (adminToken.isEmpty()) {
             adminToken = SpecStorage.exwalOauth().queryParam("grant_type", "mobile_phone")

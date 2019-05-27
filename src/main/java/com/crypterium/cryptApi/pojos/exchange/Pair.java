@@ -29,6 +29,8 @@ public class Pair {
     private BigDecimal minAmountTo;
     @Expose
     private BigDecimal rate;
+    @Expose
+    private boolean lock;
 
     public BigDecimal getAmountScaleFrom() {
         return amountScaleFrom;
@@ -108,6 +110,15 @@ public class Pair {
 
     public Pair setRate(BigDecimal rate) {
         this.rate = rate;
+        return this;
+    }
+
+    public boolean isLock() {
+        return lock;
+    }
+
+    public Pair setLock(boolean lock) {
+        this.lock = lock;
         return this;
     }
 }

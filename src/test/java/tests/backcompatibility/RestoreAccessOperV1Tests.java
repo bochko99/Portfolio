@@ -1,4 +1,4 @@
-package tests;
+package tests.backcompatibility;
 
 import com.crypterium.cryptApi.pojos.restoreaccessoperation.ChangeReq;
 import com.crypterium.cryptApi.pojos.restoreaccessoperation.CheckCodeReq;
@@ -18,7 +18,7 @@ import tests.core.ExwalTest;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
-public class RestoreAccessOperTests extends ExwalTest {
+public class RestoreAccessOperV1Tests extends ExwalTest {
 
     @Test
     @Ignore
@@ -30,26 +30,26 @@ public class RestoreAccessOperTests extends ExwalTest {
         ResetReq resetReq = new ResetReq()
                 .setPhone(user.getLogin());
 
-        given().body(resetReq).post(EndPoints.mobile_password_reset);
+        given().body(resetReq).post(EndPoints.v1_mobile_password_reset);
 
         String code = ApiCommonFunctions.getSmsCode(user.getLogin(), "PASSWORD_RESTORE");
         CheckCodeReq checkCodeReq = new CheckCodeReq()
                 .setCode(code)
                 .setPhone(user.getLogin());
-        given().body(checkCodeReq).post(EndPoints.mobile_password_reset_confirm_code);
+        given().body(checkCodeReq).post(EndPoints.v1_mobile_password_reset_confirm_code);
 
         try {
             SetNewPassReq setNewPassReq = new SetNewPassReq()
                     .setPhone(user.getLogin())
                     .setCode(code)
                     .setPassword(newPassword);
-            given().body(setNewPassReq).post(EndPoints.mobile_password_reset_confirm).then().body("access_token", Matchers.notNullValue());
+            given().body(setNewPassReq).post(EndPoints.v1_mobile_password_reset_confirm).then().body("access_token", Matchers.notNullValue());
         } finally {
             ChangeReq changeReq = new ChangeReq()
                     .setCurrentPassword(newPassword)
                     .setNewPassword(password);
 
-            service().authSingle(user.getLogin(), newPassword).body(changeReq).put(EndPoints.mobile_password_change);
+            service().authSingle(user.getLogin(), newPassword).body(changeReq).put(EndPoints.v1_mobile_password_change);
         }
 
 
@@ -62,7 +62,7 @@ public class RestoreAccessOperTests extends ExwalTest {
         ChangeReq changeReq = new ChangeReq()
                 .setCurrentPassword(user.getPassword())
                 .setNewPassword(user.getPassword());
-        service().auth().body(changeReq).put(EndPoints.mobile_password_change);
+        service().auth().body(changeReq).put(EndPoints.v1_mobile_password_change);
     }
 
 

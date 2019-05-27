@@ -11,7 +11,7 @@ public class MobileTest extends BaseTest {
     public static void init() {
         RestAssured.requestSpecification = SpecStorage.commonRequestSpec();
         RestAssured.responseSpecification = SpecStorage.commonResponseSpec();
-        Auth.basic(Auth.AuthType.CSHARP);
+        Auth.basic(Auth.AuthType.EXWAL);
     }
 
 }

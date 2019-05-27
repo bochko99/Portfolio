@@ -18,6 +18,7 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import tests.core.ExwalTest;
@@ -27,10 +28,12 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.BTC;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.CRPT;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class ExchangeTests extends ExwalTest {
@@ -39,19 +42,24 @@ public class ExchangeTests extends ExwalTest {
 
     @TestFactory
     @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
-    public Collection<DynamicTest> testGetMobileExchangeCurrencies() {
+    public Collection<DynamicNode> testGetMobileExchangeCurrencies() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        return pairs.stream().map(pair -> dynamicTest(String.format("Pair min/max amount check. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
-            BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
-            BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
-
-            String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
-            String msgMax = String.format("Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
-
-            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo()));
-            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo()));
-        })).collect(Collectors.toList());
+        Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
+        return pairs.stream().map(pair -> dynamicContainer(String.format("Exchange min/max. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()),
+                Stream.of(
+                        dynamicTest("counter min ~= rate * base min.", () -> {
+                            BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
+                            String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
+                            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo(), 4));
+                        }),
+                        dynamicTest("counter max ~= rate * base max.", () -> {
+                            BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
+                            String msgMax = String.format(" Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
+                            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo(), 4));
+                        })
+                ))).collect(Collectors.toList());
     }
+
 
     @Test
     @DisplayName(EndPoints.mobile_exchange_offer + " POST")
@@ -109,8 +117,10 @@ public class ExchangeTests extends ExwalTest {
     @DisplayName("Exchange")
     public Collection<DynamicTest> testExchange() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
-        return pairs.stream().map(pair -> dynamicTest(String.format("Exchange test. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
-                testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
+        Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
+        return pairs.stream()
+                .map(pair -> dynamicTest(String.format("Exchange. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
+                        testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 
     public void testExchangeByMinimalValue(Currency currencyFrom, Currency currencyTo) {
