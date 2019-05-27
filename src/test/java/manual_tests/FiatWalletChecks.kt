@@ -59,17 +59,21 @@ class FiatWalletChecks {
         return DynamicContainer.dynamicContainer(wallet.currency.name, listOf<DynamicTest>(
                 DynamicTest.dynamicTest("Check 1. wallet.fiat.amount / (wallet.balance * wallet.fiat.rate) ~= 1 +- delta") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
+                    Assume.assumeTrue("Rate is 0", rate > BigDecimal.ZERO)
+                    Assume.assumeTrue("Change is 0", change > BigDecimal.ZERO)
                     val calculated = fiatAmount.divide(balance.multiply(rate), 20, RoundingMode.HALF_UP)
                     val delta = BigDecimal("0.01").divide(rate, 20, RoundingMode.HALF_UP)
 
                     val low = BigDecimal.ONE.minus(delta)
                     val up = BigDecimal.ONE.plus(delta)
-                    println("${fiatAmount.toPlainString()} / ${balance.toPlainString()} * ${rate.toPlainString()} ~= 1 +- ${delta.toPlainString()}")
+                    println("${fiatAmount.toPlainString()} / (${balance.toPlainString()} * ${rate.toPlainString()}) ~= 1 +- ${delta.toPlainString()}")
                     Assert.assertTrue("${calculated.toPlainString()} not in range [${low.toPlainString()}, ${up.toPlainString()}]",
                             calculated >= low && calculated <= up)
                 },
                 DynamicTest.dynamicTest("Check 2. wallet.fiat[amount * changePercent / change] ~= 100%.") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
+                    Assume.assumeTrue("Rate is 0", rate > BigDecimal.ZERO)
+                    Assume.assumeTrue("Change is 0", change > BigDecimal.ZERO)
                     println("${fiatAmount.toPlainString()} * ${changePercent.toPlainString()} / ${change.toPlainString()} ~= 100%")
                     val expectedPercent = fiatAmount.multiply(changePercent).divide(change, 2, RoundingMode.HALF_UP)
                     Assert.assertTrue("${expectedPercent.toPlainString()} not in range [99..101]", expectedPercent.toDouble() in 99..101)
