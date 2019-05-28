@@ -37,6 +37,8 @@ public class Wallet {
     private Fiat fiat;
     @Expose
     private Long id;
+    @Expose
+    private Currency baseCurrency;
 
     public String getAddress() {
         return address;
@@ -71,15 +73,6 @@ public class Wallet {
 
     public Wallet setBalance(BigDecimal balance) {
         this.balance = balance;
-        return this;
-    }
-
-    public String getBalanceString() {
-        return balanceString;
-    }
-
-    public Wallet setBalanceString(String balanceString) {
-        this.balanceString = balanceString;
         return this;
     }
 
@@ -153,6 +146,24 @@ public class Wallet {
 
     public Wallet setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public String getBalanceString() {
+        return balanceString;
+    }
+
+    public Wallet setBalanceString(String balanceString) {
+        this.balanceString = balanceString;
+        return this;
+    }
+
+    public Currency getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public Wallet setBaseCurrency(Currency baseCurrency) {
+        this.baseCurrency = baseCurrency;
         return this;
     }
 }
