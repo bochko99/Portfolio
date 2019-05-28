@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -120,6 +121,7 @@ public class ExchangeTests extends ExwalTest {
     @Severity(SeverityLevel.BLOCKER)
     @Story("Exchange")
     @TestFactory
+    @ResourceLock(value = TestScope.AFFECTS_BALANCE)
     @Financial
     public Collection<DynamicTest> testExchange() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
