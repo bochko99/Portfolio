@@ -37,6 +37,8 @@ public class Wallet {
     private Fiat fiat;
     @Expose
     private Long id;
+    @Expose
+    private Currency baseCurrency;
 
     public String getAddress() {
         return address;
@@ -152,6 +154,15 @@ public class Wallet {
 
     public Wallet setBalanceString(String balanceString) {
         this.balanceString = balanceString;
+        return this;
+    }
+
+    public Currency getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public Wallet setBaseCurrency(Currency baseCurrency) {
+        this.baseCurrency = baseCurrency;
         return this;
     }
 }
