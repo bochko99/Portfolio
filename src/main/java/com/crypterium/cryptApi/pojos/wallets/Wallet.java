@@ -39,6 +39,8 @@ public class Wallet {
     private Long id;
     @Expose
     private Currency baseCurrency;
+    @Expose
+    private String pattern;
 
     public String getAddress() {
         return address;
@@ -163,6 +165,15 @@ public class Wallet {
 
     public Wallet setBaseCurrency(Currency baseCurrency) {
         this.baseCurrency = baseCurrency;
+        return this;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public Wallet setPattern(String pattern) {
+        this.pattern = pattern;
         return this;
     }
 }
