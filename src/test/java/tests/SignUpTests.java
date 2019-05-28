@@ -9,13 +9,14 @@ import com.crypterium.cryptApi.pojos.wallets.WalletCreateReq;
 import com.crypterium.cryptApi.pojos.wallets.WalletListResp;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
+import core.TestScope;
 import core.annotations.Credentials;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.util.HashSet;
@@ -28,19 +29,23 @@ import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.*;
 import static io.restassured.RestAssured.given;
 
+@Epic(TestScope.REGRESS)
+@Feature("Sign up")
 public class SignUpTests extends ExwalTest {
 
+    @Story("User registration")
+    @Description("User registers from latest app")
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName("Register new user")
     public void testRegisterNewUser() {
         registerNewUser();
 
     }
 
+    @Story("User creates his ETH wallets after signing up")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName("ETH/CRPT/USDC Wallet creation")
     public void testNewUserWalletCreation() {
         registerNewUser();
         List<Wallet> wallets = service().auth().body(new WalletCreateReq().setCurrencies(ETH)).post(EndPoints.wallet_create).as(WalletListResp.class).getWallets();
@@ -58,8 +63,10 @@ public class SignUpTests extends ExwalTest {
     }
 
 
+    @Story("Phone code confirmation resend")
+    @Description("User tries to resend phone confirmation code")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
-    @DisplayName(EndPoints.mobile_phone_resend + " POST")
     public void testResendPhone() {
         String phoneNumber = "";
         int statusCode;
@@ -80,9 +87,11 @@ public class SignUpTests extends ExwalTest {
         given().body(resend).post(EndPoints.mobile_phone_resend);
     }
 
+    @Story("Email code confirmation resend")
+    @Description("User tries to resend phone confirmation code")
+    @Severity(SeverityLevel.CRITICAL)
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName(EndPoints.mobile_email_resend + " POST")
     public void testResendEmailCode() {
         service().createUser();
         String email = ApiCommonFunctions.generateFreeEmail();

@@ -9,8 +9,10 @@ import com.crypterium.cryptApi.pojos.wallets.history.History;
 import com.crypterium.cryptApi.pojos.wallets.history.History.OperationType;
 import com.crypterium.cryptApi.pojos.wallets.history.WalletHistoryResponseModel;
 import com.crypterium.cryptApi.utils.*;
+import core.TestScope;
 import core.annotations.Financial;
 import core.annotations.ScopeTarget;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -34,6 +36,8 @@ import static com.crypterium.cryptApi.pojos.wallets.history.History.OperationTyp
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+@Epic(TestScope.REGRESS)
+@Feature("Wallet checks")
 public class WalletsTests extends ExwalTest {
 
     private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
@@ -89,8 +93,9 @@ public class WalletsTests extends ExwalTest {
         new BtcWallet().sendTransaction(address, amount);
     }
 
+    @Story("Get wallet by id")
+    @Severity(SeverityLevel.MINOR)
     @Test
-    @DisplayName(EndPoints.wallet_wallet_id + " GET")
     public void testWalletId() {
         WalletListResp response = service().auth().get(EndPoints.wallet_list).then()
                 .body("wallets.size()", Matchers.greaterThan(0))
@@ -100,43 +105,40 @@ public class WalletsTests extends ExwalTest {
         service().auth().pathParams("walletId", id).get(EndPoints.wallet_wallet_id);
     }
 
+    @Story("Get currencies")
+    @Severity(SeverityLevel.BLOCKER)
     @Test
-    @Ignore
-    @DisplayName(EndPoints.wallet_address_currency + " GET")
-    public void testWalletAddress() {
-
-        service().auth().pathParams("currency", BTC)
-                .get(EndPoints.wallet_address_currency).as(Wallet.class);
-
-    }
-
-    @Test
-    @DisplayName(EndPoints.wallet_currencies + " GET")
     public void testWalletCurrencies() {
 
         service().auth().get(EndPoints.wallet_currencies);
     }
 
+    @Story("Get user's wallet list")
+    @Severity(SeverityLevel.BLOCKER)
     @Test
-    @DisplayName(EndPoints.wallet_list + " GET")
     public void testWalletList() {
         service().auth().get(EndPoints.wallet_list);
     }
 
+    @Story("Get SX rates")
+    @Severity(SeverityLevel.NORMAL)
     @Test
-    @DisplayName(EndPoints.wallet_mobile_sx_rates + " GET")
     public void testWalletRates() {
 
         service().auth().get(EndPoints.wallet_mobile_sx_rates);
     }
 
+    @Story("Get SX rates for EUR")
+    @Severity(SeverityLevel.NORMAL)
     @Test
-    @DisplayName(EndPoints.wallet_mobile_sx_rates_currency + " GET")
     public void testWalletRate() {
 
         service().auth().pathParam("currency", EUR).get(EndPoints.wallet_mobile_sx_rates_currency);
     }
 
+    @Story("Calculate fee")
+    @Description("Fee calculation for inner transaction")
+    @Severity(SeverityLevel.BLOCKER)
     @Test
     @DisplayName(EndPoints.wallet_send_fee_currency + " GET")
     public void testWalletFee() {
@@ -149,8 +151,9 @@ public class WalletsTests extends ExwalTest {
                 .as(FeeResponse.class);
     }
 
+    @Story("Get user's transactions history and filter checks")
+    @Severity(SeverityLevel.NORMAL)
     @Test
-    @DisplayName(EndPoints.wallet_transaction + " GET")
     public void testWalletTransactions() {
 
         List<OperationType> transferWalletTypes = Collections.singletonList(TRANSFER_WALLET);
@@ -207,8 +210,8 @@ public class WalletsTests extends ExwalTest {
                 .filter(t -> types.contains(t.getOperationType())).count());
     }
 
+    @Story("Address verifity")
     @Test
-    @DisplayName(EndPoints.wallet_verify_currency_address + " GET")
     public void testWalletValidateAddress() {
         List<Wallet> wallets = service().authSingle(recipient.getLogin(), recipient.getPassword())
                 .get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
@@ -226,17 +229,18 @@ public class WalletsTests extends ExwalTest {
 
     //SEND CRYPTO
 
+    @Story("Send crypto")
+    @Severity(SeverityLevel.BLOCKER)
     @TestFactory
-    @DisplayName("Sendcrypto")
     public Collection<DynamicNode> testSendCrypto() {
         List<Wallet> wallets = service().auth().get(EndPoints.wallet_list).as(WalletListResp.class).getWallets();
         return wallets.stream().map(w -> dynamicContainer(w.getCurrency().getCurrency(), Stream.of(
-                dynamicTest("Sendcrypto. " + w.getCurrency() + " by address", () -> {
+                dynamicTest(w.getCurrency() + " by address", () -> {
                     BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
                     Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
                     testSendCrypto(commonBodyForAddress(w.getCurrency(), amount.toPlainString()), new TransferWalletHistoryProcessor());
                 }),
-                dynamicTest("Sendcrypto. " + w.getCurrency() + " by phone", () -> {
+                dynamicTest(w.getCurrency() + " by phone", () -> {
                     BigDecimal amount = w.getCurrency().getMinValueToSendPhone();
                     Assume.assumeTrue(w.getBalance().compareTo(amount) >= 0);
                     testSendCrypto(commonBodyForPhone(w.getCurrency(), amount.toPlainString()), new TransferPhoneHistoryProcessor());
@@ -326,8 +330,8 @@ public class WalletsTests extends ExwalTest {
                 .orElseThrow(() -> new NoSuchWalletException(body.getCurrency(), sender.getLogin()))
                 .getBalance();
 
-        Assert.assertTrue(BalanceAssertManager.equal(senderBalanceAfter, expectedSenderBalance));
-        Assert.assertTrue(BalanceAssertManager.equal(recipientBalanceAfter, expectedRecipientBalance));
+        BalanceAssertManager.assertEquals("Send crypto", senderBalanceAfter, expectedSenderBalance);
+        BalanceAssertManager.assertEquals("Send crypto", recipientBalanceAfter, expectedRecipientBalance);
     }
 
     //TODO: Написать добавить класс AfterChecks или что то подобное

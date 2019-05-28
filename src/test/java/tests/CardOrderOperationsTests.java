@@ -4,10 +4,11 @@ import com.crypterium.cryptApi.pojos.cardorderoperation.OrderReq;
 import com.crypterium.cryptApi.pojos.signupoperation.SignUpReq;
 import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
+import core.TestScope;
 import core.annotations.Credentials;
+import io.qameta.allure.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import tests.core.ExwalTest;
 
 import java.util.Random;
@@ -15,10 +16,13 @@ import java.util.Random;
 import static com.crypterium.cryptApi.Auth.service;
 import static io.restassured.RestAssured.given;
 
+@Epic(TestScope.REGRESS)
+@Feature("Card order")
 public class CardOrderOperationsTests extends ExwalTest {
 
+    @Story("Card preorder from website")
+    @Severity(SeverityLevel.MINOR)
     @Test
-    @DisplayName(EndPoints.card_order + " POST")
     public void testCardWeb() {
         String phoneNumber = "";
         int statusCode = -1;
@@ -45,16 +49,18 @@ public class CardOrderOperationsTests extends ExwalTest {
 
     }
 
+    @Story("Card preporder from app")
+    @Severity(SeverityLevel.NORMAL)
     @Test
     @Credentials(creatingNewUser = true)
-    @DisplayName(EndPoints.mobile_card_order + " POST")
     public void testCardOrderPost() {
         registerNewUser();
         service().auth().post(EndPoints.mobile_card_order);
     }
 
+    @Story("Get user's preporder status")
+    @Severity(SeverityLevel.NORMAL)
     @Test
-    @DisplayName(EndPoints.mobile_card_order + " GET")
     public void testCardOrderGet() {
         service().auth().get(EndPoints.mobile_card_order);
     }
