@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -230,6 +231,7 @@ public class WalletsTests extends ExwalTest {
     //SEND CRYPTO
 
     @Story("Send crypto")
+    @ResourceLock(value = TestScope.AFFECTS_BALANCE)
     @Severity(SeverityLevel.BLOCKER)
     @TestFactory
     public Collection<DynamicNode> testSendCrypto() {
