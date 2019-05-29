@@ -13,13 +13,15 @@ import com.crypterium.cryptApi.utils.BalanceAssertManager;
 import com.crypterium.cryptApi.utils.CredentialEntry;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
+import core.TestScope;
 import core.annotations.Financial;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import tests.core.ExwalTest;
 
 import java.math.BigDecimal;
@@ -33,23 +35,26 @@ import static com.crypterium.cryptApi.Auth.service;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+@Epic(TestScope.REGRESS)
+@Feature("Exchange")
 public class ExchangeTests extends ExwalTest {
 
     private CredentialEntry sender = Environment.CREDENTIAL_DEFAULT;
 
+    @Story("Pairs tests")
+    @Severity(SeverityLevel.NORMAL)
     @TestFactory
-    @DisplayName(EndPoints.mobile_exchange_currencies + " GET")
     public Collection<DynamicNode> testGetMobileExchangeCurrencies() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
         Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
         return pairs.stream().map(pair -> dynamicContainer(String.format("Exchange min/max. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()),
                 Stream.of(
-                        dynamicTest("counter min ~= rate * base min.", () -> {
+                        dynamicTest(String.format("counter min ~= rate * base min. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
                             BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
                             String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
                             Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo(), 4));
                         }),
-                        dynamicTest("counter max ~= rate * base max.", () -> {
+                        dynamicTest(String.format("counter max ~= rate * base max. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
                             BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
                             String msgMax = String.format(" Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
                             Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo(), 4));
@@ -58,13 +63,14 @@ public class ExchangeTests extends ExwalTest {
     }
 
 
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Zero offer")
     @TestFactory
-    @DisplayName(EndPoints.mobile_exchange_offer + " POST")
     public Collection<DynamicNode> testMobileExchangeOffer() {
 
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
 
-        return pairs.stream().map(pair -> dynamicTest("Zero offer: " + pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
+        return pairs.stream().map(pair -> dynamicTest(pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
 
             ExchangeOfferReqModel body = new ExchangeOfferReqModel()
                     .setCurrencyFrom(pair.getCurrencyFrom())
@@ -83,12 +89,14 @@ public class ExchangeTests extends ExwalTest {
         })).collect(Collectors.toList());
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Rate differentiation")
+    @Description("Difference between rates from exchange_currencies and zero offer should be less than 1%")
     @TestFactory
-    @DisplayName(EndPoints.mobile_exchange_offer + ": Rate differentiation")
     public Collection<DynamicNode> testPostMobileExchangeOfferRateDifferentiation() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
 
-        return pairs.stream().map(pair -> dynamicTest("Rate diff: " + pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
+        return pairs.stream().map(pair -> dynamicTest(pair.getCurrencyFrom() + "->" + pair.getCurrencyTo(), () -> {
             ExchangeOfferReqModel body = new ExchangeOfferReqModel()
                     .setCurrencyFrom(pair.getCurrencyFrom())
                     .setCurrencyTo(pair.getCurrencyTo())
@@ -106,18 +114,20 @@ public class ExchangeTests extends ExwalTest {
             System.out.println(offer.getExchangeRate());
             System.out.println(differentiationPercent.toString());
 
-            Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("5")));
+            Assert.assertThat(differentiationPercent.abs(), Matchers.lessThan(new BigDecimal("1")));
         })).collect(Collectors.toList());
     }
 
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Exchange")
     @TestFactory
+    @ResourceLock(value = TestScope.AFFECTS_BALANCE)
     @Financial
-    @DisplayName("Exchange")
     public Collection<DynamicTest> testExchange() {
         List<Pair> pairs = service().auth().get(EndPoints.mobile_exchange_currencies).as(ExchangePairsResponseModel.class).getPairs();
         Assert.assertThat("Pairs array is empty", pairs.size(), Matchers.greaterThan(0));
         return pairs.stream()
-                .map(pair -> dynamicTest(String.format("Exchange. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
+                .map(pair -> dynamicTest(String.format("%s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () ->
                         testExchangeByMinimalValue(pair.getCurrencyFrom(), pair.getCurrencyTo()))).collect(Collectors.toList());
     }
 

@@ -4,7 +4,9 @@ import com.crypterium.cryptApi.exceptions.NoSuchRateException;
 import com.crypterium.cryptApi.pojos.payout.*;
 import com.crypterium.cryptApi.pojos.wallets.Currency;
 import com.crypterium.cryptApi.utils.EndPoints;
+import core.TestScope;
 import core.annotations.Financial;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -19,9 +21,11 @@ import java.util.List;
 import static com.crypterium.cryptApi.Auth.service;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.BTC;
 import static com.crypterium.cryptApi.pojos.wallets.Currency.LTC;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.greaterThan;
 
+@Epic(TestScope.REGRESS)
+@Feature("Payout")
 public class PayoutTests extends ExwalTest {
 
 //    public static final String CARD_NUMBER = "5555555555555557";
@@ -29,23 +33,26 @@ public class PayoutTests extends ExwalTest {
 //    public static final String CARD_NUMBER = "5105105105105100";
 //    public static final String CARD_NUMBER = "5593450818370545";
 
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Payout data")
+    @Description("User gets payout data based on his card limit")
     @Test
-    @DisplayName(EndPoints.payout_data + " POST")
     public void testPostPayoutPayneteasyData() {
         PayoutDataRequestModel model = new PayoutDataRequestModel(CARD_NUMBER);
         PayoutDataResponseModel responseModel = service().auth().body(model).post(EndPoints.payout_data).as(PayoutDataResponseModel.class);
 
         responseModel.getRates().forEach(rate -> {
             Assert.assertThat(responseModel.getLimits().getAvailable().setScale(4, RoundingMode.HALF_UP),
-                    equalTo(rate.getRate().multiply(rate.getMaxCrypto()).setScale(4, RoundingMode.HALF_UP)));
+                    closeTo(rate.getRate().multiply(rate.getMaxCrypto()).setScale(4, RoundingMode.HALF_UP), new BigDecimal("0.0001")));
             Assert.assertTrue(rate.getMinCrypto().compareTo(rate.getMaxCrypto()) <= 0);
             Assert.assertThat(rate.getRate(), greaterThan(BigDecimal.ZERO));
-
         });
     }
 
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Payout offer")
+    @Description("User creates payout offer")
     @Test
-    @DisplayName(EndPoints.payout_offer + " POST")
     public void testPostPayoutPayneteasyOffer() {
 
         Currency currency = LTC;

@@ -92,9 +92,14 @@ artifacts {
     testOutput jarTest
 }
 
+
 test {
+    systemProperties = [
+            'junit.jupiter.execution.parallel.enabled': 'true',
+            'junit.jupiter.execution.parallel.mode.default': 'concurrent'
+    ]
     useJUnitPlatform()
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+//    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     testLogging {
         events "passed", "skipped", "failed"
     }
