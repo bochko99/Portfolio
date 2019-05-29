@@ -12,10 +12,10 @@ import com.crypterium.cryptApi.utils.SpecStorage
 import io.restassured.response.ResponseBodyExtractionOptions
 import org.junit.Assert
 import org.junit.Assume
-import org.junit.jupiter.api.DynamicContainer
-import org.junit.jupiter.api.DynamicNode
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DynamicContainer.dynamicContainer
+import org.junit.jupiter.api.DynamicTest.dynamicTest
+import tests.core.ExwalTest
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -23,7 +23,16 @@ inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
     return this.`as`(T::class.java)
 }
 
-class FiatWalletChecks {
+class FiatWalletChecks : ExwalTest() {
+
+    @Test
+    fun createUsers() {
+        val result = mutableListOf<String>()
+        repeat(10) {
+            result.add(registerNewUser().phone)
+        }
+        println(result.joinToString(separator = "\n"))
+    }
 
     private val scale = 6
 
@@ -41,11 +50,11 @@ class FiatWalletChecks {
     }
 
     private fun createScope(it: Pair<CatalogCurrency, WalletListResp>): DynamicNode {
-        return DynamicContainer.dynamicContainer(it.first.code, listOf(
-                DynamicContainer.dynamicContainer("Wallet checks", it.second.wallets.map {
+        return dynamicContainer(it.first.code, listOf(
+                dynamicContainer("Wallet checks", it.second.wallets.map {
                     createWalletTests(it)
                 }),
-                DynamicContainer.dynamicContainer("Overall checks", createFinishTests(it.second))
+                dynamicContainer("Overall checks", createFinishTests(it.second))
         ))
     }
 
@@ -56,8 +65,8 @@ class FiatWalletChecks {
         val changePercent = wallet.fiat.changePercent
         val change = wallet.fiat.change
 
-        return DynamicContainer.dynamicContainer(wallet.currency.name, listOf<DynamicTest>(
-                DynamicTest.dynamicTest("Check 1. wallet.fiat.amount / (wallet.balance * wallet.fiat.rate) ~= 1 +- delta") {
+        return dynamicContainer(wallet.currency.name, listOf<DynamicTest>(
+                dynamicTest("Check 1. wallet.fiat.amount / (wallet.balance * wallet.fiat.rate) ~= 1 +- delta") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
                     Assume.assumeTrue("Rate is 0", rate != BigDecimal.ZERO)
                     Assume.assumeTrue("Change is 0", change != BigDecimal.ZERO)
@@ -70,7 +79,7 @@ class FiatWalletChecks {
                     Assert.assertTrue("${calculated.toPlainString()} not in range [${low.toPlainString()}, ${up.toPlainString()}]",
                             calculated >= low && calculated <= up)
                 },
-                DynamicTest.dynamicTest("Check 2. wallet.fiat[amount * changePercent / change] ~= 100%.") {
+                dynamicTest("Check 2. wallet.fiat[amount * changePercent / change] ~= 100%.") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
                     Assume.assumeTrue("Rate is 0", rate != BigDecimal.ZERO)
                     Assume.assumeTrue("Change is 0", change != BigDecimal.ZERO)
@@ -89,17 +98,17 @@ class FiatWalletChecks {
         val changeValues = resp.wallets.map { it.fiat.change }
 
         return listOf(
-                DynamicTest.dynamicTest("Check 1. fiat.amount = sum(wallet.fiat.amount)") {
+                dynamicTest("Check 1. fiat.amount = sum(wallet.fiat.amount)") {
                     println("  ${fiatAmount.toPlainString()} = ${fiatValues.joinToString(separator = " + ")}")
                     val expected = fiatValues.reduce(BigDecimal::add)
                     Assert.assertTrue("$fiatAmount <> $expected (scale = $scale)", BalanceAssertManager.equal(fiatAmount, expected, scale))
                 },
-                DynamicTest.dynamicTest("Check 2. fiat.change = sum(wallet.fiat.change)") {
+                dynamicTest("Check 2. fiat.change = sum(wallet.fiat.change)") {
                     println("  ${fiatChange.toPlainString()} = ${changeValues.joinToString(separator = " + ")}")
                     val expectedChange = changeValues.reduce(BigDecimal::add)
                     Assert.assertTrue("FAILED. $fiatChange <> $expectedChange (scale = $scale)", BalanceAssertManager.equal(fiatChange, expectedChange, scale))
                 },
-                DynamicTest.dynamicTest("Check 3. fiat[amount * changePercent / change] ~= 100%.") {
+                dynamicTest("Check 3. fiat[amount * changePercent / change] ~= 100%.") {
                     println("  ${fiatAmount.toPlainString()} * ${percent.toPlainString()} / ${fiatChange.toPlainString()} ~= 100%")
                     val expectedPercent = fiatAmount.multiply(percent).divide(fiatChange, 2, RoundingMode.HALF_UP)
                     Assert.assertTrue("FAILED. $expectedPercent not in range [99..101]", expectedPercent.toDouble() in 99..101)
