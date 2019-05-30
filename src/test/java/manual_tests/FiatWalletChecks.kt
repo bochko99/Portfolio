@@ -68,8 +68,7 @@ class FiatWalletChecks : ExwalTest() {
         return dynamicContainer(wallet.currency.name, listOf<DynamicTest>(
                 dynamicTest("Check 1. wallet.fiat.amount / (wallet.balance * wallet.fiat.rate) ~= 1 +- delta") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
-                    Assume.assumeTrue("Rate is 0", rate != BigDecimal.ZERO)
-                    Assume.assumeTrue("Change is 0", change != BigDecimal.ZERO)
+                    Assume.assumeTrue("Rate is 0", rate.compareTo(BigDecimal.ZERO) != 0)
                     val calculated = fiatAmount.divide(balance.multiply(rate), 20, RoundingMode.HALF_UP)
                     val delta = BigDecimal("0.01").divide(rate, 20, RoundingMode.HALF_UP)
 
@@ -81,8 +80,7 @@ class FiatWalletChecks : ExwalTest() {
                 },
                 dynamicTest("Check 2. wallet.fiat[amount * changePercent / change] ~= 100%.") {
                     Assume.assumeTrue("Balance is 0", balance > BigDecimal.ZERO)
-                    Assume.assumeTrue("Rate is 0", rate != BigDecimal.ZERO)
-                    Assume.assumeTrue("Change is 0", change != BigDecimal.ZERO)
+                    Assume.assumeTrue("Change is 0", change.compareTo(BigDecimal.ZERO) != 0)
                     println("${fiatAmount.toPlainString()} * ${changePercent.toPlainString()} / ${change.toPlainString()} ~= 100%")
                     val expectedPercent = fiatAmount.multiply(changePercent).divide(change, 2, RoundingMode.HALF_UP)
                     Assert.assertTrue("${expectedPercent.toPlainString()} not in range [99..101]", expectedPercent.toDouble() in 99..101)
