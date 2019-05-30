@@ -85,7 +85,8 @@ public class ExwalAuth extends AuthProvider {
                 .setPhone(phoneNumber)
                 .setFingerprint(UUID.randomUUID().toString())
                 .setSmsCode(smsCode);
-        accesstoken = given().body(confirmPhone).post(EndPoints.mobile_phone_confirm).then().extract().body().jsonPath().getString("access_token");
+        accesstoken = given().body(confirmPhone)
+                .post(EndPoints.mobile_phone_confirm).then().extract().body().jsonPath().getString("access_token");
         System.out.println("Access token: " + accesstoken);
 
         return SpecStorage.exwal().header("Authorization", "Bearer " + accesstoken);
