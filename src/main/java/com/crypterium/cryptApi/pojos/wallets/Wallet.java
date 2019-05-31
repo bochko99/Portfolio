@@ -78,6 +78,7 @@ public class Wallet {
         return this;
     }
 
+
     public String getColor() {
         return color;
     }

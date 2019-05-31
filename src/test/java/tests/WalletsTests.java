@@ -387,8 +387,8 @@ public class WalletsTests extends ExwalTest {
                     .pathParams("currency", currency)
                     .queryParam("amount", amountWithTimeStamp).get(EndPoints.wallet_send_fee_currency)
                     .as(FeeResponse.class);
-            BigDecimal fee = feeResponse.getFee();
 
+            BigDecimal fee = feeResponse.getFee();
             return new WalletSendReq()
                     .setAddress(address)
                     .setAmount(new BigDecimal(amountWithTimeStamp))

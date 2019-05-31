@@ -44,7 +44,7 @@ public class SignupV1Tests extends ExwalV1Test {
             );
             VerifyEmail verifyEmail = new VerifyEmail()
                     .setEmail(email);
-            int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 400))
+            int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 422))
                     .when().post(EndPoints.v1_mobile_email_verify).statusCode();
             if (statusCode == 200) {
                 break;

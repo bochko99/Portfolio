@@ -32,6 +32,7 @@ public class EndPoints {
     //Card order operation
     public static final String card_order = "/v1/card/order";
     public static final String mobile_card_order = "/v1/mobile/card/order";
+    public static final String temp_mobile_card_order_group = "/v1/temp/mobile/card/order/gpoup/{group}";
 
     //Catalogs
     public static final String catalog_comissions = "/v1/catalog/commissions";
@@ -48,6 +49,32 @@ public class EndPoints {
     public static final String mobile_exchange_currencies = "/v1/mobile/exchange/currencies";
     public static final String mobile_exchange_offer = "/v1/mobile/exchange/offer";
     public static final String mobile_exchange_offer_offerId = "/v1/mobile/exchange/offer/{offerId}";
+
+    //Kokard
+    public static final String card_activate = "/v1/card/activate";
+    public static final String card_details = "/v1/card/details";
+    public static final String card_history = "/v1/card/history";
+    public static final String card_loadfirst = "/v1/card/loadfirst";
+    public static final String card_lock = "/v1/card/lock";
+    public static final String card_payload_currency_data = "/v1/card/payload/{currency}/data";
+    public static final String card_payload_offer_id_confirm = "/v1/card/payload/offer/{id}/confirm";
+    public static final String card_payload_offer_create = "/v1/card/payload/offer/create";
+    public static final String card_pin = "/v1/card/pin";
+    public static final String card_pin_change = "/v1/card/pin/change";
+    public static final String card_pinstatus_reset = "/v1/card/pinstatus/reset";
+    public static final String card_unlock = "/v1/card/unlock";
+    public static final String cardorder = "/v1/cardorder";
+    public static final String cardorder_apply = "/v1/cardorder/apply";
+    public static final String cardorder_deliveries_country = "/v1/cardorder/deliveries/{country}";
+    public static final String cardorder_freecard_delivery_country = "/v1/cardorder/freecard/delivery/{country}";
+    public static final String cardorder_freecard_delivery_id_pay = "/v1/cardorder/freecard/delivery/{id}/pay";
+    public static final String cardorder_freecard_order = "/v1/cardorder/freecard/order";
+    public static final String cardorder_payment = "/v1/cardorder/payment";
+    public static final String cardorder_payment_check = "/v1/cardorder/payment/check";
+    public static final String cardorder_payment_info = "/v1/cardorder/payment/info";
+    public static final String cardorder_tariffs = "/v1/cardorder/tariffs";
+    public static final String cardorder_update = "/v1/cardorder/update";
+    public static final String cardorder_upload_document = "/v1/cardorder/upload/document";
 
     //Payout
     public static final String payout_data = "/v1/payout/data";
@@ -78,7 +105,7 @@ public class EndPoints {
     public static final String v1_mobile_signup = "/v1/mobile/signup";
 
     //SignUp
-    public static final String mobile_email_confirm = "/v2/mobile/email/confirm";
+    public static final String mobile_email_confirm = "/v2/mobile/email/confirm/{token}";
     public static final String mobile_email_add = "/v2/mobile/email/add";
     public static final String mobile_email_resend = "/v2/mobile/email/verify/resend";
     public static final String mobile_phone_confirm = "/v2/mobile/phone/confirm";

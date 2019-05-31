@@ -28,7 +28,7 @@ public class ExwalAuthV1 extends ExwalAuth {
                     .setPhone(phoneNumber)
                     .setCountry("RU")
                     .setRegion("");
-            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
+            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 422))
                     .when().post(EndPoints.v1_mobile_signup).statusCode();
             if (statusCode == 200) {
                 break;
