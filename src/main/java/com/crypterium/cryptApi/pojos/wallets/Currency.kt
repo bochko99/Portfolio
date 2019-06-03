@@ -11,27 +11,38 @@ enum class Currency(
     BTC(
             currency = "BTC",
             isCrypto = true,
-            minValueToSendPhoneString = "0.0001"),
+            minValueToSendPhoneString = "0.0001"
+    ),
     ETH(
             currency = "ETH",
             isCrypto = true,
-            minValueToSendPhoneString = "0.0001"),
+            minValueToSendPhoneString = "0.0001"
+    ),
     LTC(
             currency = "LTC",
             isCrypto = true,
-            minValueToSendPhoneString = "0.001"),
+            minValueToSendPhoneString = "0.001"
+    ),
     CRPT(
             currency = "CRPT",
             isCrypto = true,
-            minValueToSendPhoneString = "0.01"),
+            minValueToSendPhoneString = "0.01"
+    ),
     USDC(
             currency = "USDC",
             isCrypto = true,
-            minValueToSendPhoneString = "0.01"),
+            minValueToSendPhoneString = "0.01"
+    ),
     EUR(
             currency = "EUR",
             isCrypto = false,
-            minValueToSendPhoneString = "0");
+            minValueToSendPhoneString = "0"
+    ),
+    XRP(
+            currency = "XPR",
+            isCrypto = true,
+            minValueToSendPhoneString = "100"
+    );
 
     val minValueToSendPhone: BigDecimal = BigDecimal(minValueToSendPhoneString)
 

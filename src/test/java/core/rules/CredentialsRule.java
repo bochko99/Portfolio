@@ -10,11 +10,20 @@ import static com.crypterium.cryptApi.Auth.service;
 
 public class CredentialsRule extends TestWatcher {
 
-    private static String currentType = "";
+    protected static String currentType = "";
     private static CredentialEntry currentEntry;
 
     public static CredentialEntry current() {
         return currentEntry;
+    }
+
+    public static void flush(String methodName) {
+        service().flush();
+        CredentialEntry entry = Environment.CREDENTIALS.get("default");
+        service().basic(entry.getLogin(), entry.getPassword());
+        currentEntry = entry;
+        System.out.println(String.format("%s : '%s' -> default", methodName, currentType));
+        currentType = "";
     }
 
     /**
@@ -64,12 +73,7 @@ public class CredentialsRule extends TestWatcher {
         super.finished(description);
         Credentials credentials = description.getAnnotation(Credentials.class);
         if (credentials != null && credentials.creatingNewUser()) {
-            service().flush();
-            CredentialEntry entry = Environment.CREDENTIALS.get("default");
-            service().basic(entry.getLogin(), entry.getPassword());
-            currentEntry = entry;
-            System.out.println(String.format("%s : '%s' -> default", description.getMethodName(), currentType));
-            currentType = "";
+            flush(description.getMethodName());
         }
     }
 }

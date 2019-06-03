@@ -9,6 +9,7 @@ import com.crypterium.cryptApi.pojos.wallets.WalletListResp
 import com.crypterium.cryptApi.utils.BalanceAssertManager
 import com.crypterium.cryptApi.utils.EndPoints
 import com.crypterium.cryptApi.utils.SpecStorage
+import core.annotations.Credentials
 import io.restassured.response.ResponseBodyExtractionOptions
 import org.junit.Assert
 import org.junit.Assume
@@ -25,6 +26,7 @@ inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
 
 class FiatWalletChecks : ExwalTest() {
 
+    @Credentials(creatingNewUser = true)
     @Test
     fun createUsers() {
         val result = mutableListOf<String>()
@@ -83,7 +85,7 @@ class FiatWalletChecks : ExwalTest() {
                     Assume.assumeTrue("Change is 0", change.compareTo(BigDecimal.ZERO) != 0)
                     println("${fiatAmount.toPlainString()} * ${changePercent.toPlainString()} / ${change.toPlainString()} ~= 100%")
                     val expectedPercent = fiatAmount.multiply(changePercent).divide(change, 2, RoundingMode.HALF_UP)
-                    Assert.assertTrue("${expectedPercent.toPlainString()} not in range [99..101]", expectedPercent.toDouble() in 99..101)
+                    Assert.assertTrue("${expectedPercent.toPlainString()} not in range [99..101]", expectedPercent.toInt() in 99..101)
                 }
         ))
     }

@@ -10,36 +10,33 @@ import com.crypterium.cryptApi.utils.EndPoints
 import core.TestScope
 import core.annotations.Credentials
 import core.annotations.ScopeTarget
+import core.rules.CredentialsRule
 import io.qameta.allure.*
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.response.ResponseBodyExtractionOptions
-import org.junit.Ignore
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import tests.core.ExwalTest
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 import kotlin.random.nextInt
-import jdk.nashorn.internal.objects.NativeDate.getTime
-import java.text.SimpleDateFormat
-import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
-import kotlin.random.nextLong
 
 
 @Feature("Kokard")
 @Epic(TestScope.REGRESS)
-class KokardTests : ExwalTest() {
+class KokardTests(
+        private val testInfo: TestInfo
+) : ExwalTest() {
 
     inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
         return this.`as`(T::class.java)
     }
 
-    private val group = "FREE_CARD_PAID_DELIVERY"
+    private val group = "FREE_CARD_FREE_DELIVERY"
 
-    @Ignore
+    @Disabled
     @Test
     fun testUserForKokardCreation() {
         val result = mutableListOf<String>()
@@ -49,6 +46,24 @@ class KokardTests : ExwalTest() {
         println(result.joinToString("\n"))
     }
 
+    @Disabled
+    @Test
+    fun testStateDelivery() {
+        val service = Auth.service<AuthProvider>()
+        repeat(20) {
+            val order = service.auth().get(EndPoints.mobile_card_order).to<OrderStatus>()
+            service.auth().get(EndPoints.cardorder_tariffs)
+            service.auth().pathParam("country", "RU").get(EndPoints.cardorder_freecard_delivery_country)
+            assertAll(
+                    { assertEquals("APPROVED", order.cardApplyStatus) },
+                    { assertEquals("ORDER", order.cardStatus) },
+                    { assertEquals("NONE", order.cardOrderStatus) },
+                    { assertEquals("FREE_CARD_PAID_DELIVERY", order.cardOrderExperimentGroup) }
+            )
+        }
+    }
+
+    @Disabled
     @ScopeTarget(ScopeTarget.Stand.BETA)
     @Story("New user process apply stage")
     @Severity(SeverityLevel.CRITICAL)
@@ -68,8 +83,8 @@ class KokardTests : ExwalTest() {
         val service = Auth.service<AuthProvider>()
 
         var cardOrder = service.auth().get(EndPoints.cardorder).to<CardOrderModel>()
-        val firstname = user.firstName ?: "Jon"
-        val lastname = user.lastName ?: "Snow"
+        val firstname = listOf("Jon", "Daenerys", "Bran", "Eddard", "Samwell", "Meera", "Sansa", "Arya").random()
+        val lastname = listOf("Snow", "Targaryen", "Stark", "Arryn", "Baratheon", "Rivers", "Sand", "Flowers", "Lannister").random()
         val nationality = cardOrder.nationality ?: "RU"
 
         // Identity data
@@ -182,13 +197,20 @@ class KokardTests : ExwalTest() {
         return user
     }
 
-    inline fun upload(service: AuthProvider, type: String, file: File, docNumber: String?) {
+    private fun upload(service: AuthProvider, type: String, file: File, docNumber: String?) {
         service.auth()
                 .header("Content-Type", "multipart/jpg")
                 .queryParam("documentNumber", docNumber)
                 .queryParam("documentType", type)
                 .multiPart("image", file)
                 .`when`().post(EndPoints.cardorder_upload_document)
+    }
+
+    @AfterEach
+    fun check() {
+        if (testInfo.tags.contains("creatingNewUser")) {
+            CredentialsRule.flush(testInfo.testMethod.get().name)
+        }
     }
 
 }
