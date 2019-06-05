@@ -49,7 +49,7 @@ public class ApiCommonFunctions {
             SignUpReq signup = new SignUpReq()
                     .setPassword("12345a")
                     .setPhone(phoneNumber);
-            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400))
+            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400, 401, 402,  403, 500))
                     .when().post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
                 return phoneNumber;
@@ -60,9 +60,8 @@ public class ApiCommonFunctions {
 
     public static String generateFreeEmail() {
         for (int i = 0; i < 10; i++) {
-            String email = String.format("%s+test@%s.com",
-                    RandomStringUtils.randomAlphabetic(5),
-                    RandomStringUtils.randomAlphabetic(3)
+            String email = String.format("%s+test@crypterium.com",
+                    RandomStringUtils.randomAlphabetic(5)
             );
             VerifyEmail verifyEmail = new VerifyEmail()
                     .setEmail(email);
