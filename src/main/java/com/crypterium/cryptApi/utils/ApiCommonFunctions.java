@@ -8,6 +8,7 @@ import com.crypterium.cryptApi.pojos.signupoperation.VerifyEmail;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class ApiCommonFunctions {
             SignUpReq signup = new SignUpReq()
                     .setPassword("12345a")
                     .setPhone(phoneNumber);
-            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400, 401, 402,  403, 500))
+            statusCode = given().body(signup).expect().statusCode(Matchers.isOneOf(200, 400, 401, 402, 403, 500))
                     .when().post(EndPoints.mobile_signup).statusCode();
             if (statusCode == 200) {
                 return phoneNumber;
@@ -65,13 +66,25 @@ public class ApiCommonFunctions {
             );
             VerifyEmail verifyEmail = new VerifyEmail()
                     .setEmail(email);
-            int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 400))
+            int statusCode = service().auth().body(verifyEmail).expect().statusCode(Matchers.isOneOf(200, 400, 500))
                     .when().put(EndPoints.mobile_email_add).statusCode();
             if (statusCode == 200) {
                 return email;
             }
         }
         return "";
+    }
+
+    public static String generateFirstName() {
+        List<String> list = Arrays.asList("Jon", "Daenerys", "Bran", "Eddard", "Samwell", "Meera", "Sansa", "Arya", "Gendry",
+                "Melisandra", "Davos", "Brienna", "Ramsi", "Ruse", "Tywin");
+        return list.get(new Random().nextInt(list.size()));
+    }
+
+    public static String generateLastName() {
+        List<String> list = Arrays.asList("Stark", "Greyjoy", "Lannister", "Tyrell", "Martell", "Baratheon", "Targaryen", "Arryn",
+                "Snow", "Rivers", "Flowers", "Reed", "Tart", "Bolton", "Sand", "Storm", "Tally", "Clegane", "Seaworth");
+        return list.get(new Random().nextInt(list.size()));
     }
 
     public static String getSmsCode(String phoneNumber, String event) {

@@ -6,6 +6,8 @@ import com.crypterium.cryptApi.pojos.cardorderoperation.OrderStatus
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel
 import com.crypterium.cryptApi.pojos.kokard.CardOrderModel
 import com.crypterium.cryptApi.pojos.kokard.ResidentialAddress
+import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateFirstName
+import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateLastName
 import com.crypterium.cryptApi.utils.EndPoints
 import core.TestScope
 import core.annotations.Credentials
@@ -101,10 +103,8 @@ class KokardTests(
         val service = Auth.service<AuthProvider>()
 
         var cardOrder = service.auth().get(EndPoints.cardorder).to<CardOrderModel>()
-        val firstname = listOf("Jon", "Daenerys", "Bran", "Eddard", "Samwell", "Meera", "Sansa", "Arya", "Gendry",
-                "Melisandra", "Davos", "Brienna", "Ramsi", "Ruse", "Tywin").random()
-        val lastname = listOf("Stark", "Greyjoy", "Lannister", "Tyrell", "Martell", "Baratheon", "Targaryen", "Arryn",
-                "Snow", "Rivers", "Flowers", "Reed", "Tart", "Bolton", "Sand", "Storm", "Tally", "Clegane", "Seaworth").random()
+        val firstname = generateFirstName()
+        val lastname = generateLastName()
         val nationality = cardOrder.nationality ?: "RU"
 
         // Identity data

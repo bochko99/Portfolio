@@ -3,6 +3,7 @@ package tests.core;
 import com.crypterium.cryptApi.Auth;
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel;
 import com.crypterium.cryptApi.pojos.signupoperation.*;
+import com.crypterium.cryptApi.utils.ApiCommonFunctions;
 import com.crypterium.cryptApi.utils.EndPoints;
 import com.crypterium.cryptApi.utils.Environment;
 import com.crypterium.cryptApi.utils.SpecStorage;
@@ -29,8 +30,8 @@ public class ExwalV1Test extends BaseTest {
 
     public UserProfileModel registerNewUser() {
         AddName name = new AddName()
-                .setFirstName("T")
-                .setLastName("T");
+                .setFirstName(ApiCommonFunctions.generateFirstName())
+                .setLastName(ApiCommonFunctions.generateLastName());
         service().createUser().body(name).put(EndPoints.v1_mobile_name_add);
         String email = "";
         for (int i = 0; i < 10; i++) {
