@@ -40,10 +40,29 @@ class KokardTests(
     @Test
     fun testUserForKokardCreation() {
         val result = mutableListOf<String>()
-        repeat(1) {
-            result.add(createUserForKokard().phone)
+        try {
+            repeat(5) {
+                result.add(createUserForKokard().phone)
+            }
+        } finally {
+            println(result.joinToString("\n"))
         }
-        println(result.joinToString("\n"))
+
+    }
+
+    @Disabled
+    @Test
+    fun generateApply() {
+        val result = mutableListOf<String>()
+        try {
+            repeat(5) {
+                result.add(processApply().phone)
+                Thread.sleep(15000)
+            }
+        } finally {
+            println(result.joinToString("\n"))
+        }
+
     }
 
     @Disabled
@@ -63,19 +82,18 @@ class KokardTests(
         }
     }
 
-    @Disabled
     @ScopeTarget(ScopeTarget.Stand.BETA)
     @Story("New user process apply stage")
     @Severity(SeverityLevel.CRITICAL)
     @Test
     @Credentials(creatingNewUser = true)
-    fun processApply() {
+    fun processApply(): UserProfileModel {
         val doc = File(Thread.currentThread().contextClassLoader.getResource("photoforkyc/document.jpg")?.file)
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, (1..30).random())
         calendar.add(Calendar.MONTH, (1..12).random())
-        calendar.add(Calendar.YEAR, -((18..69).random()))
+        calendar.add(Calendar.YEAR, -((20..69).random()))
 
         val birthday = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
 
@@ -83,8 +101,10 @@ class KokardTests(
         val service = Auth.service<AuthProvider>()
 
         var cardOrder = service.auth().get(EndPoints.cardorder).to<CardOrderModel>()
-        val firstname = listOf("Jon", "Daenerys", "Bran", "Eddard", "Samwell", "Meera", "Sansa", "Arya").random()
-        val lastname = listOf("Snow", "Targaryen", "Stark", "Arryn", "Baratheon", "Rivers", "Sand", "Flowers", "Lannister").random()
+        val firstname = listOf("Jon", "Daenerys", "Bran", "Eddard", "Samwell", "Meera", "Sansa", "Arya", "Gendry",
+                "Melisandra", "Davos", "Brienna", "Ramsi", "Ruse", "Tywin").random()
+        val lastname = listOf("Stark", "Greyjoy", "Lannister", "Tyrell", "Martell", "Baratheon", "Targaryen", "Arryn",
+                "Snow", "Rivers", "Flowers", "Reed", "Tart", "Bolton", "Sand", "Storm", "Tally", "Clegane", "Seaworth").random()
         val nationality = cardOrder.nationality ?: "RU"
 
         // Identity data
@@ -108,6 +128,7 @@ class KokardTests(
         )
 
         // Identity docs
+        0
         upload(service, "DRIVER_LICENCE", doc, "12345678")
         upload(service, "DRIVER_LICENCE_BACKSIDE", doc, "12345678")
         upload(service, "SELFIE_PHOTO", doc, "12345678")
@@ -166,6 +187,8 @@ class KokardTests(
                 { assertEquals("APPLY", status.cardStatus) },
                 { assertEquals("NONE", status.cardOrderStatus) }
         )
+
+        return user
 
     }
 

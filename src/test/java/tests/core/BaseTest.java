@@ -1,15 +1,21 @@
 package tests.core;
 
 import com.crypterium.cryptApi.utils.Environment;
+import core.extensions.CredentialsExtension;
+import core.extensions.FinancialExtension;
+import core.extensions.StandExtension;
 import core.rules.CredentialsRule;
 import core.rules.FinancialAnnotationRule;
 import core.rules.TargetRule;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(FinancialExtension.class)
+@ExtendWith(StandExtension.class)
+@ExtendWith(CredentialsExtension.class)
 public class BaseTest {
-
 
     @Rule
     public TargetRule target = new TargetRule();
@@ -31,7 +37,7 @@ public class BaseTest {
     public void checkTarget() {
         String classErrMsg = String.format("Current stand '%s' not in {%s}", Environment.TARGET, String.join(", ", target.getClassStands()));
         Assume.assumeTrue(classErrMsg, target.getClassTarget() == null
-            || target.getClassStands().contains(Environment.TARGET));
+                || target.getClassStands().contains(Environment.TARGET));
         String errMsg = String.format("Current stand '%s' not in {%s}", Environment.TARGET, String.join(", ", target.getStands()));
         Assume.assumeTrue(errMsg, target.getTarget() == null
                 || target.getStands().contains(Environment.TARGET));
