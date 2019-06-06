@@ -1,36 +1,42 @@
 package tests
 
 import com.crypterium.cryptApi.Auth
+import com.crypterium.cryptApi.Auth.service
 import com.crypterium.cryptApi.AuthProvider
 import com.crypterium.cryptApi.pojos.cardorderoperation.OrderStatus
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel
-import com.crypterium.cryptApi.pojos.kokard.CardOrderModel
-import com.crypterium.cryptApi.pojos.kokard.ResidentialAddress
+import com.crypterium.cryptApi.pojos.kokard.*
+import com.crypterium.cryptApi.pojos.wallets.Currency
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateFirstName
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateLastName
+import com.crypterium.cryptApi.utils.BalanceAssertManager
 import com.crypterium.cryptApi.utils.EndPoints
 import core.TestScope
 import core.annotations.Credentials
 import core.annotations.ScopeTarget
-import core.rules.CredentialsRule
 import io.qameta.allure.*
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.response.ResponseBodyExtractionOptions
+import org.hamcrest.Matchers
+import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DynamicContainer.dynamicContainer
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import tests.core.ExwalTest
 import java.io.File
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.stream.Stream
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 
 @Feature("Kokard")
 @Epic(TestScope.REGRESS)
-class KokardTests(
-        private val testInfo: TestInfo
-) : ExwalTest() {
+class KokardTests : ExwalTest() {
 
     inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
         return this.`as`(T::class.java)
@@ -38,49 +44,66 @@ class KokardTests(
 
     private val group = "FREE_CARD_FREE_DELIVERY"
 
-    @Disabled
-    @Test
-    fun testUserForKokardCreation() {
-        val result = mutableListOf<String>()
-        try {
-            repeat(5) {
-                result.add(createUserForKokard().phone)
-            }
-        } finally {
-            println(result.joinToString("\n"))
+    @Story("Pairs tests")
+    @Severity(SeverityLevel.NORMAL)
+    @TestFactory
+    fun payloadDataTests(): Collection<DynamicNode> {
+        val pairs = listOf(Currency.BTC, Currency.ETH, Currency.LTC)
+        return pairs.map {
+            val currency = it
+            val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
+            dynamicContainer("Data min/max. $currency",
+                    Stream.of<DynamicTest>(
+                            dynamicTest("counter min ~= rate * base min. $currency") {
+                                val expectedMin = data.fromLimits?.min?.multiply(data.params?.rate?.value)
+                                        ?: BigDecimal.ZERO
+                                val msgMin = "${data.fromLimits?.min} * ${data.params?.rate?.value}"
+                                BalanceAssertManager.assertClose(msg = msgMin, expected = expectedMin, actual = data.toLimits?.min
+                                        ?: BigDecimal.ZERO, percent = BigDecimal(0.5))
+                            },
+                            dynamicTest("counter max ~= rate * base max. $currency") {
+                                val expectedMax = data.fromLimits?.max?.multiply(data.params?.rate?.value)
+                                        ?: BigDecimal.ZERO
+                                val msgMax = "${data.fromLimits?.max} * ${data.params?.rate?.value}"
+                                BalanceAssertManager.assertClose(msg = msgMax, expected = expectedMax, actual = data.toLimits?.max
+                                        ?: BigDecimal.ZERO, percent = BigDecimal(0.5))
+                            }
+                    ))
         }
-
     }
 
-    @Disabled
-    @Test
-    fun generateApply() {
-        val result = mutableListOf<String>()
-        try {
-            repeat(5) {
-                result.add(processApply().phone)
-                Thread.sleep(15000)
+
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Rate differentiation")
+    @Description("Difference between rates from exchange_currencies and zero offer should be less than 1%")
+    @TestFactory
+    fun payloadOfferRateDifferentation(): Collection<DynamicNode> {
+        val pairs = listOf(Currency.BTC, Currency.ETH, Currency.LTC)
+        return pairs.map {
+            dynamicTest("Rate differentiation: $it") {
+                val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
+                val body = PayloadOffer(
+                        amount = Amount(
+                                currency = it,
+                                value = BigDecimal("24").divide(data.params?.rate?.value, 4, RoundingMode.HALF_UP)
+                        ),
+                        fromCurrency = it,
+                        toCurrency = data.params?.rate?.currency
+                )
+
+                val response = service<AuthProvider>().auth().body(body).post(EndPoints.card_payload_offer_create)
+                        .to<PayloadOfferResponse>()
+
+                val differentiationPercent = data.params?.rate?.value?.subtract(response.params?.rate?.value)
+                        ?.divide(data.params?.rate?.value, 6, RoundingMode.HALF_UP)
+                        ?.multiply(BigDecimal("100"))
+
+                println(data.params?.rate?.value)
+                println(response.params?.rate?.value)
+                println(differentiationPercent)
+
+                Assert.assertThat(differentiationPercent?.abs(), Matchers.lessThan(BigDecimal("1")))
             }
-        } finally {
-            println(result.joinToString("\n"))
-        }
-
-    }
-
-    @Disabled
-    @Test
-    fun testStateDelivery() {
-        val service = Auth.service<AuthProvider>()
-        repeat(20) {
-            val order = service.auth().get(EndPoints.mobile_card_order).to<OrderStatus>()
-            service.auth().get(EndPoints.cardorder_tariffs)
-            service.auth().pathParam("country", "RU").get(EndPoints.cardorder_freecard_delivery_country)
-            assertAll(
-                    { assertEquals("APPROVED", order.cardApplyStatus) },
-                    { assertEquals("ORDER", order.cardStatus) },
-                    { assertEquals("NONE", order.cardOrderStatus) },
-                    { assertEquals("FREE_CARD_PAID_DELIVERY", order.cardOrderExperimentGroup) }
-            )
         }
     }
 
@@ -128,7 +151,6 @@ class KokardTests(
         )
 
         // Identity docs
-        0
         upload(service, "DRIVER_LICENCE", doc, "12345678")
         upload(service, "DRIVER_LICENCE_BACKSIDE", doc, "12345678")
         upload(service, "SELFIE_PHOTO", doc, "12345678")
@@ -227,13 +249,6 @@ class KokardTests(
                 .queryParam("documentType", type)
                 .multiPart("image", file)
                 .`when`().post(EndPoints.cardorder_upload_document)
-    }
-
-    @AfterEach
-    fun check() {
-        if (testInfo.tags.contains("creatingNewUser")) {
-            CredentialsRule.flush(testInfo.testMethod.get().name)
-        }
     }
 
 }

@@ -52,12 +52,12 @@ public class ExchangeTests extends ExwalTest {
                         dynamicTest(String.format("counter min ~= rate * base min. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
                             BigDecimal expectedMin = pair.getMinAmountFrom().multiply(pair.getRate());
                             String msgMin = String.format("Expected: %s, Actual: %s", expectedMin, pair.getMinAmountTo());
-                            Assert.assertTrue(msgMin, BalanceAssertManager.equal(expectedMin, pair.getMinAmountTo(), 4));
+                            BalanceAssertManager.assertClose(msgMin, pair.getMinAmountTo(), expectedMin, new BigDecimal("0.5"));
                         }),
                         dynamicTest(String.format("counter max ~= rate * base max. %s -> %s", pair.getCurrencyFrom(), pair.getCurrencyTo()), () -> {
                             BigDecimal expectedMax = pair.getMaxAmountFrom().multiply(pair.getRate());
                             String msgMax = String.format(" Expected: %s, Actual: %s", expectedMax, pair.getMaxAmountTo());
-                            Assert.assertTrue(msgMax, BalanceAssertManager.equal(expectedMax, pair.getMaxAmountTo(), 4));
+                            BalanceAssertManager.assertClose(msgMax, pair.getMaxAmountTo(), expectedMax, new BigDecimal("0.5"));
                         })
                 ))).collect(Collectors.toList());
     }

@@ -5,7 +5,7 @@ import java.math.BigDecimal
 enum class Currency(
         val currency: String,
         val isCrypto: Boolean,
-        minValueToSendPhoneString: String
+        minValueToSendPhoneString: String = "0"
 ) {
 
     BTC(
@@ -35,13 +35,15 @@ enum class Currency(
     ),
     EUR(
             currency = "EUR",
-            isCrypto = false,
-            minValueToSendPhoneString = "0"
+            isCrypto = false
+    ),
+    USD(
+            currency = "USD",
+            isCrypto = false
     ),
     XRP(
             currency = "XPR",
-            isCrypto = true,
-            minValueToSendPhoneString = "100"
+            isCrypto = true
     );
 
     val minValueToSendPhone: BigDecimal = BigDecimal(minValueToSendPhoneString)
