@@ -7,7 +7,7 @@ import java.math.BigDecimal
 
 data class CardBalance(
         @JsonProperty("currency")
-        var currency: Currency?,
+        var currency: Currency,
         @JsonProperty("value")
-        var value: BigDecimal?
+        var value: BigDecimal
 )

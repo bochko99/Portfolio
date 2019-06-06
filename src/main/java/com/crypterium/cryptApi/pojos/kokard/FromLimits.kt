@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 data class FromLimits(
         @JsonProperty("max")
-        var max: BigDecimal?,
+        var max: BigDecimal,
         @JsonProperty("min")
-        var min: BigDecimal?
+        var min: BigDecimal
 )

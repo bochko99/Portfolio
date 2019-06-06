@@ -52,7 +52,7 @@ object BalanceAssertManager {
             msg: String = "",
             actual: BigDecimal,
             expected: BigDecimal,
-            percent: BigDecimal = BigDecimal.ONE
+            percent: BigDecimal = BigDecimal("0.5")
     ) {
         val diff = actual.minus(expected).divide(actual.multiply(BigDecimal("100")), 10, RoundingMode.HALF_UP).abs()
         return Assert.assertTrue("$msg. Actual: $actual. Expected: $expected. Diff: $diff", diff <= percent)

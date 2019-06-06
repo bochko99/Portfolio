@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class PayloadCurrencyData(
         @JsonProperty("cardBalance")
-        var cardBalance: CardBalance?,
+        var cardBalance: CardBalance,
         @JsonProperty("fromLimits")
-        var fromLimits: FromLimits?,
+        var fromLimits: FromLimits,
         @JsonProperty("params")
-        var params: Params?,
+        var params: Params,
         @JsonProperty("toLimits")
-        var toLimits: ToLimits?
+        var toLimits: ToLimits
 )

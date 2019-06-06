@@ -6,13 +6,13 @@ import java.util.*
 
 data class PayloadOfferResponse(
         @JsonProperty("expirationTime")
-        var expirationTime: Date?,
+        var expirationTime: Date,
         @JsonProperty("from")
-        var from: From?,
+        var from: From,
         @JsonProperty("offerId")
-        var offerId: Long?,
+        var offerId: Long,
         @JsonProperty("params")
-        var params: Params?,
+        var params: Params,
         @JsonProperty("to")
-        var to: To?
+        var to: To
 )

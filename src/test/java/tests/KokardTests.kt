@@ -6,10 +6,10 @@ import com.crypterium.cryptApi.AuthProvider
 import com.crypterium.cryptApi.pojos.cardorderoperation.OrderStatus
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel
 import com.crypterium.cryptApi.pojos.kokard.*
-import com.crypterium.cryptApi.pojos.wallets.Currency
+import com.crypterium.cryptApi.pojos.wallets.Currency.*
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateFirstName
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateLastName
-import com.crypterium.cryptApi.utils.BalanceAssertManager
+import com.crypterium.cryptApi.utils.BalanceAssertManager.assertClose
 import com.crypterium.cryptApi.utils.EndPoints
 import core.TestScope
 import core.annotations.Credentials
@@ -17,8 +17,8 @@ import core.annotations.ScopeTarget
 import io.qameta.allure.*
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.response.ResponseBodyExtractionOptions
-import org.hamcrest.Matchers
-import org.junit.Assert
+import org.hamcrest.Matchers.*
+import org.junit.Assert.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import tests.core.ExwalTest
 import java.io.File
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,29 +45,42 @@ class KokardTests : ExwalTest() {
 
     private val group = "FREE_CARD_FREE_DELIVERY"
 
-    @Story("Pairs tests")
+    @Story("Payload data tests")
     @Severity(SeverityLevel.NORMAL)
     @TestFactory
     fun payloadDataTests(): Collection<DynamicNode> {
-        val pairs = listOf(Currency.BTC, Currency.ETH, Currency.LTC)
+        val pairs = listOf(BTC, ETH, LTC)
         return pairs.map {
             val currency = it
             val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
             dynamicContainer("Data min/max. $currency",
                     Stream.of<DynamicTest>(
                             dynamicTest("counter min ~= rate * base min. $currency") {
-                                val expectedMin = data.fromLimits?.min?.multiply(data.params?.rate?.value)
-                                        ?: BigDecimal.ZERO
-                                val msgMin = "${data.fromLimits?.min} * ${data.params?.rate?.value}"
-                                BalanceAssertManager.assertClose(msg = msgMin, expected = expectedMin, actual = data.toLimits?.min
-                                        ?: BigDecimal.ZERO, percent = BigDecimal(0.5))
+                                val from = data.fromLimits.min
+                                val to = data.toLimits.min
+                                val rate = data.params.rate.value
+
+                                assertThat("fromMin > 0", from, greaterThan(ZERO))
+                                assertThat("toMin > 0", to, greaterThan(ZERO))
+                                assertThat("rate > 0", rate, greaterThan(ZERO))
+
+                                val expectedMin = from.multiply(rate)
+                                val msgMin = "$from * $rate"
+
+                                assertClose(msg = msgMin, expected = expectedMin, actual = to)
                             },
                             dynamicTest("counter max ~= rate * base max. $currency") {
-                                val expectedMax = data.fromLimits?.max?.multiply(data.params?.rate?.value)
-                                        ?: BigDecimal.ZERO
-                                val msgMax = "${data.fromLimits?.max} * ${data.params?.rate?.value}"
-                                BalanceAssertManager.assertClose(msg = msgMax, expected = expectedMax, actual = data.toLimits?.max
-                                        ?: BigDecimal.ZERO, percent = BigDecimal(0.5))
+                                val from = data.fromLimits.max
+                                val to = data.toLimits.max
+                                val rate = data.params.rate.value
+
+                                assertThat("fromMax > 0", from, greaterThan(ZERO))
+                                assertThat("toMax > 0", to, greaterThan(ZERO))
+                                assertThat("rate > 0", rate, greaterThan(ZERO))
+
+                                val expectedMax = from.multiply(rate)
+                                val msgMax = "$from * $rate"
+                                assertClose(msg = msgMax, expected = expectedMax, actual = to)
                             }
                     ))
         }
@@ -78,31 +92,36 @@ class KokardTests : ExwalTest() {
     @Description("Difference between rates from exchange_currencies and zero offer should be less than 1%")
     @TestFactory
     fun payloadOfferRateDifferentation(): Collection<DynamicNode> {
-        val pairs = listOf(Currency.BTC, Currency.ETH, Currency.LTC)
+        val pairs = listOf(BTC, ETH, LTC)
         return pairs.map {
             dynamicTest("Rate differentiation: $it") {
                 val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
                 val body = PayloadOffer(
                         amount = Amount(
                                 currency = it,
-                                value = BigDecimal("24").divide(data.params?.rate?.value, 4, RoundingMode.HALF_UP)
+                                value = data.fromLimits.min.multiply(BigDecimal("0.95"))
                         ),
                         fromCurrency = it,
-                        toCurrency = data.params?.rate?.currency
+                        toCurrency = data.params.rate.currency
                 )
 
                 val response = service<AuthProvider>().auth().body(body).post(EndPoints.card_payload_offer_create)
                         .to<PayloadOfferResponse>()
 
-                val differentiationPercent = data.params?.rate?.value?.subtract(response.params?.rate?.value)
-                        ?.divide(data.params?.rate?.value, 6, RoundingMode.HALF_UP)
+                val differentiationPercent = data.params.rate.value.subtract(response.params.rate.value)
+                        ?.divide(data.params.rate.value, 6, RoundingMode.HALF_UP)
                         ?.multiply(BigDecimal("100"))
 
-                println(data.params?.rate?.value)
-                println(response.params?.rate?.value)
+                println(data.params.rate.value)
+                println(response.params.rate.value)
                 println(differentiationPercent)
 
-                Assert.assertThat(differentiationPercent?.abs(), Matchers.lessThan(BigDecimal("1")))
+                assertAll(
+                        { assertThat("Rate differ", differentiationPercent?.abs(), lessThan(BigDecimal("1"))) },
+                        { assertThat("Amount equality", response.from.value, equalTo(body.amount.value)) },
+                        { assertClose("Load fee = 1%", response.params.fee.value, body.amount.value.multiply(data.params.fee.value)) },
+                        { assertClose("Gas fee = 0.5%", response.params.gasFee.value, body.amount.value.multiply(data.params.gasFee.value)) }
+                )
             }
         }
     }
