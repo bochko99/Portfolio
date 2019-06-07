@@ -1,7 +1,6 @@
 package com.crypterium.cryptApi.utils
 
-import org.junit.Assert
-
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -44,7 +43,12 @@ object BalanceAssertManager {
 
     @JvmStatic
     fun assertEquals(msg: String, actual: BigDecimal, expected: BigDecimal) {
-        Assert.assertTrue("$msg. Actual: $actual, Expected: $expected", equal(actual, expected))
+        assertTrue(equal(actual, expected), "$msg. Actual: $actual, Expected: $expected")
+    }
+
+    @JvmStatic
+    fun diffPercent(first: BigDecimal, second: BigDecimal): BigDecimal {
+        return first.minus(second).divide(first, 10, RoundingMode.HALF_UP)
     }
 
     @JvmStatic
@@ -54,8 +58,8 @@ object BalanceAssertManager {
             expected: BigDecimal,
             percent: BigDecimal = BigDecimal("0.5")
     ) {
-        val diff = actual.minus(expected).divide(actual.multiply(BigDecimal("100")), 10, RoundingMode.HALF_UP).abs()
-        return Assert.assertTrue("$msg. Actual: $actual. Expected: $expected. Diff: $diff", diff <= percent)
+        val diff = diffPercent(actual, expected)
+        return assertTrue(diff <= percent, "$msg. Actual: $actual. Expected: $expected. Diff: $diff%")
     }
 
 }

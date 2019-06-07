@@ -104,7 +104,6 @@ public class ExwalAuth extends AuthProvider {
 
     @Override
     public void flush() {
-        adminToken = "";
         accesstoken = "";
     }
 

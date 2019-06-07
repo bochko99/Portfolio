@@ -17,7 +17,7 @@ public class Auth {
     }
 
     public static <T extends AuthProvider> T service() {
-        return service(DEFAULT_FINGERPRINT);
+        return service(Thread.currentThread().getName());
     }
 
     @SuppressWarnings("all")
@@ -27,7 +27,7 @@ public class Auth {
 
     @SuppressWarnings("all")
     public static <T extends AuthProvider> T service(AuthType type) {
-        return (T) getService(DEFAULT_FINGERPRINT, type.service);
+        return (T) getService(Thread.currentThread().getName(), type.service);
     }
 
     @SuppressWarnings("all")
@@ -59,11 +59,11 @@ public class Auth {
         EXWAL(ExwalAuth.class),
         EXWAL_V1(ExwalAuthV1.class);
 
+        private Class<? extends AuthProvider> service;
+
         AuthType(Class<? extends AuthProvider> service) {
             this.service = service;
         }
-
-        private Class<? extends AuthProvider> service;
 
         public Class<? extends AuthProvider> getService() {
             return service;

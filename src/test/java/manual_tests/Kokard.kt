@@ -56,7 +56,7 @@ class Kokard : ExwalTest() {
         val result = mutableListOf<String>()
         try {
             repeat(5) {
-                result.add(KokardTests().processApply().phone)
+//                result.add(KokardTests().processApply().phone)
                 Thread.sleep(15000)
             }
         } finally {

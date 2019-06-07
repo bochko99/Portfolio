@@ -11,7 +11,8 @@ class FinancialExtension : BeforeEachCallback {
 
     override fun beforeEach(context: ExtensionContext?) {
         if (Environment.FINANCE_OPERATIONS_ALLOWED != "true") {
-            val isFinancial = AnnotationSupport.isAnnotated(context?.requiredTestMethod, Financial::class.java)
+            val isFinancial = AnnotationSupport.isAnnotated(context?.testMethod
+                    ?: context?.testClass, Financial::class.java)
             Assume.assumeFalse(isFinancial)
         }
     }

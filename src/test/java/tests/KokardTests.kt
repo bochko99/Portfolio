@@ -19,10 +19,13 @@ import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.response.ResponseBodyExtractionOptions
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
+import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.assertAll
 import tests.core.ExwalTest
 import java.io.File
 import java.math.BigDecimal
@@ -43,7 +46,7 @@ class KokardTests : ExwalTest() {
         return this.`as`(T::class.java)
     }
 
-    private val group = "FREE_CARD_FREE_DELIVERY"
+    private val group = "PAID_CARD_WITHOUT_SUBSCRIPTION"
 
     @Story("Payload data tests")
     @Severity(SeverityLevel.NORMAL)
@@ -54,33 +57,36 @@ class KokardTests : ExwalTest() {
             val currency = it
             val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
             dynamicContainer("Data min/max. $currency",
-                    Stream.of<DynamicTest>(
+                    Stream.of(
                             dynamicTest("counter min ~= rate * base min. $currency") {
                                 val from = data.fromLimits.min
                                 val to = data.toLimits.min
                                 val rate = data.params.rate.value
 
-                                assertThat("fromMin > 0", from, greaterThan(ZERO))
-                                assertThat("toMin > 0", to, greaterThan(ZERO))
-                                assertThat("rate > 0", rate, greaterThan(ZERO))
-
                                 val expectedMin = from.multiply(rate)
                                 val msgMin = "$from * $rate"
 
-                                assertClose(msg = msgMin, expected = expectedMin, actual = to)
+                                assertAll(
+                                        { assertThat("fromMin > 0", from, greaterThan(ZERO)) },
+                                        { assertThat("toMin > 0", to, greaterThan(ZERO)) },
+                                        { assertThat("rate > 0", rate, greaterThan(ZERO)) },
+                                        { assertClose(msg = msgMin, expected = expectedMin, actual = to) }
+                                )
                             },
                             dynamicTest("counter max ~= rate * base max. $currency") {
                                 val from = data.fromLimits.max
                                 val to = data.toLimits.max
                                 val rate = data.params.rate.value
 
-                                assertThat("fromMax > 0", from, greaterThan(ZERO))
-                                assertThat("toMax > 0", to, greaterThan(ZERO))
-                                assertThat("rate > 0", rate, greaterThan(ZERO))
-
                                 val expectedMax = from.multiply(rate)
                                 val msgMax = "$from * $rate"
-                                assertClose(msg = msgMax, expected = expectedMax, actual = to)
+
+                                assertAll(
+                                        { assertThat("fromMax > 0", from, greaterThan(ZERO)) },
+                                        { assertThat("toMax > 0", to, greaterThan(ZERO)) },
+                                        { assertThat("rate > 0", rate, greaterThan(ZERO)) },
+                                        { assertClose(msg = msgMax, expected = expectedMax, actual = to) }
+                                )
                             }
                     ))
         }
@@ -91,7 +97,7 @@ class KokardTests : ExwalTest() {
     @Story("Rate differentiation")
     @Description("Difference between rates from exchange_currencies and zero offer should be less than 1%")
     @TestFactory
-    fun payloadOfferRateDifferentation(): Collection<DynamicNode> {
+    fun payloadOfferRateDifferentiation(): Collection<DynamicNode> {
         val pairs = listOf(BTC, ETH, LTC)
         return pairs.map {
             dynamicTest("Rate differentiation: $it") {
@@ -126,18 +132,18 @@ class KokardTests : ExwalTest() {
         }
     }
 
-    @ScopeTarget(ScopeTarget.Stand.BETA)
+    @ScopeTarget(ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE)
     @Story("New user process apply stage")
     @Severity(SeverityLevel.CRITICAL)
     @Test
     @Credentials(creatingNewUser = true)
-    fun processApply(): UserProfileModel {
+    fun processApply() {
         val doc = File(Thread.currentThread().contextClassLoader.getResource("photoforkyc/document.jpg")?.file)
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, (1..30).random())
         calendar.add(Calendar.MONTH, (1..12).random())
-        calendar.add(Calendar.YEAR, -((20..69).random()))
+        calendar.add(Calendar.YEAR, (20..69).random().unaryMinus())
 
         val birthday = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
 
@@ -228,9 +234,6 @@ class KokardTests : ExwalTest() {
                 { assertEquals("APPLY", status.cardStatus) },
                 { assertEquals("NONE", status.cardOrderStatus) }
         )
-
-        return user
-
     }
 
     fun createUserForKokard(): UserProfileModel {
