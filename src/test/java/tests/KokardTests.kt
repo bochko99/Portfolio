@@ -1,11 +1,11 @@
 package tests
 
-import com.crypterium.cryptApi.Auth
 import com.crypterium.cryptApi.Auth.service
 import com.crypterium.cryptApi.AuthProvider
 import com.crypterium.cryptApi.pojos.cardorderoperation.OrderStatus
 import com.crypterium.cryptApi.pojos.customerprofile.UserProfileModel
 import com.crypterium.cryptApi.pojos.kokard.*
+import com.crypterium.cryptApi.pojos.wallets.Currency
 import com.crypterium.cryptApi.pojos.wallets.Currency.*
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateFirstName
 import com.crypterium.cryptApi.utils.ApiCommonFunctions.generateLastName
@@ -13,12 +13,13 @@ import com.crypterium.cryptApi.utils.BalanceAssertManager.assertClose
 import com.crypterium.cryptApi.utils.EndPoints
 import core.TestScope
 import core.annotations.Credentials
-import core.annotations.ScopeTarget
 import io.qameta.allure.*
 import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.response.ResponseBodyExtractionOptions
+import manual_tests.to
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
+import org.junit.AssumptionViolatedException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicNode
@@ -46,19 +47,33 @@ class KokardTests : ExwalTest() {
         return this.`as`(T::class.java)
     }
 
+    class DataProvider(private val currency: Currency) {
+        val data: PayloadCurrencyData? by lazy {
+            try {
+                println("Calculated for $currency")
+                service<AuthProvider>().auth().pathParam("currency", currency).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
+            } catch (e: AssertionError) {
+                null
+            }
+        }
+    }
+
     private val group = "PAID_CARD_WITHOUT_SUBSCRIPTION"
 
     @Story("Payload data tests")
     @Severity(SeverityLevel.NORMAL)
     @TestFactory
     fun payloadDataTests(): Collection<DynamicNode> {
+
         val pairs = listOf(BTC, ETH, LTC)
         return pairs.map {
             val currency = it
-            val data = service<AuthProvider>().auth().pathParam("currency", it).get(EndPoints.card_payload_currency_data).to<PayloadCurrencyData>()
+            val dataProvider = DataProvider(it)
             dynamicContainer("Data min/max. $currency",
                     Stream.of(
                             dynamicTest("counter min ~= rate * base min. $currency") {
+                                val data = dataProvider.data
+                                        ?: throw AssumptionViolatedException("No payload card")
                                 val from = data.fromLimits.min
                                 val to = data.toLimits.min
                                 val rate = data.params.rate.value
@@ -74,6 +89,8 @@ class KokardTests : ExwalTest() {
                                 )
                             },
                             dynamicTest("counter max ~= rate * base max. $currency") {
+                                val data = dataProvider.data
+                                        ?: throw AssumptionViolatedException("No payload card")
                                 val from = data.fromLimits.max
                                 val to = data.toLimits.max
                                 val rate = data.params.rate.value
@@ -125,14 +142,13 @@ class KokardTests : ExwalTest() {
                 assertAll(
                         { assertThat("Rate differ", differentiationPercent?.abs(), lessThan(BigDecimal("1"))) },
                         { assertThat("Amount equality", response.from.value, equalTo(body.amount.value)) },
-                        { assertClose("Load fee = 1%", response.params.fee.value, body.amount.value.multiply(data.params.fee.value)) },
-                        { assertClose("Gas fee = 0.5%", response.params.gasFee.value, body.amount.value.multiply(data.params.gasFee.value)) }
+                        { assertClose("Total fee = 1.5%", response.params.fee.value, body.amount.value.multiply(data.params.fee.value.add(data.params.gasFee?.value))) }
                 )
             }
         }
     }
 
-    @ScopeTarget(ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE)
+    //    @ScopeTarget(ScopeTarget.Stand.BETA, ScopeTarget.Stand.STAGE)
     @Story("New user process apply stage")
     @Severity(SeverityLevel.CRITICAL)
     @Test
@@ -147,8 +163,8 @@ class KokardTests : ExwalTest() {
 
         val birthday = SimpleDateFormat("yyyy-MM-dd").format(calendar.time)
 
-        val user = createUserForKokard()
-        val service = Auth.service<AuthProvider>()
+        createUserForKokard()
+        val service = service<AuthProvider>()
 
         var cardOrder = service.auth().get(EndPoints.cardorder).to<CardOrderModel>()
         val firstname = generateFirstName()
@@ -239,7 +255,7 @@ class KokardTests : ExwalTest() {
     fun createUserForKokard(): UserProfileModel {
 
         val user = registerNewUser()
-        val service = Auth.service<AuthProvider>()
+        val service = service<AuthProvider>()
 
         // email verification
         val codeValue = service.admin()

@@ -7,7 +7,7 @@ data class Params(
         @JsonProperty("fee")
         var fee: Fee,
         @JsonProperty("gasFee")
-        var gasFee: GasFee,
+        var gasFee: GasFee?,
         @JsonProperty("rate")
         var rate: Rate
 )

@@ -42,7 +42,6 @@ public class SignUpTests extends ExwalTest {
     @Credentials(creatingNewUser = true)
     public void testRegisterNewUser() {
         registerNewUser();
-
     }
 
     @Story("SMS on prod validation")
